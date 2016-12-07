@@ -1,0 +1,565 @@
+@charset "utf-8";
+.login .container{
+	width:1200px;
+}
+/* login header */
+.login{
+	background:#f6f6f6;
+}
+.banner { 
+	position: relative; 
+	overflow: auto; 
+}
+.banner li { 
+	list-style: none; 
+}
+.banner ul li { 
+	float: left; 
+}
+.login_header{
+	width:100%;
+	min-width:1200px;
+    height:68px;
+    line-height:68px;
+    background: #f6f6f6;
+}
+.login_banner{
+	height:	400px;
+	overflow-x: 
+}
+.login_banner li{
+	overflow-x: hidden;
+}
+.login_form{
+    height:290px;
+    width:295px;
+    background: #000000;
+	filter:alpha(opacity=30); 
+	-moz-opacity:0.3; 
+	-khtml-opacity: 0.3; 
+	opacity: 0.3;
+}
+.login_form_content{
+	width:235px;
+	height:255px;
+	color:#FFFFFF;
+}
+.login_form_content p{
+	font-size:16px;
+	color:#47c86c;
+	margin-bottom: 15px;
+}
+.login_form_content .row{
+	margin-bottom:10px;
+}
+.login_form_content .control-group{
+	height:43px;
+}
+.login_form_content .control-label{
+	width:40px;
+	height:36px;
+}
+.login_form_content .controls{
+	margin:0;
+}
+.login_form_content .controls input{
+	height:32px;
+	line-height: 32px;
+	border-left:none;
+}
+.login_form_content .x-field-error{
+	display:block;
+	margin:5px 0;
+}
+.login_form_content .login_submit{
+	width:228px;
+	height:48px;
+	border:none;
+	background:url("../images/login_submit.png") no-repeat;
+}
+/* 错误提示信息 */
+.login_error{
+	background:#fdeee9;
+	color: #454545;
+	font-size:12px;
+	width: 228px;
+	height:30px;
+	line-height:30px;
+	position: absolute;
+	top:0px;
+	left:-10px;
+}
+.login_error div, .login_submit_error div{
+	float:left;
+	margin-left:10px;
+}
+.login_submit_error{
+	background:#fdeee9;
+	color: #454545;
+	font-size:12px;
+	width: 228px;
+	margin-bottom: 15px;
+}
+.login_submit_error a{
+	color:#0088cc;
+}
+.login_submit_error span{
+	padding:5px 5px;
+}
+/* 登录信息展示 */
+.login_about{
+	margin-top:20px;
+	margin-bottom:88px;
+}
+.login_about .row{
+	margin:0 0 44px 0;
+}
+.login_about .til{
+	font-size:24px;
+	height:30px;
+	margin-bottom:10px;
+}
+.login_about .bg{
+	background:#FFFFFF;
+	border:1px solid #eeeeee;
+}
+.login_about .solve .bg{
+	height:312px;
+}
+.login_about .sell .bg,
+.login_about .serve .bg,
+.login_about .more .bg{
+	height:260px;
+}
+.login_about .left{
+	margin:0 24px 0 0;
+}
+.login_about .solve .left{
+	width:876px;
+}
+.login_about .sell .left{
+	width:100%;
+}
+.login_about .services .left{
+	width:693px;
+}
+.login_about .solve .left_content li,
+.login_about .sell .left_content li{
+	margin:10px 0 10px 0;
+	text-align: center;
+	width:280px;
+}
+.login_about .serve .content{
+	
+}
+.login_about .serve .content li{
+	margin:10px 10px;
+	text-align: center;
+}
+.login_about .solve .left_til,
+.login_about .solve .right_til{
+	margin:24px;
+	font-size: 16px;
+}
+.login_about .right{
+	margin:0 0;
+	width:290px;
+}
+.login_about .services .right{
+	width:473px;
+}
+.login_about .services .right .description{
+	width:230px;
+	margin:70px 10px 50px 20px;
+}
+.login_about .services .right .pic{
+	width:190px;
+	margin:50px 20px 50px 0;
+}
+.login_about .right_content{
+	text-align:center;
+}
+.login_about .right_img{
+	margin:10px 10px;
+	
+}
+.login_about .item_til{
+	font-size:16px;
+	color:#000000;
+	line-height:36px;
+}
+.login_about .services .right .item_til{
+	line-height:44px;
+}
+.login_about .item_dec{
+	font-size:12px;
+	color:#656565;
+}
+.login_about .solve .item_dec{
+	line-height:36px;
+}
+.login_about .sell .item_dec,
+.login_about .services .item_dec{
+	line-height:22px;
+}
+.login_about .services .right .item_dec{
+	line-height:25px;
+}
+/* login footer */
+.login_footer{
+	height:175px;
+	background:#ededed;
+	text-align:center;
+}
+.login_footer .join{
+	margin:40px 0;
+}
+.login_footer .breadcrumb{
+	background:none;
+	border:none;
+	border-radius: none;
+    box-shadow: none;
+    color:#a0a0a0;
+}
+.login_footer .breadcrumb a{
+	color:#a0a0a0;
+}
+/*表单控件*/
+.form-wrapper { 
+	text-align: center;
+	margin-bottom: 10px; 
+}
+.username-wrapper, .password-wrapper, .captcha-wrapper {
+	float: left;
+	position: relative;
+	width: 295px;
+	height: 38px;
+	line-height: 38px;
+	background-color: #FFFFFF;
+	border: 1px solid #a5a5a5;
+}
+.captcha-wrapper {
+	width: 160px;
+}
+.username-wrapper img, .password-wrapper img, .captcha-wrapper img {
+	/*float: left;
+	margin-top: 3px;*/
+	position: absolute;
+	left: 0px;
+	top: 3px;
+}
+.username-wrapper input, .password-wrapper input, .captcha-wrapper input {
+	/*float: left;*/
+	position: absolute;
+	left: 31px;
+	top: 0;
+	color: #999;
+	width: 240px; 
+	border: 0px;
+	margin: 5px;
+}
+.login-wrapper {
+	text-align: center;
+}
+/*错误信息提示框*/
+.validation_error {
+	height: 40px;
+	line-height: 40px;
+	width: 247px;
+	margin: 10px 0 20px 430px;
+	float: left;
+	border-radius: 5px;
+}
+/*登陆按钮*/
+#login_submit {
+	width: 172px;
+	height: 50px;
+	background: url(../images/btn_login_off.png) no-repeat 0 0;
+	border: 0;
+}
+/*表单验证*/
+.formtips {
+	/*padding-left: 25px;*/
+	float: left;
+	height: 38px;
+	line-height: 38px;
+	border-radius: 5px;
+	padding: 0 7px 0 7px;
+}
+.onInfo {
+	background: #D3E5F5;
+	color: #146DB5;
+}
+.onError {
+    background: #F2DEDE;
+    color: #B94A48;
+}
+.onSuccess {
+    background: #DFF0D8;
+    color: #468847;
+}
+.high {
+	float: left;
+	height: 38px;
+	line-height: 38px;
+	width: 30px;
+	margin-left: 10px;
+    color: red;
+}/*登录页面样式 end*/
+/*product thumbnail*/
+#product_thumbs li, #menu_item_thumbs li {
+	width: 160px;
+	height: 120px;
+	float: left;
+	display: inline;
+	margin: 10px 25px 15px 0;
+	position: relative;
+}
+#product_thumbs li .icon-trash, #menu_item_thumbs li .icon-trash {
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+#product_thumbs li img, #menu_item_thumbs li img {
+	width: 160px; 
+	height: 120px;
+}
+.makeload {
+	width: 16px;
+	height: 16px;
+	background: url("../images/loader.gif") no-repeat;
+	display: block;
+	position: absolute;
+	color: #666;
+	left: 40px;
+	top: 50px;
+}
+/*product lists*/
+#product_lists td {
+	text-align: center;
+	vertical-align: middle;
+}
+#del_btn, #edit_btn {
+	display: none;
+}
+.thumbs {
+	padding-left: 20px;
+}
+.small_pre {
+	float: left;
+	display: inline;
+	margin: 5px;
+	width: 50px;
+}
+.spec p {
+	text-indent: 20px;
+}
+.navbar-inner {
+	min-height: 50px;
+}
+.container-fluid {
+	min-height: 50px;
+	padding-top: 10px;
+}
+/* Sidenav for Docs */
+.bs-docs-sidenav {
+	margin: 5px 0 20px;
+	padding: 0;
+	background-color: #fff;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+	-moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, .065);
+}
+.bs-docs-sidenav > li > a {
+	display: block;
+	margin: 0 0 -1px;
+	padding: 8px 14px;
+	border: 1px solid #e5e5e5;
+}
+.bs-docs-sidenav > li:first-child > a {
+	-webkit-border-radius: 6px 6px 0 0;
+	-moz-border-radius: 6px 6px 0 0;
+	border-radius: 6px 6px 0 0;
+}
+.bs-docs-sidenav > li:last-child > a {
+	-webkit-border-radius: 0 0 6px 6px;
+	-moz-border-radius: 0 0 6px 6px;
+	border-radius: 0 0 6px 6px;
+}
+/*Chevrons*/
+.bs-docs-sidenav .icon-chevron-right {
+	float: right;
+	margin-top: 2px;
+	margin-right: -6px;
+	opacity: .25;
+}
+.leftNav {
+    margin-top:30px;
+}
+.city_link {
+    font-size: 12px;
+	margin: 0 8px 0  0; 
+}
+.city_link:hover {
+ 	text-decoration: none;
+}
+.small_a {
+  	font-size: 12px;
+	text-decoration: none;
+}
+.small_a:hover {
+    font-size: 12px;
+    text-decoration: none;
+}
+.w_b_left_bar {
+    z-index: 3000;
+    position: fixed;
+    background-color: #EEEEEE;
+	width: 500px;
+	max-height: 600px;
+	display: none;
+	overflow-x: auto;
+    overflow-y: scroll;
+    border: 1px solid #999;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    *border: 1px solid #999;
+}
+/*菜单列表*/
+.widget_menu {
+}
+.widget_menu .menu_title {
+  	font-size: 18px;
+}
+.widget_menu .menu_category {
+  	font-size: 16px;
+}
+.menu_item_list {
+	font-size: 14px;
+	padding-left: 10px;
+	list-style: none;
+}
+.menu_item_list li {
+	line-height: 2; 
+}
+.item_title .item_title_left {
+	background-color: #FFFFFF;
+	background: url("../images/disc.gif") repeat-x 0 0.7em #fff;  
+	cursor: default;
+}
+.item_title  .left {
+	background-color: #FFFFFF;
+	padding-right: 10px;
+}
+.menu_item_list  li.current .item_title_left {
+	background: url("../images/disc1.gif") repeat-x 0 0.7em #fea62a;  
+	cursor: default; 
+}
+.menu_item_list  li.current .right {
+	background-color: #fea62a;
+}
+.menu_item_list  li.current .left {
+	background-color: #fea62a;
+}
+.item_title .right {
+	padding-left: 10px; 
+	background-color: #FFFFFF;
+	float: right; 
+	display: inline;
+}
+.item_title .count_container {
+	padding-left: 10px; 
+	margin-left: 10px; 
+}
+.menu_item_note {
+	padding-left: 10px; 
+	font-size: 10px;
+	color: #888888;
+}
+.menu_item_select {
+	padding-left: 10px; 
+	font-size: 10px;
+	color: #888888;
+}
+.data_info {
+}
+.booking_state {
+	margin-top: 5px;
+	font-size: 1px;
+}
+.booking_state_link {
+	cursor: pointer;
+}
+.breadcrumb {
+	background-color: #FFFFFF;
+	padding: 20px 0px 0px 0px;
+}
+.page_header_button {
+	padding-top: 10px; 
+}
+a:hover {text-decoration: none;}
+/**/
+.time_item {
+	margin-top: 10px;
+}
+.table_title {
+	font-size: 15px;
+	color: #000000;
+}
+/*订么返回按钮统一样式*/
+.dingmore_return_btn {
+	height: 21px;
+	line-height: 21px;
+	margin-left: 20px;
+	*height: 22px; 
+	*line-height: 22px;
+}
+/*订么分页按钮统一样式*/
+p.dingmore-pageLinks {
+	margin: 20px auto;
+	text-align: center;
+}
+p.dingmore-pageLinks strong, p.dingmore-pageLinks a {
+	background: #F9F9F9;
+	display: inline-block;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	width: 30px;
+	border-radius: 5px;
+}
+p.dingmore-pageLinks strong {/*当前选中项*/
+	background: #ccc;
+}
+p.dingmore-pageLinks a.changedColor {
+	background: #ccc;
+}
+/*日期选择控件*/
+/*注意选择符的权重问题：id>class>tag*/
+input#datepicker_start_time, input#datepicker_end_time {
+	margin-top: 8px; 
+	margin-right: 40px;
+}
+select#booking_item_id, select#status {
+	margin-top: 8px; 
+	width: 127px;
+	*margin-top: 18px;
+}
+/*日期选择错误提示框*/
+#mydatepickerModal .modal-header h3 {
+	font-size: 18px;
+	color: #3A87AD;
+}
+#mydatepickerModal .modal-body {
+	background-color: #F2DEDE;
+	color: #B94A48;
+}
+/*帮助文档*/
+#help-img {
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	margin-top: -4px;
+}

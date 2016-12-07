@@ -18,11 +18,10 @@ public class BaseController {
     @Autowired
     private AbcService service;
 
-    @RequestMapping(value = "/")
-    public String riderTrack(Model model, HttpServletRequest request) {
-            return "index2";
-    }
-
+//    @RequestMapping(value = "/")
+//    public String riderTrack(Model model, HttpServletRequest request) {
+//            return "index2";
+//    }
 
     @RequestMapping(value = "/getBusinessLine", method = RequestMethod.GET)
     @ResponseBody

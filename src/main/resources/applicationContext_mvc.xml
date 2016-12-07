@@ -16,6 +16,9 @@
     <mvc:annotation-driven/>
     <mvc:resources mapping="/images/**" location="/html/" />
     <mvc:resources mapping="/html/**" location="/html/" />
+    <mvc:resources mapping="/css/**" location="/resources/css/" />
+    <mvc:resources mapping="/image/**" location="/resources/image/" />
+    <mvc:resources mapping="/js/**" location="/resources/js/" />
 
     <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
     <bean id="mappingJacksonHttpMessageConverter"
@@ -60,6 +63,31 @@
             <value>4096</value>
         </property>
     </bean>
-
+    
+    
+    
+    <!-- 拦截器 -->
+ 	<mvc:interceptors>  
+  	    <mvc:interceptor>  
+  	       <mvc:mapping path="/**"  /><!-- 如果不配置或/*,将拦截所有的Controller -->
+ 	       <bean class="com.zhsj.intercepter.LoginCookieInterceptor"> 
+ 	           <property name="paths">  
+ 	              <list>
+ 	                 <!-- 静态资源放行 -->
+ 	                 <value>/css/**</value>
+ 	                 <value>/image/**</value>
+ 	                 <value>/js/**</value>
+ 	                 <!-- 页面放行 -->
+ 	                 <value></value>
+ 	                 <!-- 接口放行 -->
+ 	                 <value>/</value>
+ 	                 <value>/user/login</value>
+ 	              </list> 
+               </property>
+ 	       
+ 	       </bean>
+ 	   </mvc:interceptor>
+    </mvc:interceptors> 
+  
 
 </beans>
