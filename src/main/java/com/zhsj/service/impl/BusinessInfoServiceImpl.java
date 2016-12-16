@@ -22,6 +22,8 @@ public class BusinessInfoServiceImpl implements BusinessInfoService {
 	 */
 	@Override
 	public int insert(BusinessInfo businessInfo) throws Exception {
+		businessInfo.setCtime(System.currentTimeMillis());
+		businessInfo.setUtime(System.currentTimeMillis());
 		return businessInfoDao.insert(businessInfo);
 	}
 

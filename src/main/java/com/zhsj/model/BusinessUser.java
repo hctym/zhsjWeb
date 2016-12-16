@@ -1,19 +1,13 @@
 package com.zhsj.model;
 
 import java.io.Serializable;
-/**
- * 
- * @author xulinchuang
- * 用户
- *
- */
-public class BmUser implements Serializable{
+
+public class BusinessUser implements Serializable{
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3867938711318040371L;
-	
+	 * @Fields serialVersionUID : 
+	 */ 
+	private static final long serialVersionUID = -8308258138439371964L;
 	private int id;//主键
 	private String account;//账户：手机号作为登录名
 	private String password;//密码
@@ -21,13 +15,13 @@ public class BmUser implements Serializable{
 	private char gender;//性别 1：男 2：女
 	private String mobile;//手机号
 	private String email;//邮箱
-	private int userGroupId;//用户组id
+	private int  type;//1：店长2：员工
 	private long ctime;//
 	private long utime;//
 	private int isValid;//是否有效 1：有效 0：无效
 	private	int status;//账户状态 0：禁用 1：启用
-	//用于映射
-	private transient UserGroup userGroup;
+	
+	private transient BusinessInfo businessInfo;
 	
 	public int getId() {
 		return id;
@@ -71,11 +65,11 @@ public class BmUser implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getUserGroupId() {
-		return userGroupId;
+	public int getType() {
+		return type;
 	}
-	public void setUserGroupId(int userGroupId) {
-		this.userGroupId = userGroupId;
+	public void setType(int type) {
+		this.type = type;
 	}
 	public long getCtime() {
 		return ctime;
@@ -101,11 +95,14 @@ public class BmUser implements Serializable{
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public UserGroup getUserGroup() {
-		return userGroup;
+	public BusinessInfo getBusinessInfo() {
+		return businessInfo;
 	}
-	public void setUserGroup(UserGroup userGroup) {
-		this.userGroup = userGroup;
+	public void setBusinessInfo(BusinessInfo businessInfo) {
+		this.businessInfo = businessInfo;
 	}
 	
+	
+	
+
 }

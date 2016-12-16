@@ -2,6 +2,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+int id  = (Integer)request.getAttribute("id");
 %>
 
 <!DOCTYPE HTML>
@@ -60,22 +61,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</style>
 	<script type="text/javascript">
 	   $(function(){
-		   //退出
-		   $("#logout").click(function(){
-			   $.post("user/logout",function(data){
-				   if(data.code == 0){
-					   alert("退出成功");
-					   window.location.href="<%=basePath%>";
-				   }else{
-					   alert("退出失败。系统异常");
-				   }
-			   });
-		   });
-		   
 		   $(document).ajaxSend(function(){
-			   alert("数据疯狂加载中..");
+			   alert("数据疯狂加载中111..");
 		   });  
-		   $.post("bmuser/getList?page=1&pageSize=100",function(result){
+		   $.get("businessUser/getbuserBybinfoId?businessInfoId=<%=id%>",{
+		   },function(result){
 			   if(result.code == 0){
 				   var tbody = $("tbody");
 				   var status ="",name="";
@@ -85,10 +75,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					   }else{
 						   status="禁用";
 					   }
-					   if(result.data[i].usersGroup == null){
-						   name = result.data[i].userGroupId;
+					   if(result.data[i].type == 1){
+						   name = "店长";
 					   }else{
-						   name = result.data[i].usersGroup.name;
+						   name = "员工";
 					   }
 					   tbody.append($("<tr>")
 							   .append($("<td>").text(result.data[i].account))
@@ -126,44 +116,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<th style="width:150px;">真实姓名</th>
 									<th style="width:150px;">手机号</th>
 									<th style="width:150px;">邮箱</th>
-									<th style="width:100px;">所属用户组</th>
+									<th style="width:100px;">类型</th>
 									<th style="width:100px;">状态</th>
-									<th style="width:200px;"><span style="float:right"><a href="page/addBmUser" class="btn btn-primary">添加省级用户</a></span></th>
 								</tr>
 							</thead>
 							<tbody>
-<!-- 								<tr> -->
-<!-- 									<td>测试商圈</td> -->
-<!-- 									<td>131950898</td> -->
-<!-- 									<td>河北省</td> -->
-<!-- 									<td><span class="label label-info">省级代理</span></td> -->
-<!-- 									<td><span class="label label-success">正常状态</span></td> -->
-<!-- 									<td></td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td>辽宁省总后台</td> -->
-<!-- 									<td>131402807</td> -->
-<!-- 									<td>辽宁省</td> -->
-<!-- 									<td><span class="label label-info">省级代理</span></td> -->
-<!-- 									<td><span class="label label-success">正常状态</span></td> -->
-<!-- 									<td></td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td>北京总后台</td> -->
-<!-- 									<td>131102788</td> -->
-<!-- 									<td>北京市</td> -->
-<!-- 									<td><span class="label label-info">省级代理</span></td> -->
-<!-- 									<td><span class="label label-success">正常状态</span></td> -->
-<!-- 									<td></td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td>山东省后台</td> -->
-<!-- 									<td>131581849</td> -->
-<!-- 									<td>山东省</td> -->
-<!-- 									<td><span class="label label-info">省级代理</span></td> -->
-<!-- 									<td><span class="label label-success">正常状态</span></td> -->
-<!-- 									<td></td> -->
-<!-- 								</tr> -->
+							<!-- content -->
 							</tbody>
 						</table>
 	                 </div>

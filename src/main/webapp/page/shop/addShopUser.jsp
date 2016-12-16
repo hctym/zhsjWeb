@@ -2,6 +2,8 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+int type = (Integer)request.getAttribute("type");//类型
+int id = (Integer)request.getAttribute("id");//门店id
 %>
 
 <!DOCTYPE HTML>
@@ -89,37 +91,37 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				    alert("输入邮箱");
 			    	return false;
 			   }
-			    $.post("bmuser/add",{
+			    $.post("businessUser/add",{
 			    	account:$("#account").val(),
 			    	password:$("#password").val(),
 			    	name:$("#name").val(),
 			    	gender:$("input[name='gender']:checked").val(),
 			    	mobile:$("#mobile").val(),
 			    	email:$("#email").val(),
-			    	userGroupId:$("#groupid").val()
+			    	type:<%=type%>,
+			    	businessInfoId:<%=id%>
 			    },function(data){
 			    	if(data.code == 0){
-			    		alert("添加用户成功");
-			    		location.href="page/bmUserList";
+			    		alert("添加商家用户成功");
+			    		location.href="page/shopUsers?id=<%=id%>";
 			    	}else{
-			    		alert("添加用户失败");
+			    		alert("添加商家用户失败");
 			    	}
 			    });
 			   
 		   });
 		   
 		   
-		   //获取用户组
 		   
-		   $.post("userGroup/getlist",function(result){
-			   if(result.code == 0){
-				   for(var i in result.data){
-				     $("#groupid").append($("<option>").attr("value",result.data[i].id).text(result.data[i].name));
-				   }
-			   }else{
-				   alert(result.msg);
-			   }
-		   });
+// 		   $.post("userGroup/getlist",function(result){
+// 			   if(result.code == 0){
+// 				   for(var i in result.data){
+// 				     $("#groupid").append($("<option>").attr("value",result.data[i].id).text(result.data[i].name));
+// 				   }
+// 			   }else{
+// 				   alert(result.msg);
+// 			   }
+// 		   });
 		   
 		   
 	   });
@@ -128,11 +130,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 <body>
                  <div class="contentNav">
-                      /&nbsp;&nbsp;<span>添加用户</span>
+                      /&nbsp;&nbsp;<span>添加商家用户</span>
                  </div>
                  <div class="taps nav-tabs">
                      <span class="defaultSel">
-                                                                    添加用户
+                                                                    添加商家用户
                      </span>
                  </div>
                  
@@ -187,20 +189,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								<span class="help-block">输入邮箱</span>
 							</div>
 						</div>
-						<div class="form-group">
-								<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">所属用户组</label>
-								<div class="col-sm-10 col-lg-9 col-xs-12">
-									<select name="provincecode" class="form-control" id="groupid">
-<!-- 										<option value="0">请-选-择</option> -->
-<!-- 										<option value="820000">澳  门</option> -->
-									</select>
-									<span class="help-block">分配用户所属用户组后，该用户会自动拥有此用户组内的模块操作权限
-设置用户组后，系统会根据对应用户组的服务期限对用户的服务开始时间和结束时间进行初始化</span>
-								</div>
-							</div>
 					   <div class="form-group">
 							<div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-1 col-xs-12 col-sm-10 col-md-10 col-lg-11">
-								<input type="submit" id="submit" class="btn btn-primary span3" name="submit" value="确认注册">
+								<input type="submit" id="submit" class="btn btn-primary span3" name="submit" value="添加">
 							</div>
 						</div>
 					</div>

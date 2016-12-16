@@ -2,8 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhsj.dao.BmUserDao">
 
-
-    <insert id="insert" useGeneratedKeys="true">
+    
+    <resultMap type="com.zhsj.model.BmUser" id="bmusers">
+       <id column="id" property="id"/>
+       <result column="account" property="account"/>
+       <result column="mobile" property="mobile"/>
+       <result column="name" property="name"/>
+       <result column="email" property="email"/>
+       <result column="status" property="status"/>
+       <result column="userGroupId" property="userGroupId"/>
+       <association property="userGroup" javaType="com.zhsj.model.UserGroup">
+           <id column="ugId" property="id"/>
+           <result column="ugname" property="name"/>
+       </association>
+   </resultMap>
+   
+   
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
        insert into bmuser (
           account,
           password,
@@ -42,14 +57,26 @@
        select * from bmuser where account = #{account} and password = #{password}
     </select>
 
-
     <select id="getBmUserById" resultType="com.zhsj.model.BmUser">
         select * from bmuser where id = #{id}
     </select>
 
 
-    <select id="getBmUserList" resultType="java.util.List">
-        select * from bmuser limit #{start},#{end}
+    <select id="getBmUserList" resultMap="bmusers">
+        select 
+	        bu.id,
+	        bu.account,
+	        bu.mobile,
+	        bu.name,
+	        bu.email,
+	        bu.status,
+            bu.userGroupId,
+            ug.id ugId,
+            ug.name ugname
+        from bmuser bu
+        left join userGroup ug
+        on bu.userGroupId = ug.id
+        order by bu.ctime desc limit #{start},#{end}
     </select>
     
     

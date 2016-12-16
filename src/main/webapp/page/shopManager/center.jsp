@@ -148,37 +148,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	      <!-- 左导航 -->
 	      <div class="leftnav">
 	          <h5 class="page-header">
-	             <i class="fa fa-briefcase"></i>&nbsp;&nbsp;用户管理
+	             <i class="fa fa-briefcase"></i>&nbsp;&nbsp;门店管理
 	          </h5>
 	          <div class="clearfix">
-					<a href="javascript:void(0)" class="tile " target="right">
-						<span>省级合作商管理</span>
+					<a href="page/shopList" class="tile " target="right">
+						<span>门店管理</span>
 					</a>
-					<a href="javascript:void(0)" class="tile" target="right">
-						<span>用户管理</span>
-					</a>
-					<a href="page/bmUserList" class="tile sel" target="right">
-						<span>添加用户</span>
-					</a>
-					<a href="javascript:void(0)" class="tile" target="right">
-						<span>用户解禁室</span>
+					<a href="page/addShop" class="tile sel" target="right">
+						<span>添加门店</span>
 					</a>
 			  </div>
 			  <h5 class="page-header">
-			      &nbsp;&nbsp;用户组管理
+			      &nbsp;&nbsp;终端商户
 			  </h5>
 			  <div class="clearfix">
-					<a href="page/userGroupList" class="tile" target="right">
-						<span>用户组管理</span>
+					<a href="javascript:void(0)" class="tile" target="right">
+						<span>终端商户管理</span>
 					</a>
-					<a href="page/addUserGroup" class="tile" target="right">
-						<span>添加用户组</span>
+					<a href="javascript:void(0)" class="tile" target="right">
+						<span>粉丝管理</span>
 					</a>
 			  </div>
 	      </div>
 	      <!-- 主要显示内容 -->
 	      <div class="mainContent">
-	         <iframe id="rightIframe" scrolling="no" frameborder="0" src="page/bmUserList" name="right" width="100%" border="0" marginwidth="0" marginheight="0" ></iframe>
+	         <iframe id="rightIframe" scrolling="no" frameborder="0" src="page/addShop" name="right" width="100%" border="0" marginwidth="0" marginheight="0" ></iframe>
 	      </div>
 </body>
 </html>	

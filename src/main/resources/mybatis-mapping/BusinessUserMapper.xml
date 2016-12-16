@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.BusinessUserDao">
+
+
+<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+       insert into businessUser (
+          account,
+          password,
+          name,
+          gender,
+          mobile,
+          email,
+          type,
+          ctime,
+          utime,
+          isValid,
+          status
+       ) values (
+          #{account},
+          #{password},
+          #{name},
+          #{gender},
+          #{mobile},
+          #{email},
+          #{type},
+          #{ctime},
+          #{utime},
+          #{isValid},
+          #{status}
+       )
+    
+    </insert>
+    
+     <!--  通过商户信息查询该商户的所有用户-->
+     <select id="getBusinessUsersByBusinessInfoId" resultType="com.zhsj.model.BusinessUser">
+           select bu.* from 
+           BusinessUser bu left join BusinessInfoUser biu
+           on bu.id = biu.businessUserId where biu.businessInfoId = #{bid}
+     </select>
+     
+     
+     <resultMap type="com.zhsj.model.BusinessUser" id="businessUser">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="name" property="name"/>
+        <result column="gender" property="gender"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="type" property="type"/>
+        <association property="businessInfo" javaType="com.zhsj.model.BusinessInfo">
+                <id column="bid" property="id"/>
+		        <result column="shopName" property="shopName"/>
+		        <result column="shopType" property="shopType"/>
+		        <result column="address" property="address"/>
+		        <result column="contact" property="contact"/>
+		        <result column="contactPhone" property="contactPhone"/>
+		        <result column="intro" property="intro"/>
+		        <result column="status" property="status"/>
+        </association>
+     </resultMap>
+     <!-- 用于商家 商户登录 -->
+     <select id="getUser" resultMap="businessUser">
+          select 
+            bu.*,
+            bi.id bid,
+            bi.shopName shopName, 
+            bi.shopType shopType, 
+            bi.address address, 
+            bi.contact contact, 
+            bi.contact contactPhone, 
+            bi.intro intro, 
+            bi.status status
+          from 
+          businessUser bu left join businessInfoUser biu
+          on bu.id = biu.businessUserId 
+          left join businessInfo bi
+          on biu.businessInfoId = bi.id
+          where bu.account = #{name} and bu.password = #{encrypt}
+     </select>
+</mapper>

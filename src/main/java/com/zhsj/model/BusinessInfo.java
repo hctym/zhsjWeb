@@ -25,6 +25,12 @@ public class BusinessInfo implements Serializable{
 	private String intro;//介绍
 	private int status;//状态0：启用1：禁用2：删除
 	
+	private int iscooperate;//是否是合作母商户 0为否 1为是'
+	private String latitude;//门店维度
+	private String longitude;//门店经度a
+	private int iszx;//支付方式
+	private long ctime;
+	private long utime;
 	
 	public int getId() {
 		return id;
@@ -91,6 +97,42 @@ public class BusinessInfo implements Serializable{
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	public int getIscooperate() {
+		return iscooperate;
+	}
+	public void setIscooperate(int iscooperate) {
+		this.iscooperate = iscooperate;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	public int getIszx() {
+		return iszx;
+	}
+	public void setIszx(int iszx) {
+		this.iszx = iszx;
+	}
+	public long getCtime() {
+		return ctime;
+	}
+	public void setCtime(long ctime) {
+		this.ctime = ctime;
+	}
+	public long getUtime() {
+		return utime;
+	}
+	public void setUtime(long utime) {
+		this.utime = utime;
 	}
 	
 	

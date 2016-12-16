@@ -17,6 +17,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="shortcut icon" href="image/wechat.jpg">
 	<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="js/lib/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/Dutil.js"></script>
 	<style>
 	*{
 	    box-sizing: border-box;
@@ -57,47 +58,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	   margin-top:10px;
 	   border:1px solid #ccc;
 	}
+	td span{
+	  margin-left:10px;
+	  color:#428bca;
+	  cursor:pointer;
+	}
 	</style>
 	<script type="text/javascript">
 	   $(function(){
-		   //退出
-		   $("#logout").click(function(){
-			   $.post("user/logout",function(data){
-				   if(data.code == 0){
-					   alert("退出成功");
-					   window.location.href="<%=basePath%>";
-				   }else{
-					   alert("退出失败。系统异常");
-				   }
-			   });
-		   });
 		   
 		   $(document).ajaxSend(function(){
 			   alert("数据疯狂加载中..");
 		   });  
-		   $.post("bmuser/getList?page=1&pageSize=100",function(result){
+		   $.post("userGroup/getlist",function(result){
 			   if(result.code == 0){
 				   var tbody = $("tbody");
-				   var status ="",name="";
 				   for(var i in result.data){
-					   if(result.data[i].status == 1){
-						   status="启用";
-					   }else{
-						   status="禁用";
-					   }
-					   if(result.data[i].usersGroup == null){
-						   name = result.data[i].userGroupId;
-					   }else{
-						   name = result.data[i].usersGroup.name;
-					   }
+						if(result.data[i].ctime >0 ){
+							   result.data[i].ctime =  new Date(result.data[i].ctime).Format("yyyy-MM-dd hh:mm:ss");
+						}
+						console.log(result.data[i]);
 					   tbody.append($("<tr>")
-							   .append($("<td>").text(result.data[i].account))
+							   .append($("<td>").text(result.data[i].id))
 							   .append($("<td>").text(result.data[i].name))
-							   .append($("<td>").text(result.data[i].mobile))
-							   .append($("<td>").text(result.data[i].email))
-							   .append($("<td>").append($("<span>").attr("class","label label-info").text(name)))
-							   .append($("<td>").append($("<span>").attr("class","label label-success").text(status)))
-							   .append($("<td>")));
+							   .append($("<td>").text(result.data[i].isValid))
+							   .append($("<td>").text(result.data[i].ctime))
+							   .append($("<td>")
+									   .append($("<span>").text("编辑").attr("data-id",result.data[i].id).on("click",function(){
+										   alert($(this).attr("data-id")+"   编辑");
+									   }))
+									   .append($("<span>").text("删除").attr("data-id",result.data[i].id).on("click",function(){
+										   alert($(this).attr("data-id")+"   删除");
+									   }))
+									   .append($("<span>").text("分配模块").attr("data-id",result.data[i].id).on("click",function(){
+// 										   alert($(this).attr("data-id")+"   分配模块");
+                                            window.location.href="page/modules?id="+$(this).attr("data-id");
+									   }))));
 				   }
 			   }else{
 				   alert(result.msg);
@@ -110,11 +106,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <body>
       
                  <div class="contentNav">
-                      /&nbsp;&nbsp;<span>用户列表</span>
+                      /&nbsp;&nbsp;<span>用户组列表</span>
                  </div>
                  <div class="taps nav-tabs">
                      <span class="defaultSel">
-                                                                    用户列表
+                                                                    用户组列表
                      </span>
                  </div>
                  <div class="content">
@@ -122,13 +118,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<table class="table table-hover">
 							<thead class="navbar-inner">
 								<tr>
-									<th style="width:200px;">账户名称</th>
-									<th style="width:150px;">真实姓名</th>
-									<th style="width:150px;">手机号</th>
-									<th style="width:150px;">邮箱</th>
-									<th style="width:100px;">所属用户组</th>
-									<th style="width:100px;">状态</th>
-									<th style="width:200px;"><span style="float:right"><a href="page/addBmUser" class="btn btn-primary">添加省级用户</a></span></th>
+									<th style="width:200px;">用户组id</th>
+									<th style="width:200px;">用户组名称</th>
+									<th style="width:150px;">是否有效</th>
+									<th style="width:150px;">创建时间</th>
+									<th style="width:150px;">操作</th>
 								</tr>
 							</thead>
 							<tbody>

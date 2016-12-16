@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.UserGroupModuleDao">
+
+
+    <insert id="add">
+       insert into userGroupModule (
+          userGroupId,
+          moduleId
+       ) values (
+          #{userGroupId},
+          #{moduleId}
+       )
+    </insert>
+
+
+    <delete id="delete" >
+       delete from UserGroupModule where id = #{id}
+    </delete>
+    
+    
+    <delete id="deleteMultiple">
+        delete from userGroupModule where id in 
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                  #{item}
+            </foreach>
+    </delete>
+    
+    
+    
+    <update id="update">
+      update UserGroupModule set
+           userGroupId = #{userGroupId},
+           moduleId = #{moduleId}
+           where id = #{id}
+    </update>
+    
+    <!-- 查询用户组关联的模块  查询关联的模块ID-->
+    <select id="getModulesByUserGroupId" resultType="com.zhsj.model.UserGroupModule">
+       select ugm.* from userGroupModule ugm where userGroupId = #{userGroupId}
+    </select>
+
+</mapper>

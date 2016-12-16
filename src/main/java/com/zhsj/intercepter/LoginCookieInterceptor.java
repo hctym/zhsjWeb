@@ -4,9 +4,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.zhsj.model.BmUser;
+import com.zhsj.model.BusinessUser;
+import com.zhsj.service.BmUserService;
+import com.zhsj.service.BusinessUserService;
+import com.zhsj.util.AES;
 
 /**
  * 
@@ -16,6 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class LoginCookieInterceptor implements HandlerInterceptor {
 
+	@Autowired
+	private BmUserService bmUserService;
+	@Autowired
+	private BusinessUserService businessUserService;
+	
 	private String[] paths;
 	
 	public String[] getPaths() {
@@ -56,11 +68,29 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 			}
 		}
 		for(Cookie c:cookies){
-			if("loginInfo".equals(c.getName())){
-				return true;
+			if("LI".equals(c.getName())){
+				String value = c.getValue();
+				String[] strs = AES.decrypt(value).split(",");
+				String username = strs[0],md5password = strs[1];
+				if("1".equals(strs[2]) ){
+					BmUser bmUser = bmUserService.getBmUser(username, md5password);
+					if(bmUser != null){
+						request.getSession().setAttribute("user", bmUser);
+						return true;
+					}
+				}else if("2".equals(strs[2])){
+					BusinessUser user = businessUserService.getUser(username, md5password);
+					if(user != null){
+						request.getSession().setAttribute("user", user);
+						return true;
+					}
+				}else{
+					return false;
+				}
+				break;
 			}
 		}
-		response.getWriter().write("<script>parent.location.href=\""+basePath+"\";</script>");
+		response.getWriter().write("<script>parent.parent.location.href=\""+basePath+"\";</script>");
 		return false;
 	}
 

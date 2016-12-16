@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.ModuleDao">
+
+
+    <insert id="add">
+        insert into module (
+	          parentId,
+		      mname,
+		      url,
+		      mdesc,
+		      ctime
+         ) values (
+	          #{parentId},
+		      #{mname},
+		      #{url},
+		      #{mdesc},
+		      #{ctime}
+         )
+    </insert>
+    
+    <update id="update">
+       update module set 
+           parentId = #{parentId},
+           mname = #{mname},
+           url = #{url},
+           mdesc = #{mdesc},
+           ctime = #{ctime}
+           where id = #{id}
+    </update>
+
+    <delete id="delete">
+       delete from module where id = #{id} 
+    </delete>
+    
+    <!-- 通过用户组id获取父模块 -->
+    <select id="getParentModulesByUserGroupId" resultType="com.zhsj.model.Module">
+       select 
+          opm.* 
+        from 
+       module m 
+       left join userGroupModule ugm
+       on m.id = ugm.moduleid
+       left join module tpm
+       on m.parentId = tpm.id
+       left join module opm
+       on tpm.parentId = opm.id 
+       where opm.parentId = 0 and ugm.userGroupId = #{userGroupId}
+    </select>
+    
+    
+    <resultMap type="com.zhsj.model.Module" id="module">
+       <id column="id" property="id"/>
+       <result  column="parentId"  property="parentId"/>
+       <result  column="mname"  property="mname"/>
+       <result  column="url"  property="url"/>
+       <result  column="mdesc"  property="mdesc"/>
+       <result  column="ctime"  property="ctime"/>
+       <collection property="childrenModules" ofType="com.zhsj.model.Module">
+           <id column="cid" property="id"/>
+           <result  column="cparentId"  property="parentId"/>
+	       <result  column="cmname"  property="mname"/>
+	       <result  column="curl"  property="url"/>
+	       <result  column="cmdesc"  property="mdesc"/>
+	       <result  column="cctime"  property="ctime"/>
+       </collection>
+<!--        <collection property="parentModules" ofType="com.zhsj.model.Module" > -->
+<!--            <id column="pid" property="id"/> -->
+<!--            <result  column="pparentId"  property="parentId"/> -->
+<!-- 	       <result  column="pname"  property="name"/> -->
+<!-- 	       <result  column="purl"  property="url"/> -->
+<!-- 	       <result  column="pdesc"  property="desc"/> -->
+<!-- 	       <result  column="pctime"  property="ctime"/> -->
+<!--        </collection> -->
+    </resultMap>
+    <!-- 通过父模块的id 查询二级模块和二级模块对应下的三级模块 -->
+    <select id="getModulesByParentModuleId" resultMap="module">
+      select m.* ,
+            cm.id cid,
+            cm.parentId cparentId,
+            cm.mname cmname,
+            cm.url curl,
+            cm.mdesc cmdesc,
+            cm.ctime cctime
+            from 
+      module m left join module cm 
+      on cm.parentId = m.id 
+      left join UserGroupModule ugm on cm.id = ugm.moduleid
+      where m.parentId = #{moduleId} and ugm.userGroupId = #{userGroupId}
+    </select>
+    
+    <!--所有 模块的映射 -->
+    <resultMap type="com.zhsj.model.Module" id="allModule">
+       <id column="id" property="id"/>
+       <result  column="parentId"  property="parentId"/>
+       <result  column="mname"  property="mname"/>
+       <result  column="url"  property="url"/>
+       <result  column="mdesc"  property="mdesc"/>
+       <result  column="ctime"  property="ctime"/>
+       <collection property="childrenModules" ofType="com.zhsj.model.Module">
+           <id column="twid" property="id"/>
+           <result  column="twparentId"  property="parentId"/>
+	       <result  column="twmname"  property="mname"/>
+	       <result  column="twurl"  property="url"/>
+	       <result  column="twmdesc"  property="mdesc"/>
+	       <result  column="twctime"  property="ctime"/>
+	       <collection property="childrenModules" ofType="com.zhsj.model.Module" >
+	           <id column="thid" property="id"/>
+	           <result  column="thparentId"  property="parentId"/>
+		       <result  column="thmname"  property="mname"/>
+		       <result  column="thurl"  property="url"/>
+		       <result  column="thmdesc"  property="mdesc"/>
+		       <result  column="thctime"  property="ctime"/>
+	       </collection>
+       </collection>
+    </resultMap>
+    <!-- 查询所有的模块 -->
+    <select id="getModules" resultMap="allModule">
+       select 
+          m.*,
+          <!-- 二级 -->
+          twm.id twid,
+          twm.parentId twparentId,
+          twm.mname twmname,
+          twm.url twurl,
+          twm.mdesc twmdesc,
+          twm.ctime twctime,
+          <!-- 三级 -->
+          thm.id thid,
+          thm.parentId thparentId,
+          thm.mname thmname,
+          thm.url thurl,
+          thm.mdesc thmdesc,
+          thm.ctime thctime
+        from 
+	      module m 
+	      left join module twm 
+	      on m.id = twm.parentId 
+	      left join module thm 
+	      on twm.id = thm.parentid
+	      where m.parentId = 0
+    </select>
+    
+    <resultMap type="com.zhsj.model.Module" id="pAllModules">
+       <id column="id" property="id"/>
+       <result  column="parentId"  property="parentId"/>
+       <result  column="mname"  property="mname"/>
+       <result  column="url"  property="url"/>
+       <result  column="mdesc"  property="mdesc"/>
+       <result  column="ctime"  property="ctime"/>
+       <association property="parentModule" javaType="com.zhsj.model.Module">
+               <id column="tid" property="id"/>
+		       <result  column="tparentId"  property="parentId"/>
+		       <result  column="tmname"  property="mname"/>
+		       <result  column="turl"  property="url"/>
+		       <result  column="tmdesc"  property="mdesc"/>
+		       <result  column="tctime"  property="ctime"/>
+               <association property="parentModule" javaType="com.zhsj.model.Module">
+                       <id column="oid" property="id"/>
+				       <result  column="oparentId"  property="parentId"/>
+				       <result  column="omname"  property="mname"/>
+				       <result  column="ourl"  property="url"/>
+				       <result  column="omdesc"  property="mdesc"/>
+				       <result  column="octime"  property="ctime"/>
+               </association>
+       </association>
+    </resultMap>
+    
+    <!-- 通过用户组id查询该用户组关联的模块(子模块关联的二级模块和三级模块)-->
+    <select id="getModulesByUserGroupId" parameterType="java.lang.Integer" resultMap="pAllModules">
+               select 
+                  m.*,
+                  <!-- 二级父模块 -->
+                  tm.id tid,
+		          tm.parentId tparentId,
+		          tm.mname tmname,
+		          tm.url turl,
+		          tm.mdesc tmdesc,
+		          tm.ctime tctime,
+		          tm.id tid,
+		          <!-- 一级父模块 -->
+		          om.id oid,
+		          om.parentId oparentId,
+		          om.mname omname,
+		          om.url ourl,
+		          om.mdesc omdesc,
+		          om.ctime octime
+               from module m 
+               left join userGroupModule ugm
+               on m.id = ugm.moduleId
+               left join module tm 
+               on m.parentId = tm.id
+               left join module om
+               on tm.parentId = om.id
+               where om.parentId = 0 and ugm.userGroupId = #{userGroupId}
+    </select>
+</mapper>

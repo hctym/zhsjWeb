@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 用户和区域的绑定
  *
  */
-public class BmUserGegion implements Serializable{
+public class BmUserRegion implements Serializable{
 
 	/**
 	 * 

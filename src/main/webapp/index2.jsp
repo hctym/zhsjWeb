@@ -35,7 +35,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			border: none;
 			background: url("image/login_submit.png") no-repeat;
 		}
-
+        .loginSelect{
+           display:inline;
+           margin-top:5px;
+           margin-left:5px;
+           font-size:14px;
+           font-weight:bold;
+        }
+        .loginSelect label{
+             line-height: 3;
+             cursor: pointer;
+        }
 	</style>
 </head>
 <body class="login">
@@ -78,7 +88,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<div class="control-group">
 					<label class="control-label"><img src="image/login_pwd.png"></label>
 					<div class="controls">
-						<input type="password" name="password" id="password" class="input-normal bui-form-field" data-rules="{required:true,minlength:1,maxlength:30}" data-messages="{required:'密码不能为空!'}" placeholder="请输入您的密码" style="width:180px;" aria-disabled="false">						</div>
+						<input type="password" name="password" id="password" class="input-normal bui-form-field" data-rules="{required:true,minlength:1,maxlength:30}" data-messages="{required:'密码不能为空!'}" placeholder="请输入您的密码" style="width:180px;" aria-disabled="false">		
+					</div>
+				</div>
+			</div>
+			<!--  -->
+			<div class="row">
+				<div class="control-group">
+					    <div class="loginSelect">
+						   <input type="radio" name="login" value="1" id="admin" checked>
+						   <label for="admin">管理员登录</label>
+						</div>
+						<div class="loginSelect"> 
+						   <input type="radio" name="login" value="2" id="shop">
+						   <label for="shop">商户门店登录</label>
+						</div>
 				</div>
 			</div>
 
@@ -95,9 +119,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	$(function(){
 		
 		$("#submit").on("click",function(){
+			var log = $("input[type='radio']:checked").val();
+			if(log == 1){// bmUser
+				alert("管理员登录");
 				$.post("user/login",{
 					name:$("#username").val(),
-					password:$("#password").val()
+					password:$("#password").val(),
+					login:log
 				},function(data){
 					console.log(data);
 					if(data.code == 1){
@@ -107,6 +135,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						window.location.href="<%=basePath%>main";
 					}
 				});
+			}else if(log == 2){//businessUser
+				alert("商户门店登录");
+				$.post("businessUser/login",{
+					name:$("#username").val(),
+					password:$("#password").val(),
+					login:log
+				},function(data){
+					console.log(data);
+					if(data.code == 1){
+						alert("登录失败");
+						return false;
+					}else if(data.code == 0){
+						window.location.href="<%=basePath%>index";
+					}
+				});
+			}
+// 			return false;
+				
 			
 		});
 		//利用绝对位置，图片总偏移360px

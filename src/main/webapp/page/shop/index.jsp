@@ -1,11 +1,12 @@
-<%@page import="com.zhsj.model.BmUser"%>
+<%@page import="com.zhsj.model.BusinessUser"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-BmUser user = (BmUser)request.getSession().getAttribute("user");
+BusinessUser user = (BusinessUser)request.getSession().getAttribute("user");
 String name = user.getAccount();
-int userGroupId = user.getUserGroupId();
+int type = user.getType();
+int businessInfoId = user.getBusinessInfo().getId();
 %>
 
 <!DOCTYPE HTML>
@@ -224,6 +225,28 @@ int userGroupId = user.getUserGroupId();
 	  overflow:hidden;
 	  display:block;
 	}
+	.contentNav {
+	   background:#f5f5f5;
+       padding:8px 15px;
+       color:#777;
+	}
+	 .taps{
+	   margin-bottom: 20px;
+       border-color: #44b549;
+       padding:10px 10px 10px 0;
+	}
+	.nav-tabs {
+	    border-bottom: 1px solid #ddd;
+	}
+	.defaultSel{
+	   background:#44b549;
+	   color:#fff;
+	   padding:10px;
+	}
+	.content{
+	   margin-top:10px;
+	   border:1px solid #ccc;
+	}
 	</style>
 	<script type="text/javascript">
 	   $(function(){
@@ -248,74 +271,6 @@ int userGroupId = user.getUserGroupId();
 				   }
 			   });
 		   });
-		   
-		   //根据当前用户的用户组加载上边父模块
-		   $.post("module/getParentModulesByUserGroupId",{
-			   userGroupId:<%=userGroupId%>
-		   },function(result){
-			  var arr = result.data,len=arr.length;
-			  for(var i =0;i<len;i++){
-				  if(i==0){
-				     $(".nav ul").append($("<li>").prop("class","active").append($("<a>").prop("href","javascript:void(0)")
-				    		                .attr("data-id",arr[i].id).text(arr[i].mname).on("click",function(){
-                                                left($(this).attr("data-id"));
-                                                $(".nav>ul .active").removeClass("active");
-                      						    $(this).parent("li").addClass("active");
-				    		                })));
-				  }else{
-					 $(".nav ul").append($("<li>").append($("<a>").attr("data-id",arr[i].id)
-							            .prop("href","javascript:void(0)")
-							            .text(arr[i].mname).on("click",function(){
-							            	left($(this).attr("data-id"));
-							            	$(".nav>ul .active").removeClass("active");
-											  $(this).parent("li").addClass("active");
-							            })));
-				  }
-			  }
-			  if(len > 0){
-				  left(arr[0].id);
-			  }
-		   });
-		   
-		   function left(id){
-			   $.post("module/getModuleByModuleIdAndUserGroupId",{
-					  userGroupId:<%=userGroupId%>,
-					  moduleId:id
-				  },function(obj){
-					  var leftnav = $(".leftnav");
-					  leftnav.empty();
-					  var tarr=obj.data,length=tarr.length;
-					  for(var j=0;j<length;j++){
-						  var h5 = $("<h5>").prop("class","page-header")
-						           .html("<i class='fa fa-briefcase'></i>&nbsp;&nbsp;"+ tarr[j].mname);
-						  var clearfix = $("<div>").prop("class","clearfix");
-						  var nlen = tarr[j].childrenModules.length;
-						  for(var n =0;n<nlen;n++){
-							  var a = $("<a>").prop("target","right")
-							                 .append($("<span>").text(tarr[j].childrenModules[n].mname)).on("click",function(){
-									      			   $(".leftnav .sel").removeClass("sel");
-									    			   $(this).addClass("sel");
-							    		   });;
-							  if(n == 0 && j == 0){
-								  a.prop("class","tile sel");
-// 								  if(tarr[j].childrenModules[n].url.length>5){//配有真实的地址
-								      $("iframe").prop("src",tarr[j].childrenModules[n].url);
-// 								  }
-							  }else{
-								  a.prop("class","tile");
-							  }
-							  if(tarr[j].childrenModules[n].url.length>5){
-								  a.prop("href",tarr[j].childrenModules[n].url);
-							  }else{
-								  a.prop("href","javascript:void(0)");
-							  }
-							  clearfix.append(a);
-						  }
-						  leftnav.append(h5).append(clearfix);
-					  }
-				  });
-		   }
-		   
 	   });
 	 
 	</script>
@@ -337,76 +292,40 @@ int userGroupId = user.getUserGroupId();
 	     </div>
 	     <div class="nav">
 	       <ul>
-	           <!-- 上导航 -->
-<!-- 	          <li> -->
-<!-- 	             <a href="page/shopPaySet"  target="center">收款设置</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li > -->
-<!-- 	             <a href="javascript:void(0)"  target="center">流水汇总</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li> -->
-<!-- 	             <a href="javascript:void(0)" target="center">账号设置</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li class="active"> -->
-<!-- 	             <a href="page/userManager" target="center">用户管理</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li> -->
-<!-- 	             <a href="page/shopManager" target="center">门店管理</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li> -->
-<!-- 	             <a href="javascript:void(0)" target="center">收款管理</a> -->
-<!-- 	          </li> -->
-<!-- 	          <li> -->
-<!-- 	             <a href="javascript:void(0)" target="center">商户通管理</a>       -->
-<!-- 	          </li> -->
-<!-- 	          <li> -->
-<!-- 	             <a href="javascript:void(0)" target="center">商场管理</a> -->
-<!-- 	          </li> -->
+	          <li class="active">
+	             <a href="javascript:void(0)" target="center">门店管理</a>      
+	          </li>
 	       </ul>
 	     </div>
 	  </div>
 	  <!-- 主内容 -->
 	  <div class="content">
 	      <div class="leftnav">
-	      <!-- 左导航 -->
-<!-- 	          <h5 class="page-header"> -->
-<!-- 	             <i class="fa fa-briefcase"></i>&nbsp;&nbsp;用户管理 -->
-<!-- 	          </h5> -->
-<!-- 	          <div class="clearfix"> -->
-<!-- 					<a href="javascript:void(0)" class="tile " target="right"> -->
-<!-- 						<span>省级合作商管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="javascript:void(0)" class="tile" target="right"> -->
-<!-- 						<span>用户管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="page/bmUserList" class="tile sel" target="right"> -->
-<!-- 						<span>添加用户</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="javascript:void(0)" class="tile" target="right"> -->
-<!-- 						<span>用户解禁室</span> -->
-<!-- 					</a> -->
-<!-- 			  </div> -->
-<!-- 			  <h5 class="page-header"> -->
-<!-- 			      &nbsp;&nbsp;用户组管理 -->
-<!-- 			  </h5> -->
-<!-- 			  <div class="clearfix"> -->
-<!-- 					<a href="page/userGroupList" class="tile" target="right"> -->
-<!-- 						<span>用户组管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="page/addUserGroup" class="tile" target="right"> -->
-<!-- 						<span>添加用户组</span> -->
-<!-- 					</a> -->
-<!-- 			  </div> -->
+	          <h5 class="page-header">
+	             <i class="fa fa-briefcase"></i>&nbsp;&nbsp;门店管理
+	          </h5>
+	          <div class="clearfix">
+					<a href="page/shopInfo?id=<%=businessInfoId%>" class="tile sel" target="right">
+						<span>门店信息</span>
+					</a>
+					<a href="page/shopUsers?id=<%=businessInfoId %>" class="tile" target="right">
+						<span>门店员工</span>
+					</a>
+					<% if(type == 1){%>
+					<a href="page/addShopUser?type=2&id=<%=businessInfoId %>" class="tile" target="right">
+						<span>添加门店员工</span>
+					</a>
+					<% } %>
+			  </div>
 	      </div>
 	      <!-- 主要显示内容 -->
 	      <div class="mainContent">
-	         <iframe id="rightIframe" scrolling="no" frameborder="0" src="" name="right" width="100%" border="0" marginwidth="0" marginheight="0" ></iframe>
+	         <iframe id="rightIframe" scrolling="no" frameborder="0" src="page/shopInfo?id=<%=businessInfoId%>" name="right" width="100%" border="0" marginwidth="0" marginheight="0" ></iframe>
 	      </div>
 	  </div>
 	  <!-- footer -->
 	  <div class="footer">
 	       <span>万物通科技(北京)有限公司 </span>&nbsp;&nbsp;
-<!-- 	       <span>总部地址:北京市海淀区学清路16号学知轩大厦14层</span> -->
 	  </div>
   </div>
 </body>

@@ -18,5 +18,14 @@ public interface BusinessInfoDao {
 	
 	List<BusinessInfo> getBusinessInfoList(Map<String, Object> map);
 	
+	/**
+	 * 
+	 * @Title: getBusinessInfoByBuId
+	 * @Description: 通过商家用户的id 查询该用户的商家信息
+	 * @param businessUserId
+	 * @return
+	 */
+	BusinessInfo getBusinessInfoByBuId(@Param("businessUserId")int businessUserId);
+	
 	
 }

@@ -37,4 +37,6 @@ public interface BmUserDao {
 	
 	int delete(@Param("id")int id);
 	
+	
+	
 }

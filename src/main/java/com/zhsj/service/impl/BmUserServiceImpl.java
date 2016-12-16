@@ -7,25 +7,29 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.serializer.MapSerializer;
 import com.zhsj.dao.BmUserDao;
+import com.zhsj.dao.BmUserGroupDao;
 import com.zhsj.model.BmUser;
+import com.zhsj.model.BmUserGroup;
 import com.zhsj.service.BmUserService;
+import com.zhsj.util.Md5;
 
 /**
  * 
  * 项目名称：zhsjWeb   
  *
- * 类描述：
+ * 类描述：对用户的操作(crud以及给用户分配角色)
  * 类名称：com.zhsj.service.impl.BmUseServiceImpl     
  * 创建人：xulinchuang
  * 创建时间：2016年12月7日 上午9:39:06
  */
 @Service
-public class BmUseServiceImpl implements BmUserService {
+public class BmUserServiceImpl implements BmUserService {
 	
 	@Autowired
 	private BmUserDao bmUserDao;
+	@Autowired
+	private BmUserGroupDao bmUserGroupDao;
     /**
      * 
      * @see com.zhsj.service.BmUserService#insert(com.zhsj.model.BmUser)
@@ -33,8 +37,10 @@ public class BmUseServiceImpl implements BmUserService {
 	@Override
 	public int insert(BmUser bmUser) throws Exception {
 		bmUser.setIsValid(0);
+		bmUser.setStatus(1);
 		bmUser.setCtime(System.currentTimeMillis());
 		bmUser.setUtime(System.currentTimeMillis());
+		bmUser.setPassword(Md5.encrypt(bmUser.getPassword()));
 		return bmUserDao.insert(bmUser);
 	}
     /**
@@ -56,6 +62,28 @@ public class BmUseServiceImpl implements BmUserService {
 	@Override
 	public BmUser getBmUserById(int id) throws Exception{
 		return bmUserDao.getBmUserById(id);
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.BmUserService#getBmUser(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public BmUser getBmUser(String account, String password) {
+		return bmUserDao.getBmUser(account, password);
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.BmUserService#addOrUpdateUserGroup(com.zhsj.model.BmUserGroup)
+	 */
+	@Override
+	public int addOrUpdateUserGroup(BmUserGroup bmUserGroup) {
+//		BmUserGroup bug = bmUserGroupDao.getBmUserGroupByBmUserId(bmUserGroup.getBmUserId());
+//		if(bug != null)
+		if(bmUserGroup.getId() != 0){
+			return bmUserGroupDao.update(bmUserGroup);
+		}else{
+			return bmUserGroupDao.add(bmUserGroup);
+		}
 	}
        
 }

@@ -82,6 +82,7 @@
  	                 <!-- 接口放行 -->
  	                 <value>/</value>
  	                 <value>/user/login</value>
+ 	                 <value>/businessUser/login</value>
  	              </list> 
                </property>
  	       

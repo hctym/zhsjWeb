@@ -3,13 +3,13 @@ package com.zhsj.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.zhsj.model.BmUser;
+import com.zhsj.model.BmUserGroup;
 import com.zhsj.service.BmUserService;
 import com.zhsj.util.CommonResult;
 /**
@@ -21,7 +21,7 @@ import com.zhsj.util.CommonResult;
  * 创建人：xulinchuang
  * 创建时间：2016年12月7日 上午9:47:34
  */
-@Controller
+@RestController
 @RequestMapping("bmuser")
 public class BmUserController {
 	
@@ -35,11 +35,10 @@ public class BmUserController {
      * @return
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
-    @ResponseBody
     public Object addBmUser(BmUser bmUser){
-    	int id;
+    	
 		try {
-			id = bmUserService.insert(bmUser);
+			int id = bmUserService.insert(bmUser);
 			return CommonResult.success("添加用户成功", id); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,8 +53,7 @@ public class BmUserController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "/getList")
-    @ResponseBody
+    @RequestMapping(value = "/getList",method = RequestMethod.POST)
     public Object getList(int page,int pageSize){
     	try {
 			List<BmUser> list = bmUserService.getList(page, pageSize);
@@ -73,7 +71,6 @@ public class BmUserController {
      * @return
      */
     @RequestMapping(value = "getbmuser/{id}")
-    @ResponseBody
     public Object getBmUser(@PathVariable("id")int id){
     	try {
 			BmUser bmUser = bmUserService.getBmUserById(id);
@@ -82,5 +79,16 @@ public class BmUserController {
 			e.printStackTrace();
 			return CommonResult.defaultError("系统错误");
 		}
+    }
+    
+    /**
+     * 
+     * @Title: addUserGroup
+     * @Description: 给 用户添加用户组(给用户分配角色)
+     * @return
+     */
+    public Object addOrUpdateUserGroup(BmUserGroup bmUserGroup){
+    	bmUserService.addOrUpdateUserGroup(bmUserGroup);
+    	return null;
     }
 }
