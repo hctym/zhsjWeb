@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StoreDiscountDao">
+
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_store_discount (
+	        store_no,
+	        discount_id,
+	        start_time,
+	        end_time,
+	        valid,
+	        utime,
+	        ctime
+         ) values (
+             #{storeNo},
+             #{discountId},
+             #{startTime},
+             #{endTime},
+             #{valid},
+	         #{utime},
+	         #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过商户门店编号 查询总数 (用于分页) -->
+    <select id="getCountByStoreNo" resultType="java.lang.Integer">
+       select count(id) from tb_store_discount where store_no = #{storeNo}
+    </select>
+</mapper>

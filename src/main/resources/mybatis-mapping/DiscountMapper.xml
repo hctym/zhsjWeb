@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.DiscountDao">
+
+    <!-- 添加-->
+    <insert id="add" keyProperty="id">
+        insert into tb_discount (
+	         name,
+	         content,
+	         start_time,
+	         end_time,
+	         valid,
+	         utime,
+	         ctime,
+	         type
+         ) values (
+             #{name},
+             #{content},
+             #{startTime},
+             #{endTime},
+             #{valid},
+	         #{utime},
+	         #{ctime},
+	         #{type}
+         )
+    </insert>
+    
+    <!-- 分页查询列表 -->
+    <select id="getListByPageAndStoreNo" resultType="com.zhsj.model.Discount">
+       select
+         dis.id,
+         dis.name,
+	     dis.content,
+	     dis.start_time startTime,
+	     dis.end_time endTime,
+	     dis.valid,
+	     dis.utime,
+	     dis.ctime,
+	     dis.type
+       from tb_discount dis
+       left join tb_store_discount sd
+       on dis.id = sd.discount_id
+       where sd.store_no = #{storeNo} 
+       limit #{row},#{pageSize}
+    </select>
+    
+</mapper>

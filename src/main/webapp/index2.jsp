@@ -117,41 +117,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript">
 
 	$(function(){
-		
+		function commonResultFunc(obj){
+			if(obj.code == 0){
+				if(obj.data == 0){
+					alert("用户不存在");
+					return false;
+				}else if(obj.data == 1){
+					window.location.href="<%=basePath%>main";
+				}else if(obj.data == 2){
+					alert("密码错误");
+					return false;
+				}
+			}else{
+				alert("系统错误");
+				return false;
+			}
+		}
 		$("#submit").on("click",function(){
 			var log = $("input[type='radio']:checked").val();
-			if(log == 1){// bmUser
-				alert("管理员登录");
-				$.post("user/login",{
+			if(log == 1){// account
+				$.post("account/login",{
 					name:$("#username").val(),
 					password:$("#password").val(),
 					login:log
-				},function(data){
-					console.log(data);
-					if(data.code == 1){
-						alert("登录失败");
-						return false;
-					}else if(data.code == 0){
-						window.location.href="<%=basePath%>main";
-					}
+				},function(obj){
+					commonResultFunc(obj);
 				});
 			}else if(log == 2){//businessUser
-				alert("商户门店登录");
-				$.post("businessUser/login",{
+// 				alert("商户门店登录");
+				$.post("storeAccount/login",{
 					name:$("#username").val(),
 					password:$("#password").val(),
 					login:log
-				},function(data){
-					console.log(data);
-					if(data.code == 1){
-						alert("登录失败");
-						return false;
-					}else if(data.code == 0){
-						window.location.href="<%=basePath%>index";
-					}
+				},function(obj){
+					commonResultFunc(obj);
 				});
 			}
-// 			return false;
 				
 			
 		});

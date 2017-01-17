@@ -9,24 +9,24 @@ import java.util.List;
  * 类描述：模块
  * 类名称：com.zhsj.model.Module     
  * 创建人：xulinchuang
- * 创建时间：2016年12月13日 上午9:49:37
+ * 创建时间：2016年12月28日 上午10:58:21
  */
 public class Module implements Serializable{
 
 	/**
-	 * @Fields serialVersionUID : 
+	 * @Fields serialVersionUID : TODO
 	 */ 
 	private static final long serialVersionUID = 7678414307778373120L;
-	
+
 	private int id;
-	private int parentId;//父id
-	private String mname;//模块名称
-	private String url;//模块url
-	private String mdesc;//描述
-	private long ctime;//
-	
-	private transient List<Module> childrenModules;//用户映射 子模块
-	private transient Module parentModule;//用户映射 父模块
+	private String name;//名称
+	private String url;//url
+	private String parentId;//父模块id
+	private int valid;//1、有效0、无效
+	private long utime;
+	private long ctime;
+	private transient List<Module> childrens;//子节点
+	private transient Module parent;//父节点
 	
 	public int getId() {
 		return id;
@@ -34,32 +34,35 @@ public class Module implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getParentId() {
-		return parentId;
+	public String getName() {
+		return name;
 	}
-	public void setParentId(int parentId) {
-		this.parentId = parentId;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
 	public String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
-	public String getMname() {
-		return mname;
+	public String getParentId() {
+		return parentId;
 	}
-	public void setMname(String mname) {
-		this.mname = mname;
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
-	public String getMdesc() {
-		return mdesc;
+	public int getValid() {
+		return valid;
 	}
-	public void setMdesc(String mdesc) {
-		this.mdesc = mdesc;
+	public void setValid(int valid) {
+		this.valid = valid;
+	}
+	public long getUtime() {
+		return utime;
+	}
+	public void setUtime(long utime) {
+		this.utime = utime;
 	}
 	public long getCtime() {
 		return ctime;
@@ -67,17 +70,18 @@ public class Module implements Serializable{
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
 	}
-	public List<Module> getChildrenModules() {
-		return childrenModules;
+	public List<Module> getChildrens() {
+		return childrens;
 	}
-	public void setChildrenModules(List<Module> childrenModules) {
-		this.childrenModules = childrenModules;
+	public void setChildrens(List<Module> childrens) {
+		this.childrens = childrens;
 	}
-	public Module getParentModule() {
-		return parentModule;
+	public Module getParent() {
+		return parent;
 	}
-	public void setParentModule(Module parentModule) {
-		this.parentModule = parentModule;
+	public void setParent(Module parent) {
+		this.parent = parent;
 	}
+	
 	
 }

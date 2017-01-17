@@ -36,7 +36,9 @@ public class AES {
 	public static String encrypt(String content) {  
         try {             
                 KeyGenerator kgen = KeyGenerator.getInstance("AES");  
-                kgen.init(128, new SecureRandom(KEY.getBytes()));  
+                SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG" );   
+                secureRandom.setSeed(KEY.getBytes());  
+                kgen.init(128, secureRandom);  
                 SecretKey secretKey = kgen.generateKey();  
                 byte[] enCodeFormat = secretKey.getEncoded();  
                 SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");  
@@ -72,7 +74,9 @@ public class AES {
 	public static String decrypt(String content) {  
         try {  
                  KeyGenerator kgen = KeyGenerator.getInstance("AES");  
-                 kgen.init(128, new SecureRandom(KEY.getBytes()));  
+                 SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG" );   
+                 secureRandom.setSeed(KEY.getBytes());  
+                 kgen.init(128, secureRandom);  
                  SecretKey secretKey = kgen.generateKey();  
                  byte[] enCodeFormat = secretKey.getEncoded();  
                  SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");              
@@ -126,8 +130,8 @@ public class AES {
         return result;  
     }  
 	public static void main(String[] args) {
-		String name = "xulinchang";
-		String enString = encrypt(name);
+		String name = "4A8031F12AFCE28A767606CD2BABEB733FA7EECE3508A59C093914B52DF4439CD785861F10484F7888375B746301C7C1";
+		String enString = decrypt(name);
 		System.err.println(enString);
 		System.err.println(decrypt(enString));
 	}

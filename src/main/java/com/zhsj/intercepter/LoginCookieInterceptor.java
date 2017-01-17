@@ -9,11 +9,12 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.zhsj.model.BmUser;
-import com.zhsj.model.BusinessUser;
-import com.zhsj.service.BmUserService;
-import com.zhsj.service.BusinessUserService;
+import com.zhsj.model.Account;
+import com.zhsj.model.StoreAccount;
+import com.zhsj.service.AccountService;
+import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
+
 
 /**
  * 
@@ -23,10 +24,10 @@ import com.zhsj.util.AES;
  */
 public class LoginCookieInterceptor implements HandlerInterceptor {
 
+    @Autowired
+	private AccountService accountService;
 	@Autowired
-	private BmUserService bmUserService;
-	@Autowired
-	private BusinessUserService businessUserService;
+	private StoreAccountService storeAccountService;
 	
 	private String[] paths;
 	
@@ -42,14 +43,12 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest arg0,
 			HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1,
 			Object arg2, ModelAndView arg3) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -67,21 +66,26 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 				return true;
 			}
 		}
+//		if(request.getSession().getAttribute("user") != null){
+//			return true;
+//		}
 		for(Cookie c:cookies){
-			if("LI".equals(c.getName())){
+			if("thor".equals(c.getName())){
 				String value = c.getValue();
 				String[] strs = AES.decrypt(value).split(",");
 				String username = strs[0],md5password = strs[1];
 				if("1".equals(strs[2]) ){
-					BmUser bmUser = bmUserService.getBmUser(username, md5password);
-					if(bmUser != null){
-						request.getSession().setAttribute("user", bmUser);
+					Account account = accountService.getByNameAndMd5Password(username, md5password);
+					if(account != null){
+						request.getSession().setAttribute("user", account);
+						request.getSession().setAttribute("flag", "account");
 						return true;
 					}
 				}else if("2".equals(strs[2])){
-					BusinessUser user = businessUserService.getUser(username, md5password);
-					if(user != null){
-						request.getSession().setAttribute("user", user);
+					StoreAccount storeAccount = storeAccountService.getByNameAndMd5PassWord(username,md5password);
+					if(storeAccount != null){
+						request.getSession().setAttribute("user", storeAccount);
+						request.getSession().setAttribute("flag", "storeAccount");
 						return true;
 					}
 				}else{
@@ -90,7 +94,7 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 				break;
 			}
 		}
-		response.getWriter().write("<script>parent.parent.location.href=\""+basePath+"\";</script>");
+		response.getWriter().write("<script>parent.location.href=\""+basePath+"\";</script>");
 		return false;
 	}
 

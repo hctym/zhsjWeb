@@ -1,6 +1,5 @@
 package com.zhsj.controller;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,74 +9,64 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.zhsj.model.BmUser;
-import com.zhsj.model.BusinessUser;
-import com.zhsj.service.BmUserService;
-import com.zhsj.service.BusinessUserService;
+import com.zhsj.model.Account;
+import com.zhsj.model.StoreAccount;
+import com.zhsj.service.AccountService;
+import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
-
-
 /**
  * 
  * 项目名称：zhsjWeb   
  *
- * 类描述：页面控制
+ * 类描述：页面控制跳转
  * 类名称：com.zhsj.controller.PageController     
  * 创建人：xulinchuang
- * 创建时间：2016年12月7日 下午5:43:55
+ * 创建时间：2016年12月30日 下午5:01:54
  */
 @Controller
 public class PageController {
-
+    
 	@Autowired
-	private BmUserService bmUserService;
+	private AccountService accountService;
 	@Autowired
-	private BusinessUserService businessUserService;
+	private StoreAccountService storeAccountService;
 	/**
 	 * 
-	 * @Title: test
-	 * @Description: TODO
+	 * @Title: index
+	 * @Description: 首页
 	 * @return
 	 */
-	@RequestMapping(value="/page/error",method=RequestMethod.GET)
-	public String test(){
-		return "page/error";
-	}
-	
-	/**
-	 * 
-	 * @param request
-	 * @return 默认首页
-	 */
 	@RequestMapping(value="/",method=RequestMethod.GET)
-	public String index(HttpServletRequest request,HttpServletResponse response){
+	public String index(HttpServletRequest request,
+			HttpServletResponse response) throws Exception{
 		Cookie[] cookies = request.getCookies();
 		for(Cookie cookie:cookies){
-			if("LI".equals(cookie.getName())){
+			if("thor".equals(cookie.getName())){
 				String value = cookie.getValue();
 				String[] strs = AES.decrypt(value).split(",");
 				String username = strs[0],md5password = strs[1],login = strs[2];
 				if("1".equals(login)){
-					BmUser bmUser = bmUserService.getBmUser(username, md5password);
-					if(bmUser != null){
-						request.getSession().setAttribute("user", bmUser);
+					Account account = accountService.getByNameAndMd5Password(username, md5password);
+					if(account != null){
+						request.getSession().setAttribute("user", account);
+						request.getSession().setAttribute("flag", "account");
 						try {
 							response.sendRedirect("main");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						
 					}
+						
 				}else if("2".equals(login)){
-					BusinessUser user = businessUserService.getUser(username, md5password);
-					if(user != null){
-						request.getSession().setAttribute("user", user);
+					StoreAccount storeAccount = storeAccountService.getByNameAndMd5PassWord(username,md5password);
+					if(storeAccount != null){
+						request.getSession().setAttribute("user", storeAccount);
+						request.getSession().setAttribute("flag", "storeAccount");
 						try {
 							response.sendRedirect("main");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						
 					}
 				}else{
 					return "index2";
@@ -87,181 +76,225 @@ public class PageController {
 		}
 		return "index2";
 	}
-	
 	/**
-	 * 管理员登录以后的默认主页面
+	 * 
+	 * @Title: main
+	 * @Description: 主页面
 	 * @return
 	 */
-	@RequestMapping(value="main",method=RequestMethod.GET)
+	@RequestMapping("main")
 	public String main(){
 		return "page/main";
 	}
 	/**
 	 * 
-	 * @Title: shopIndex
-	 * @Description: 商家登录默认首页
-	 * @return
-	 */
-	@RequestMapping(value="index",method=RequestMethod.GET)
-	public String shopIndex(){
-		return "page/shop/index";
-	}
-	/**
-	 * 
-	 * @Title: shopInfo
-	 * @Description: 商家信息
-	 * @return
-	 */
-	@RequestMapping(value="page/shopInfo")
-	public String shopInfo(int id,HttpServletRequest request){
-		request.setAttribute("id", id);
-		return "page/shop/shopInfo";
-	}
-	/**
-	 * 
-	 * @Title: shopUsers
-	 * @Description: 查询该商家下面的用户
-	 * @return
-	 */
-	@RequestMapping(value="page/shopUsers")
-	public String shopUsers(int id,HttpServletRequest request){
-		request.setAttribute("id", id);
-		return "page/shop/shopUsers";
-	}
-	/**
-	 * 
-	 * @Title: addShopUser
-	 * @Description: TODO
-	 * @param type  类型 添加1店长、2员工
-	 * @param id  门店id
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value="page/addShopUser")
-	public String addShopUser(int type,int id,HttpServletRequest request){
-		request.setAttribute("type", type);
-		request.setAttribute("id", id);
-		return "page/shop/addShopUser";
-	}
-	/**
-	 * 
-	 * @Title: userManager
-	 * @Description: 用户管理
-	 * @return
-	 */
-	@RequestMapping("page/userManager")
-	public String waterSummary(){
-		return "page/userManager/center";
-	}
-	/**
-	 * 
-	 * @Title: addbmUser
-	 * @Description: TODO
-	 * @return
-	 */
-	@RequestMapping("page/addBmUser")
-	public String addbmUser(){
-		return "page/userManager/content/addBmUser";
-	}
-	/**
-	 * 
-	 * @Title: bmUserList
-	 * @Description: TODO
-	 * @return
-	 */
-	@RequestMapping("page/bmUserList")
-	public String bmUserList(){
-		return "page/userManager/content/bmUserList";
-	}
-	/**
-	 * 
-	 * @Title: addUserGroup
-	 * @Description: 添加用户组
-	 * @return
-	 */
-	@RequestMapping("page/addUserGroup")
-	public String  addUserGroup(){
-		return "page/userManager/content/addUserGroup";
-	}
-	/**
-	 * 
-	 * @Title: getUserGroups
-	 * @Description: 获取用户组列表
-	 * @return
-	 */
-	@RequestMapping("page/userGroupList")
-	public String getUserGroups(){
-		return "page/userManager/content/userGroupList";
-	}
-	/**
-	 * 
-	 * @Title: modules
-	 * @Description: 给用户组分配模块
+	 * @Title: module
+	 * @Description: 展示所有模块
 	 * @return
 	 */
 	@RequestMapping("page/modules")
-	public String modules(int id,HttpServletRequest request){
+	public String module(int id,HttpServletRequest request){
 		request.setAttribute("id", id);
-		return "page/userManager/content/modules";
+		return "page/userManager/modules";
 	}
 	/**
 	 * 
-	 * @Title: shopManager
-	 * @Description: 门店管理
+	 * @Title: addModule
+	 * @Description: 添加模块
 	 * @return
 	 */
-	@RequestMapping("page/shopManager")
-	public String shopManager(){
-		return "page/shopManager/center";
+	@RequestMapping("page/addModule")
+	public String addModule(){
+		return "page/module/add";
 	}
 	/**
 	 * 
-	 * @Title: addShop
-	 * @Description: 添加门店
+	 * @Title: addRole
+	 * @Description: 添加角色
 	 * @return
 	 */
-	@RequestMapping("page/addShop")
-	public String addShop(){
-		return "page/shopManager/content/addShop";
+	@RequestMapping("page/addRole")
+	public String addRole(){
+		return "page/userManager/addRole";
 	}
 	/**
 	 * 
-	 * @Title: shopList
-	 * @Description: 门店list
+	 * @Title: roleList
+	 * @Description: TODO
 	 * @return
 	 */
-	@RequestMapping("page/shopList")
-	public String shopList(){
-		return "page/shopManager/content/shopList";
+	@RequestMapping("page/roleList")
+	public String roleList(){
+		return "page/userManager/roleList";
 	}
 	/**
 	 * 
-	 * @Title: shopPaySet
-	 * @Description: 收款设置
+	 * @Title: addAccount
+	 * @Description: 添加账户
 	 * @return
 	 */
-	@RequestMapping("page/shopPaySet")
-	public String shopPaySet(){
-		return "page/shopPaySet/center";
+	@RequestMapping("page/addAccount")
+	public String addAccount(){
+		return "page/userManager/addAccount";
 	}
 	/**
 	 * 
-	 * @Title: wechatPay
-	 * @Description: 微信支付
+	 * @Title: addStore
+	 * @Description: 添加门店信息
 	 * @return
 	 */
-	@RequestMapping("page/wechatPay")
-	public  String wechatPay(){
-		return "page/shopPaySet/content/wechatPay";
+	@RequestMapping("page/addStore")
+	public String addStore(String parentNo,HttpServletRequest request){
+		request.setAttribute("parentNo", parentNo);
+		return "page/storeManager/addStore";
 	}
 	/**
 	 * 
-	 * @Title: aliPay
-	 * @Description: 支付宝
+	 * @Title: editStore
+	 * @Description: 编辑门店
+	 * @param id
+	 * @param request
 	 * @return
 	 */
-	@RequestMapping("page/aliPay")
-	public String aliPay(){
-		return "page/shopPaySet/content/aliPay";
+	@RequestMapping("page/editStore")
+	public String editStore(long id,HttpServletRequest request){
+		request.setAttribute("id", id);
+		return "page/storeManager/editStore";
+	}
+	/**
+	 * 
+	 * @Title: addcStore
+	 * @Description: 添加子门店信息
+	 * @return
+	 */
+	@RequestMapping("page/addcStore")
+	public String addcStore(){
+		return "page/storeManager/addcStore";
+	}
+	/**
+	 * 
+	 * @Title: storeList
+	 * @Description: 展示门店列表(商户组织)
+	 * @return
+	 */
+	@RequestMapping("page/storeList")
+	public String storeList(){
+		return "page/storeManager/storeList";
+	}
+	/**
+	 * 
+	 * @Title: stores
+	 * @Description: 门店列表(storeNo)
+	 * @return
+	 */
+	@RequestMapping("page/stores")
+	public String stores(){
+		return "page/storeManager/stores";
+	}
+	/**
+	 * 
+	 * @Title: addStoreAccout
+	 * @Description: 添加门店账户
+	 * @return
+	 */
+	@RequestMapping("page/addStoreAccount")
+	public String addStoreAccout(String storeNo,HttpServletRequest request){
+		request.setAttribute("storeNo", storeNo);
+		return "page/storeManager/addStoreAccount";
+	}
+	/**
+	 * 
+	 * @Title: storeAccountList
+	 * @Description: 某一个商户门店的账户列表
+	 * @param storeNo
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("page/storeAccountList")
+	public String storeAccountList(String storeNo,HttpServletRequest request){
+		request.setAttribute("storeNo", storeNo);
+		return "page/storeManager/storeAccountList";
+	}
+	/**
+	 * 
+	 * @Title: accountList
+	 * @Description: 用户账户列表
+	 * @return
+	 */
+	@RequestMapping("page/accountList")
+	public String accountList(){
+		return "page/userManager/accountList";
+	}
+	/**
+	 * 
+	 * @Title: error
+	 * @Description: 页面不存在的跳转
+	 * @return
+	 */
+	@RequestMapping("page/error")
+	public String error(){
+		return "page/error";
+	}
+	/**
+	 * 
+	 * @Title: orderList
+	 * @Description: 订单
+	 * @return
+	 */
+	@RequestMapping("page/orderList")
+	public String orderList(){
+		return "page/order/list";
+	}
+	/**
+	 * 
+	 * @Title: discountList
+	 * @Description: 优惠列表
+	 * @return
+	 */
+	@RequestMapping("page/discountList")
+	public String discountList(){
+		return "page/discount/list";
+	}
+	/**
+	 * 
+	 * @Title: addDiscount
+	 * @Description: 商户门店 添加优惠
+	 * @return
+	 */
+	@RequestMapping("page/addDiscount")
+	public String addDiscount(){
+		return "page/discount/addDiscount";
+	}
+	/**
+	 * 
+	 * @Title: orgList
+	 * @Description: 组织架构
+	 * @return
+	 */
+	@RequestMapping("page/orgList")
+	public String orgList(){
+		return "page/org/list";
+	}
+	/**
+	 * 
+	 * @Title: addRule
+	 * @Description: 添加规则
+	 * @return
+	 */
+	@RequestMapping("page/addRule")
+	public String addRule(int id,HttpServletRequest request){
+		request.setAttribute("id", id);
+		return "page/discount/addRule";
+	}
+	/**
+	 * 
+	 * @Title: ruleList
+	 * @Description: 规则列表
+	 * @return
+	 */
+	@RequestMapping("page/ruleList")
+	public String ruleList(int id,HttpServletRequest request){
+		request.setAttribute("id", id);
+		return "page/discount/ruleList";
 	}
 }

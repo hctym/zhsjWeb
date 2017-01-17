@@ -78,11 +78,10 @@
  	                 <value>/image/**</value>
  	                 <value>/js/**</value>
  	                 <!-- 页面放行 -->
- 	                 <value></value>
- 	                 <!-- 接口放行 -->
  	                 <value>/</value>
- 	                 <value>/user/login</value>
- 	                 <value>/businessUser/login</value>
+ 	                 <!-- 接口放行 -->
+ 	                 <value>/account/login</value> 
+  	                 <value>/storeAccount/login</value> 
  	              </list> 
                </property>
  	       

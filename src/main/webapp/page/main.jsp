@@ -1,11 +1,31 @@
-<%@page import="com.zhsj.model.BmUser"%>
+<%@page import="com.zhsj.model.Role"%>
+<%@page import="com.zhsj.model.StoreAccount"%>
+<%@page import="com.zhsj.model.Account"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-BmUser user = (BmUser)request.getSession().getAttribute("user");
-String name = user.getAccount();
-int userGroupId = user.getUserGroupId();
+String flag = (String)request.getSession().getAttribute("flag");
+String name = "";
+long id=0;
+int roleId = 0;
+if("account".equals(flag)){
+	Account account = (Account)request.getSession().getAttribute("user");
+	name = account.getName();
+    id = account.getId();
+    Role role = account.getRole();
+    if(role != null){
+       roleId = account.getRole().getId();
+    }
+}else if("storeAccount".equals(flag)){
+	StoreAccount storeAccount = (StoreAccount)request.getSession().getAttribute("user");
+    name = storeAccount.getName();
+    id = storeAccount.getId();
+    Role role = storeAccount.getRole();
+    if(role != null){
+       roleId = storeAccount.getRole().getId();
+    }
+}
 %>
 
 <!DOCTYPE HTML>
@@ -110,6 +130,7 @@ int userGroupId = user.getUserGroupId();
 	    background: #fff !important;
 	    color: #222222 !important;
         line-height: 50px;
+        font-size:1.8em;
 	}
 	.content{
 	    background: #fff;
@@ -132,37 +153,25 @@ int userGroupId = user.getUserGroupId();
 	    float: left;
 	    margin-top: 20px;
 	}
-	.leftnav .page-header {
-	    color: #8d8d8d;
-	    text-align: left;
-	    background: #f5f5f5;
-	    border: 0px;
-	    height: 40px;
-	    line-height: 40px;
-	    font-size: 14px;
-	    margin-left: 0px;
-	    padding-left: 1em;
-	}
-	.leftnav .tile {
-	    background: #fff;
-	    padding: 0px;
-	    padding-left: 40px;
-	    margin: 0px;
-	    height: 40px;
-	    line-height: 40px;
-	    width: 100%;
-	    text-align: left;
-	}
-	.tile {
-	    display: block;
-	    margin: 0.4em;
-	    padding: .2em 1em .5em 1em;
-	    width: 8em;
+	.leftnav ul {
+	    color: #fff;
 	    text-align: center;
-	    background: #EEE;
-	    color: #333;
-	    text-decoration: none;
-    }
+	    height: 40px;
+	    line-height: 40px;
+	    font-size: 20px;
+	    cursor: pointer;
+	    margin: 0 0 10px !important;
+	    list-style: none;
+        text-align: center;
+	}
+	.leftnav ul li {
+	   background: #aaa;
+       margin-bottom: 10px;
+       color:#fff;
+	}
+	.leftnav ul li a{
+	    color: #fff;
+	}
 	.leftnav .sel {
 	    background: #44b549;
 	    color: #fff;
@@ -233,13 +242,14 @@ int userGroupId = user.getUserGroupId();
 			  $(this).addClass("active");
 		   });
 		 //左边导航
-		   $(".clearfix a").on("click",function(){
-			   $(".leftnav .sel").removeClass("sel");
+		   $("#leftUl>li").on("click",function(){
+			   alert(1);
+			   $("#leftUl .sel").removeClass("sel");
 			   $(this).addClass("sel");
 		   });
 		   //退出
 		   $("#logout").click(function(){
-			   $.post("user/logout",function(data){
+			   $.post("account/logout",function(data){
 				   if(data.code == 0){
 					   alert("退出成功");
 					   window.location.href="<%=basePath%>";
@@ -248,73 +258,64 @@ int userGroupId = user.getUserGroupId();
 				   }
 			   });
 		   });
-		   
-		   //根据当前用户的用户组加载上边父模块
-		   $.post("module/getParentModulesByUserGroupId",{
-			   userGroupId:<%=userGroupId%>
-		   },function(result){
-			  var arr = result.data,len=arr.length;
-			  for(var i =0;i<len;i++){
-				  if(i==0){
-				     $(".nav ul").append($("<li>").prop("class","active").append($("<a>").prop("href","javascript:void(0)")
-				    		                .attr("data-id",arr[i].id).text(arr[i].mname).on("click",function(){
-                                                left($(this).attr("data-id"));
-                                                $(".nav>ul .active").removeClass("active");
-                      						    $(this).parent("li").addClass("active");
-				    		                })));
-				  }else{
-					 $(".nav ul").append($("<li>").append($("<a>").attr("data-id",arr[i].id)
-							            .prop("href","javascript:void(0)")
-							            .text(arr[i].mname).on("click",function(){
-							            	left($(this).attr("data-id"));
-							            	$(".nav>ul .active").removeClass("active");
-											  $(this).parent("li").addClass("active");
-							            })));
-				  }
-			  }
-			  if(len > 0){
-				  left(arr[0].id);
-			  }
-		   });
-		   
-		   function left(id){
-			   $.post("module/getModuleByModuleIdAndUserGroupId",{
-					  userGroupId:<%=userGroupId%>,
-					  moduleId:id
-				  },function(obj){
-					  var leftnav = $(".leftnav");
-					  leftnav.empty();
-					  var tarr=obj.data,length=tarr.length;
-					  for(var j=0;j<length;j++){
-						  var h5 = $("<h5>").prop("class","page-header")
-						           .html("<i class='fa fa-briefcase'></i>&nbsp;&nbsp;"+ tarr[j].mname);
-						  var clearfix = $("<div>").prop("class","clearfix");
-						  var nlen = tarr[j].childrenModules.length;
-						  for(var n =0;n<nlen;n++){
-							  var a = $("<a>").prop("target","right")
-							                 .append($("<span>").text(tarr[j].childrenModules[n].mname)).on("click",function(){
-									      			   $(".leftnav .sel").removeClass("sel");
-									    			   $(this).addClass("sel");
-							    		   });;
-							  if(n == 0 && j == 0){
-								  a.prop("class","tile sel");
-// 								  if(tarr[j].childrenModules[n].url.length>5){//配有真实的地址
-								      $("iframe").prop("src",tarr[j].childrenModules[n].url);
-// 								  }
+		   //
+					   $.post("role/getParentModulesByRoleId",{
+						  roleId:<%=roleId%>
+					   },function(result){
+						  var arr = result.data,len=arr.length;
+						  for(var i =0;i<len;i++){
+							  if(i==0){
+							     $(".nav ul").append($("<li>").prop("class","active").append($("<a>").prop("href","javascript:void(0)")
+							    		                .attr("data-id",arr[i].id).text(arr[i].name).on("click",function(){
+			                                                left($(this).attr("data-id"));
+			                                                $(".nav>ul .active").removeClass("active");
+			                      						    $(this).parent("li").addClass("active");
+							    		                })));
 							  }else{
-								  a.prop("class","tile");
+								 $(".nav ul").append($("<li>").append($("<a>").attr("data-id",arr[i].id)
+										            .prop("href","javascript:void(0)")
+										            .text(arr[i].name).on("click",function(){
+										            	left($(this).attr("data-id"));
+										            	$(".nav>ul .active").removeClass("active");
+														  $(this).parent("li").addClass("active");
+										            })));
 							  }
-							  if(tarr[j].childrenModules[n].url.length>5){
-								  a.prop("href",tarr[j].childrenModules[n].url);
-							  }else{
-								  a.prop("href","javascript:void(0)");
-							  }
-							  clearfix.append(a);
 						  }
-						  leftnav.append(h5).append(clearfix);
-					  }
-				  });
-		   }
+						  if(len > 0){
+							  left(arr[0].id);
+						  }
+					   });	
+					   
+					   function left(id){
+						   $.post("module/getModulesByParentModuleIdAndRoleId",{
+								  roleId:<%=roleId%>,
+								  moduleId:id
+							  },function(obj){
+								  var leftnav = $("#leftUl");
+								  leftnav.empty();
+								  var tarr=obj.data,length=tarr.length;
+								  for(var j=0;j<length;j++){
+									  var li;
+									  if(j == 0){
+										   li = $("<li>").prop("class","sel").on("click",function(){ $("#leftUl .sel").removeClass("sel");
+										   $(this).addClass("sel");})
+								           .html("<a href='"+tarr[j].url+"' target='right'><span>"+tarr[j].name+"</span><a/>");
+										   $("#rightIframe").prop("src",tarr[j].url);
+									  }else{
+										   li = $("<li>").on("click",function(){ $("#leftUl .sel").removeClass("sel");
+										   $(this).addClass("sel");})
+								           .html("<a href='"+tarr[j].url+"' target='right'><span>"+tarr[j].name+"</span><a/>"); 
+									  }
+									  leftnav.append(li);
+								  }
+							  });
+					   }
+					   
+					   
+		   //根据当前用户的用户组加载上边父模块
+		     
+		   
+		   
 		   
 	   });
 	 
@@ -368,35 +369,18 @@ int userGroupId = user.getUserGroupId();
 	  <!-- 主内容 -->
 	  <div class="content">
 	      <div class="leftnav">
-	      <!-- 左导航 -->
-<!-- 	          <h5 class="page-header"> -->
-<!-- 	             <i class="fa fa-briefcase"></i>&nbsp;&nbsp;用户管理 -->
-<!-- 	          </h5> -->
-<!-- 	          <div class="clearfix"> -->
-<!-- 					<a href="javascript:void(0)" class="tile " target="right"> -->
-<!-- 						<span>省级合作商管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="javascript:void(0)" class="tile" target="right"> -->
-<!-- 						<span>用户管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="page/bmUserList" class="tile sel" target="right"> -->
-<!-- 						<span>添加用户</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="javascript:void(0)" class="tile" target="right"> -->
-<!-- 						<span>用户解禁室</span> -->
-<!-- 					</a> -->
-<!-- 			  </div> -->
-<!-- 			  <h5 class="page-header"> -->
-<!-- 			      &nbsp;&nbsp;用户组管理 -->
-<!-- 			  </h5> -->
-<!-- 			  <div class="clearfix"> -->
-<!-- 					<a href="page/userGroupList" class="tile" target="right"> -->
-<!-- 						<span>用户组管理</span> -->
-<!-- 					</a> -->
-<!-- 					<a href="page/addUserGroup" class="tile" target="right"> -->
-<!-- 						<span>添加用户组</span> -->
-<!-- 					</a> -->
-<!-- 			  </div> -->
+	         <ul id="leftUl">
+<!-- 	            <li class="sel"> -->
+<!-- 	               <a href="javascript:void(0)" target="right"> -->
+<!-- 	                    <span>省级合作商管理</span> -->
+<!-- 	               </a> -->
+<!-- 	            </li> -->
+<!-- 	            <li> -->
+<!-- 	               <a href="javascript:void(0)"  target="right"> -->
+<!-- 	                    <span>省级合作商管理</span> -->
+<!-- 	               </a> -->
+<!-- 	            </li> -->
+	         </ul>
 	      </div>
 	      <!-- 主要显示内容 -->
 	      <div class="mainContent">

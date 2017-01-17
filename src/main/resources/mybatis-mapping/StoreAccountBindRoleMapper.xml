@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StoreAccountBindRoleDao">
+
+    <!-- 添加-->
+    <insert id="add" keyProperty="id">
+        insert into tb_store_account_bind_role (
+            account_id,
+            role_id,
+            valid,
+            utime,
+            ctime
+         ) values (
+             #{accountId},
+             #{roleId},
+             #{valid},
+             #{utime},
+             #{ctime}
+         )
+    </insert>
+    
+    
+    
+</mapper>
