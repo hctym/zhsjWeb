@@ -1,16 +1,23 @@
 package com.zhsj.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.zhsj.model.Account;
+import com.zhsj.model.AccountBindRole;
 import com.zhsj.model.Module;
 import com.zhsj.model.Role;
+import com.zhsj.model.StoreAccount;
+import com.zhsj.model.StoreAccountBindRole;
 import com.zhsj.service.RoleService;
 import com.zhsj.util.CommonResult;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -125,11 +132,74 @@ public class RoleController {
 			List<Module> modules = roleService.getAllModuleByRoleId(roleId);
 			return CommonResult.success("success", modules);
 		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: getParentModuleByAccount
+	 * @Description: 通过账户获取该用户的额所有父模块
+	 * @return
+	 */
+	@RequestMapping(value="getParentModuleByAccount")
+	public Object getParentModuleByAccount(){
+		Map<String, Object> map = SessionThreadLocal.getSession();
+		String flag = (String)map.get("flag");
+		List<Integer> roleIds = new ArrayList<Integer>();
+		if("account".equals(flag)){
+			Account account = (Account) map.get("user");
+			List<AccountBindRole> accountBindRoles = account.getAccountBindRoles();
+			for(AccountBindRole abr:accountBindRoles){
+				roleIds.add(abr.getRoleId());
+			}
+		}else if("storeAccount".equals(flag)){
+			StoreAccount storeAccount = (StoreAccount) map.get("user");
+			List<StoreAccountBindRole> storeAccountBindRoles  = storeAccount.getStoreAccountBindRoles();
+			for(StoreAccountBindRole sabr:storeAccountBindRoles){
+				roleIds.add(sabr.getRoleId());
+			}
+		}
+		try {
+			List<Module> modules = roleService.getParentModulesByRoleIds(roleIds);
+			return CommonResult.success("success", modules);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: getModulesByPmIdandAccount
+	 * @Description: TODO
+	 * @param moduleId
+	 * @return
+	 */
+	@RequestMapping(value="getModulesByPmIdandAccount")
+	public Object getModulesByPmIdandAccount(int moduleId){
+		Map<String, Object> map = SessionThreadLocal.getSession();
+		String flag = (String)map.get("flag");
+		List<Integer> roleIds = new ArrayList<Integer>();
+		if("account".equals(flag)){
+			Account account = (Account) map.get("user");
+			List<AccountBindRole> accountBindRoles = account.getAccountBindRoles();
+			for(AccountBindRole abr:accountBindRoles){
+				roleIds.add(abr.getRoleId());
+			}
+		}else if("storeAccount".equals(flag)){
+			StoreAccount storeAccount = (StoreAccount) map.get("user");
+			List<StoreAccountBindRole> storeAccountBindRoles  = storeAccount.getStoreAccountBindRoles();
+			for(StoreAccountBindRole sabr:storeAccountBindRoles){
+				roleIds.add(sabr.getRoleId());
+			}
+		}
+		try {
+			List<Module> modules = roleService.getModulesByPmIdAndRoleIds(moduleId,roleIds);
+			return CommonResult.success("success", modules);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return CommonResult.defaultError("fail");
 		}
 	}
-	
-	
 }

@@ -45,4 +45,6 @@ public interface RoleDao {
     
 	void update(Role role);
 	
+	
+	
 }

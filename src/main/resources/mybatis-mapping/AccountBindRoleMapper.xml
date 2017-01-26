@@ -19,4 +19,30 @@
          )
     </insert>
     
+    <!-- 通过用户的id 查询关联角色 -->
+    <select id="getAccountBindRoleListByAccountId" parameterType="java.lang.Integer" 
+                                 resultType="com.zhsj.model.AccountBindRole">
+            select 
+               id,
+               account_id accountId,
+               role_id roleId,
+               valid,
+               utime,
+               ctime
+            from tb_account_bind_role
+            <where>
+              account_id = #{accountId} and valid = 1
+            </where>                      
+    </select>
+    
+    
+    <!-- 根据用户id删除关联的角色 -->
+    <delete id="deleteAllByAccountId" parameterType="java.lang.Integer">
+       delete from tb_account_bind_role 
+       <where>
+            account_id = #{accountId}      
+       </where>
+    </delete>
+    
+    
 </mapper>

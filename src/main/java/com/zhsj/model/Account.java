@@ -1,6 +1,7 @@
 package com.zhsj.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -31,9 +32,8 @@ public class Account implements Serializable{
 	private long ctime;
 	private long utime;
 	//用于映射transient
-	private transient int roleId;
-	private transient Role role;
-	private transient Org org;
+	private transient List<AccountBindRole> accountBindRoles;
+	private transient AccountBindOrg accountBindOrg;
 	
 	
 	public long getId() {
@@ -114,25 +114,17 @@ public class Account implements Serializable{
 	public void setUtime(long utime) {
 		this.utime = utime;
 	}
-	public int getRoleId() {
-		return roleId;
+	public List<AccountBindRole> getAccountBindRoles() {
+		return accountBindRoles;
 	}
-	public void setRoleId(int roleId) {
-		this.roleId = roleId;
+	public void setAccountBindRoles(List<AccountBindRole> accountBindRoles) {
+		this.accountBindRoles = accountBindRoles;
 	}
-	public Role getRole() {
-		return role;
+	public AccountBindOrg getAccountBindOrg() {
+		return accountBindOrg;
 	}
-	public void setRole(Role role) {
-		this.role = role;
+	public void setAccountBindOrg(AccountBindOrg accountBindOrg) {
+		this.accountBindOrg = accountBindOrg;
 	}
-	public Org getOrg() {
-		return org;
-	}
-	public void setOrg(Org org) {
-		this.org = org;
-	}
-	
-	
 
 }

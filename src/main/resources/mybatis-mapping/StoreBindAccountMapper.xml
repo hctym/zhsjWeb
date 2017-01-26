@@ -31,7 +31,9 @@
            sba.utime,
            sba.ctime
        from tb_store_bind_account sba 
-       where sba.store_account_id = #{id}
+       <where>
+           sba.store_account_id = #{id}
+       </where>
     </select>
     
 </mapper>

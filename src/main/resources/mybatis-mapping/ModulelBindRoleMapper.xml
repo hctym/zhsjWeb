@@ -28,4 +28,23 @@
     <delete id="deleteById">
        delete from tb_module_bind_role where id = #{id}
     </delete>
+    
+    
+     <!-- 通过角色 查找 模块id的集合 -->
+    <select id="getModuleByRoleIds" resultType="com.zhsj.model.ModuleBindRole">
+          select 
+            mbr.id id,
+            mbr.role_id roleId,
+            mbr.module_id moduleId,
+            mbr.valid valid,
+            mbr.utime utime,
+            mbr.ctime ctime
+          from tb_module_bind_role mbr
+          <where>
+             mbr.valid = 1 and mbr.role_id in
+            <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+          </where>
+    </select>
 </mapper>

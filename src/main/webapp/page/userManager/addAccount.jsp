@@ -1,14 +1,16 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 long orgId=0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
-	Org org = account.getOrg();
-	if(org != null){
-		orgId = org.getId();
+	Account account = (Account)map.get("user");
+	AccountBindOrg abrOrg = account.getAccountBindOrg();
+	if(abrOrg != null){
+		orgId = abrOrg.getOrgId();
 	}
 }
 %>
@@ -74,10 +76,10 @@ if("account".equals(flag)){
 	<script type="text/javascript">
 	   $(function(){
 		   $("#submit").click(function(){
-			   if($("#account").val() == ''){
-			    	alert("输入账户名称");
-			    	return false;
-			   }
+			   if(($("#account").val()).length != 11){
+					  alert("账号必须为11位的手机号");
+					  return false;
+				} 
 			   if($("#password").val() == ''){
 				    alert("输入密码");
 			    	return false;
@@ -98,24 +100,42 @@ if("account".equals(flag)){
 				    alert("输入邮箱");
 			    	return false;
 			   }
-			    $.post("account/add",{
-			    	orgId:<%=orgId%>,
-			    	account:$("#account").val(),
-			    	password:$("#password").val(),
-			    	name:$("#name").val(),
-			    	gender:$("input[name='gender']:checked").val(),
-			    	mobile:$("#mobile").val(),
-			    	email:$("#email").val(),
-			    	roleId:$("#roleid").val()
-			    },function(data){
-			    	if(data.code == 0){
-			    		alert("添加用户成功");
-// 			    		location.href="page/accountList";
-                        location.reload();
-			    	}else{
-			    		alert("添加用户失败");
-			    	}
-			    });
+			   $.ajax({
+				   url:"account/isRegisterByAccount",
+// 			       async: false,
+			       data:{
+			    	   account:$("#account").val()
+			       },
+			       success:function(result){
+					   console.log(result);
+					   if(result.code == 1){
+						   alert("异常");
+						   return false;
+					   }else if(result.code == 0){
+						   alert("该手机号已经被注册了");
+						   return false;
+					   }else{
+						   $.post("account/add",{
+						    	orgId:<%=orgId%>,
+						    	account:$("#account").val(),
+						    	password:$("#password").val(),
+						    	name:$("#name").val(),
+						    	gender:$("input[name='gender']:checked").val(),
+						    	mobile:$("#mobile").val(),
+						    	email:$("#email").val(),
+						    	roleId:$("#roleid").val()
+						    },function(data){
+						    	if(data.code == 0){
+						    		alert("添加用户成功");
+			                        location.reload();
+						    	}else{
+						    		alert("添加用户失败");
+						    	}
+						    });
+						   
+					   }
+				   }
+			   });
 			   
 		   });
 		   
@@ -135,6 +155,37 @@ if("account".equals(flag)){
 		   });
 		   
 		   
+		   
+// 		   $("#account").blur(function(){
+// 			  if(($(this).val()).length != 11){
+// 				  alert("账号必须为11位的手机号");
+// 				  return false;
+// 			  } 
+// 			  if(!isReg($(this).val())){
+// 				  alert("该手机号已经被注册了");
+// 				  return false;
+// 			  }
+// 		   });
+		   
+// 		   function isReg(account){
+// 			   $.ajax({
+// 				   url:"account/isRegisterByAccount",
+// 			       async: false,
+// 			       data:{
+// 			    	   account:account 
+// 			       },
+// 			       success:function(result){
+// 					   console.log(result);
+// 					   if(result.code == 1){
+// 						   alert("异常");
+// 						   return false;
+// 					   }else if(result.code == 0){
+// 						   alert("该手机号已经被注册了");
+// 						   return false;
+// 					   }
+// 				   }
+// 			   });
+// 		   }
 	   });
 	 
 	</script>

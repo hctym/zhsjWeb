@@ -25,6 +25,9 @@ public class StorePayInfo implements Serializable{
 	private String field2;//
 	private String field3;//
 	private String field4;//
+	private String remark;//
+	private int status;//状态
+	private int valid;//是否有效
 	private long utime;
 	private long ctime;
 	
@@ -76,6 +79,24 @@ public class StorePayInfo implements Serializable{
 	}
 	public void setField4(String field4) {
 		this.field4 = field4;
+	}
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public int getValid() {
+		return valid;
+	}
+	public void setValid(int valid) {
+		this.valid = valid;
 	}
 	public long getUtime() {
 		return utime;

@@ -42,6 +42,13 @@ public interface ModuleDao {
 	   */
 	  List<Module> getModulesByParentModuleIdAndRoleId(@Param("parentModuleId")int parentModuleId,
 			  @Param("roleId")int roleId);
-	  
-	  
+
+	  /**
+	   * 
+	   * @Title: getModulesByCms
+	   * @Description: 通过子模块的ids 查找父模块的集合
+	   * @param array
+	   * @return
+	   */
+	  List<Module> getModulesByCms(Object[] array);
 }

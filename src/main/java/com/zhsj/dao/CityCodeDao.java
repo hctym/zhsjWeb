@@ -23,4 +23,13 @@ public interface CityCodeDao {
      * @return
      */
 	List<CityCode> getListByParentCode(@Param("pCode")String pCode);
+	
+	/**
+	 * 
+	 * @Title: getBycode
+	 * @Description: 通过code  查询cityCode
+	 * @param code
+	 * @return
+	 */
+	CityCode getBycode(@Param("code")String code);
 }

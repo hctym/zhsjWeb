@@ -1,5 +1,6 @@
 package com.zhsj.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,14 @@ public class AccountServiceImpl implements AccountService{
 	 */
 	@Override
 	public Account getByName(String accountName) throws Exception {
-		return accountDao.getByName(accountName);
+		Account account = accountDao.getByName(accountName);
+		if(account != null){
+			List<AccountBindRole> roles = accountBindRoleDao.getAccountBindRoleListByAccountId(account.getId());
+			account.setAccountBindRoles(roles);
+			AccountBindOrg accountBindOrg =accountBindOrgDao.getByAccountId(account.getId());
+			account.setAccountBindOrg(accountBindOrg);
+		}
+		return account;
 	}
 	/**
 	 * 
@@ -81,7 +89,12 @@ public class AccountServiceImpl implements AccountService{
 	 */
 	@Override
 	public Account getByNameAndMd5Password (String username, String md5password) throws Exception {
-		return accountDao.getByNameAndMd5Password(username,md5password);
+		Account account = accountDao.getByNameAndMd5Password(username,md5password);
+		List<AccountBindRole> roles = accountBindRoleDao.getAccountBindRoleListByAccountId(account.getId());
+		account.setAccountBindRoles(roles);
+		AccountBindOrg accountBindOrg =accountBindOrgDao.getByAccountId(account.getId());
+		account.setAccountBindOrg(accountBindOrg);
+		return account;
 	}
 	/**
 	 * 
@@ -103,6 +116,49 @@ public class AccountServiceImpl implements AccountService{
 		map.put("list", list);
 		map.put("count", count);
 		return map;
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.AccountService#getById(long)
+	 */
+	@Override
+	public Account getById(long id) throws Exception {
+		return accountDao.getById(id);
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.AccountService#update(com.zhsj.model.Account)
+	 */
+	@Override
+	public void update(Account account) throws Exception {
+		account.setUtime(System.currentTimeMillis()/1000);
+		accountDao.update(account);
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.AccountService#getRoleIdsByAccountId(int)
+	 */
+	@Override
+	public List<Integer> getRoleIdsByAccountId(
+			int accountId) throws Exception {
+		List<Integer> list = new ArrayList<>();
+		List<AccountBindRole> abRoles = accountBindRoleDao.getAccountBindRoleListByAccountId(accountId);
+		for(AccountBindRole abr:abRoles){
+			list.add(abr.getRoleId());
+		}
+		return list;
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.AccountService#isRegisterByAccount(java.lang.String)
+	 */
+	@Override
+	public boolean isRegisterByAccount(String account) throws Exception {
+		Account  acc = accountDao.getByAccount(account);
+		if(acc != null){
+			return true;
+		}
+		return false;
 	}
 
 }

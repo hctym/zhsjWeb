@@ -1,14 +1,16 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 long orgId=0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
-    Org org = account.getOrg();
-    if(org != null){
-    	orgId = account.getOrg().getId();
+	Account account = (Account)map.get("user");
+	AccountBindOrg abrOrg = account.getAccountBindOrg();
+    if(abrOrg != null){
+    	orgId = abrOrg.getOrgId();
     }
 }
 %>
@@ -144,7 +146,8 @@ if("account".equals(flag)){
 		   function load(page){
 				   $.post("store/getListByOrgId",{
 					   orgId:<%=orgId%>,
-					   status:$("input[name='status']:checked").val(),
+// 					   status:$("input[name='status']:checked").val(),
+                       status:$("#status").val(),
 					   page:page,
 					   pageSize:pageSize
 				   },function(result){
@@ -219,15 +222,20 @@ if("account".equals(flag)){
 		                   <div class="g-left">
 			                    <label>状态</label>
 			                    <div class="time clearfix" >
-			                       <div class="start">
-			                          <label><input type="radio" name="status" value="0" checked />全部</label>
-			                       </div>
-			                       <div class="start">
-			                          <label><input type="radio" name="status" value="1"/>上线</label>
-			                       </div>
-			                       <div class="end">
-			                          <label><input type="radio" name="status" value="2"/>下线</label>
-			                       </div>
+			                        <select id="status" class="form-control">
+			                           <option value="0">全部</option>
+			                           <option value="1">上线</option>
+			                           <option value="2">下线</option>
+			                        </select>
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="status" value="0" checked />全部</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="status" value="1"/>上线</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="end"> -->
+<!-- 			                          <label><input type="radio" name="status" value="2"/>下线</label> -->
+<!-- 			                       </div> -->
 			                    </div>
 		                    </div>
 		                    <div>

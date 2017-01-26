@@ -33,7 +33,8 @@ public class Store implements Serializable{
 	private int valid;//0、无效1、有效
 	private long utime;
 	private long ctime;
-	
+	//2017
+	private transient CityCode cc;
 	
 	public long getId() {
 		return id;
@@ -132,6 +133,13 @@ public class Store implements Serializable{
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
 	}
+	public CityCode getCc() {
+		return cc;
+	}
+	public void setCc(CityCode cc) {
+		this.cc = cc;
+	}
 	
 
+	
 }

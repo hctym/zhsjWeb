@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zhsj.model.Account;
+import com.zhsj.model.AccountBindOrg;
 import com.zhsj.model.Order;
-import com.zhsj.model.Org;
 import com.zhsj.model.StoreAccount;
 import com.zhsj.service.OrderService;
 import com.zhsj.util.CommonResult;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -88,12 +89,12 @@ public class OrderController {
 	public Object getListByPageAndParamOrgId(int page,int pageSize,
 			long startTime,long endTime,int payType,String payMethod,
 			int status,BigDecimal startAmount,BigDecimal endAmount,String orderId,HttpServletRequest request){
-//		long orgId
 		try {
-			Account account = (Account) request.getSession().getAttribute("user");
-			Org org = account.getOrg();
+			Map<String, Object> sessionMap = SessionThreadLocal.getSession();
+			Account account = (Account) sessionMap.get("user");
+			AccountBindOrg accountBindOrg = account.getAccountBindOrg();
 			Map<String, Object> map = orderService.getOrderListByPageAndParamOrgId(page,pageSize,
-					startTime,endTime,payType,payMethod,status,startAmount,endAmount,orderId,org.getId());
+					startTime,endTime,payType,payMethod,status,startAmount,endAmount,orderId,accountBindOrg.getOrgId());
 			return CommonResult.success("success", map);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,9 +122,10 @@ public class OrderController {
 	public Object getListByPageAndParamStoreNo(int page,int pageSize,
 			long startTime,long endTime,int payType,String payMethod,
 			int status,BigDecimal startAmount,BigDecimal endAmount,String orderId,HttpServletRequest request){
-//		String storeNo
 		try {
-			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+//			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+			Map<String, Object> sessionMap = SessionThreadLocal.getSession();
+			StoreAccount storeAccount = (StoreAccount) sessionMap.get("user");
 			Map<String, Object> map = orderService.getOrderListByPageAndParamStoreNo(page, pageSize,
 					startTime, endTime, payType, payMethod, status, startAmount, endAmount, orderId, storeAccount);
 			return CommonResult.success("success", map);

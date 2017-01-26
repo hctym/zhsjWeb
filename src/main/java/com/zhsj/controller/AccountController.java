@@ -1,5 +1,7 @@
 package com.zhsj.controller;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -18,6 +20,7 @@ import com.zhsj.service.AccountService;
 import com.zhsj.util.AES;
 import com.zhsj.util.CommonResult;
 import com.zhsj.util.Md5;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -68,8 +71,10 @@ public class AccountController {
 			if(account != null){
 				if(account.getPassword().equals(Md5.encrypt(password))){
 					code = 1;//登录成功
-					session.setAttribute("user", account);
-					session.setAttribute("flag", "account");
+					Map<String,Object> map = new HashMap<String, Object>();
+					map.put("user", account);
+					map.put("flag", "account");
+					SessionThreadLocal.setSession(map);
 					Cookie cookie = new Cookie("thor",AES.encrypt(name+","+Md5.encrypt(password)+","+login));
 					cookie.setMaxAge(60 * 60 * 24);
 					cookie.setPath("/");
@@ -137,6 +142,76 @@ public class AccountController {
 		try {
 			Map<String, Object> map  = accountService.getList(page,pageSize,orgId);
 			return CommonResult.success("success", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: getById
+	 * @Description: 通过id查询
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="getById")
+	public Object getById(long id){
+		try {
+			Account account = accountService.getById(id);
+			return CommonResult.success("success", account);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: update
+	 * @Description: 更新
+	 * @param account
+	 * @return
+	 */
+	@RequestMapping(value="update")
+	public Object update(Account account){
+		try {
+			accountService.update(account);
+			return CommonResult.success("success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail"); 
+		}
+	}
+	/**
+	 * 
+	 * @Title: getRoleIdsByAccountId
+	 * @Description: 通过用户id  查询角色
+	 * @param accountId
+	 * @return
+	 */
+	@RequestMapping(value="getRoleIdsByAccountId")
+	public Object getRoleIdsByAccountId(int accountId){
+		try {
+			List<Integer> list = accountService.getRoleIdsByAccountId(accountId);
+			return CommonResult.success("success", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	
+	/**
+	 * 
+	 * @Title: isRegisterByAccount
+	 * @Description: 验证用户账号的唯一性
+	 * @param account
+	 * @return
+	 */
+	@RequestMapping(value="isRegisterByAccount")
+	public Object isRegisterByAccount(String account){
+		try {
+			//code 1:异常  0：已被注册了 2：可以注册
+			boolean isReg = accountService.isRegisterByAccount(account);
+			return CommonResult.build(isReg?0:2, "success");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return CommonResult.defaultError("fail");

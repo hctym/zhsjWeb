@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zhsj.model.Store;
 import com.zhsj.model.StoreAccount;
+import com.zhsj.model.StorePayInfo;
 import com.zhsj.service.StoreService;
 import com.zhsj.util.CommonResult;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -91,7 +93,9 @@ public class StoreController {
 	@RequestMapping(value="addc",method=RequestMethod.POST)
 	public Object addc(Store store,HttpServletRequest request){
 		try {
-			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+//			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+			Map<String, Object> map = SessionThreadLocal.getSession();
+			StoreAccount storeAccount = (StoreAccount) map.get("user");
 			int code = storeService.addc(store,storeAccount.getId());
 			return CommonResult.success("success",code);
 		} catch (Exception e) {
@@ -151,9 +155,79 @@ public class StoreController {
 	public Object getListByStoreNo(int page,int pageSize,int status,
 			HttpServletRequest request){
 		try {
-			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+//			StoreAccount storeAccount = (StoreAccount) request.getSession().getAttribute("user");
+			Map<String, Object> sessionMap = SessionThreadLocal.getSession();
+			StoreAccount storeAccount = (StoreAccount) sessionMap.get("user");
 			Map<String, Object> map = storeService.getListByStoreNo(page,pageSize,storeAccount.getId(),status);
 			return CommonResult.success("success", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	
+	/**
+	 * 
+	 * @Title: addPayInfo
+	 * @Description: 添加支付方式
+	 * @param storePayInfo
+	 * @return
+	 */
+	@RequestMapping(value="addPayInfo",method=RequestMethod.POST)
+	public Object addPayInfo(StorePayInfo storePayInfo){
+		try {
+			int code = storeService.addPayInfo(storePayInfo);
+			return CommonResult.success("success", code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: getPayInfoListByStoreNo
+	 * @Description: 获取支付方式list通过StoreNo
+	 * @return
+	 */
+	@RequestMapping(value="getPayInfoListByStoreNo")
+	public Object getPayInfoListByStoreNo(){
+		try {
+			List<StorePayInfo> list = storeService.getPayInfoListByStoreNo();
+			return CommonResult.success("success", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: updateStorePayInfo
+	 * @Description: 更新支付方式
+	 * @param storePayInfo
+	 * @return
+	 */
+	@RequestMapping(value="updateStorePayInfo",method = RequestMethod.POST)
+	public Object updateStorePayInfo(StorePayInfo storePayInfo){
+		try {
+			int code = storeService.updatePayInfo(storePayInfo);
+			return CommonResult.success("success", code);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return CommonResult.defaultError("fail");
+		}
+	}
+	/**
+	 * 
+	 * @Title: getPayInfoByPayInfoId
+	 * @Description: 通过支付方式的id 查询支付方式 用于展示  编辑
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="getPayInfoById")
+	public Object getPayInfoByPayInfoId(int id){
+		try {
+			StorePayInfo storePayInfo = storeService.getPayInfoByPayInfoId(id);
+			return CommonResult.success("success", storePayInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return CommonResult.defaultError("fail");

@@ -1,5 +1,9 @@
 package com.zhsj.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.zhsj.model.AccountBindRole;
 
 /**
@@ -14,4 +18,20 @@ import com.zhsj.model.AccountBindRole;
 public interface AccountBindRoleDao {
 
 	int add(AccountBindRole accountBindRole);
+	/**
+	 * 
+	 * @Title: getAccountBindRoleListByAccountId
+	 * @Description: 通过用户id 查询关联的角色
+	 * @param accountId
+	 * @return
+	 */
+	List<AccountBindRole> getAccountBindRoleListByAccountId(@Param("accountId")long accountId);
+	
+	/**
+	 * 
+	 * @Title: deleteAllByAccountId
+	 * @Description: 通过用户id 删除所有该用户关联的角色
+	 * @param accountId
+	 */
+	void deleteAllByAccountId(@Param("accountId")int accountId);
 }

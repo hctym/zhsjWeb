@@ -89,15 +89,15 @@
        <where>
               ctime &gt;= #{startTime}
               and  ctime  &lt;= #{endTime}
-          <if test="payType != null and payType != '' and payType != 0">
+           <if test="payType != null and payType != '' and payType != 0"> 
               and pay_type = #{payType}
-          </if>
-          <if test="payMethod != null and payMethod != '' and payMethod != 0">
-              and pay_method like "%${payMethod}%"
-          </if>
-          <if test="status != null and status != '' and status != 0">
+           </if> 
+           <if test="payMethod != null and payMethod != '' and payMethod != 0"> 
+              and pay_method = #{payMethod}
+           </if> 
+            <if test="status != 3">  
               and status = #{status}
-          </if>
+            </if> 
           <if test="startAmount != null and startAmount != ''">
               and plan_charge_amount &gt;= #{startAmount}
           </if>
@@ -123,15 +123,15 @@
        <where>
                ctime &gt;= #{startTime}
               and  ctime  &lt;= #{endTime}
-          <if test="payType != null and payType != '' and payType != 0">
+           <if test="payType != null and payType != '' and payType != 0"> 
               and pay_type = #{payType}
-          </if>
-          <if test="payMethod != null and payMethod != '' and payMethod != 0">
-              and pay_method like "%${payMethod}%"
-          </if>
-          <if test="status != null and status != '' and status != 0">
+           </if> 
+           <if test="payMethod != null and payMethod != '' and payMethod != 0"> 
+              and pay_method = #{payMethod}
+           </if> 
+           <if test="status != 3"> 
               and status = #{status}
-          </if>
+           </if> 
           <if test="startAmount != null and startAmount != ''">
               and plan_charge_amount &gt;= #{startAmount}
           </if>
@@ -171,13 +171,13 @@
        <where>
                ctime &gt;= #{startTime}
               and  ctime  &lt;= #{endTime}
-          <if test="payType != null and payType != '' and payType != 0">
+         <if test="payType != null and payType != '' and payType != 0">
               and pay_type = #{payType}
           </if>
           <if test="payMethod != null and payMethod != '' and payMethod != 0">
-              and pay_method like "%${payMethod}%"
+              and pay_method = #{payMethod}
           </if>
-          <if test="status != null and status != '' and status != 0">
+          <if test="status != 3">
               and status = #{status}
           </if>
           <if test="startAmount != null and startAmount != ''">
@@ -211,9 +211,9 @@
               and pay_type = #{payType}
           </if>
           <if test="payMethod != null and payMethod != '' and payMethod != 0">
-              and pay_method like "%${payMethod}%"
+              and pay_method = #{payMethod}
           </if>
-          <if test="status != null and status != '' and status != 0">
+          <if test="status != 3">
               and status = #{status}
           </if>
           <if test="startAmount != null and startAmount != ''">

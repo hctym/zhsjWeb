@@ -2,15 +2,20 @@ package com.zhsj.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zhsj.dao.ModuleBindRoleDao;
+import com.zhsj.dao.ModuleDao;
 import com.zhsj.dao.RoleDao;
 import com.zhsj.model.Module;
+import com.zhsj.model.ModuleBindRole;
 import com.zhsj.model.Role;
 import com.zhsj.service.RoleService;
 
@@ -19,6 +24,10 @@ public class RoleServiceImpl implements RoleService {
 
 	@Autowired
 	private RoleDao roleDao;
+	@Autowired
+	private ModuleBindRoleDao moduleBindRoleDao;
+	@Autowired
+	private ModuleDao moduleDao;
 	
 	/**
 	 * 
@@ -85,6 +94,48 @@ public class RoleServiceImpl implements RoleService {
 	public void update(Role role) throws Exception {
 		 role.setUtime(System.currentTimeMillis()/1000);
 		 roleDao.update(role);
+	}
+    /**
+     * 
+     * @see com.zhsj.service.RoleService#getParentModulesByRoleIds(java.util.List)
+     */
+	@Override
+	public List<Module> getParentModulesByRoleIds(List<Integer> roleIds) throws Exception{
+		List<ModuleBindRole> cModules = moduleBindRoleDao.getModuleByRoleIds(roleIds.toArray());
+		Set<Integer> cmIdset = new HashSet<Integer>();
+		for(ModuleBindRole bmr:cModules){
+			cmIdset.add(bmr.getModuleId());//子模块去重之后的  模块id集合
+		}
+		List<Module> modules = moduleDao.getModulesByCms(cmIdset.toArray());//通过子模块id的集合查找 模块集合
+		Set<Integer> pmIdSet = new HashSet<Integer>();
+		for(Module m:modules){
+			pmIdSet.add(m.getParentId());
+		}
+		List<Module> pModules = moduleDao.getModulesByCms(pmIdSet.toArray());
+		return pModules;
+	}
+    /**
+     * 
+     * @see com.zhsj.service.RoleService#getModulesByPmIdAndRoleIds(int, java.util.List)
+     */
+	@Override
+	public List<Module> getModulesByPmIdAndRoleIds(int moduleId,
+			List<Integer> roleIds) throws Exception{
+		List<Module> cmModules = moduleDao.getModulesByParentMonduleId(moduleId);
+		List<ModuleBindRole> cModules = moduleBindRoleDao.getModuleByRoleIds(roleIds.toArray());
+		Set<Integer> cmIdset = new HashSet<Integer>();
+		for(ModuleBindRole bmr:cModules){
+			cmIdset.add(bmr.getModuleId());//子模块去重之后的  模块id集合
+		}
+		List<Module> cList = new ArrayList<Module>();
+		for(Module m:cmModules){
+			for(Integer i:cmIdset){
+				if(m.getId() == i){
+					cList.add(m);
+				}
+			}
+		}
+		return cList;
 	}
 
 }

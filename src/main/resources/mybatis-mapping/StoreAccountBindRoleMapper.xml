@@ -19,6 +19,21 @@
          )
     </insert>
     
+    <!-- 通过账户id 查询账户和角色的关联list -->
+    <select id="getListByAccountId" parameterType="java.lang.Long" 
+                      resultType="com.zhsj.model.StoreAccountBindRole">
+           select 
+              id,
+              account_id accountId,
+              role_id roleId,
+              valid,
+              utime,
+              ctime
+           from tb_store_account_bind_role
+           <where>
+              valid = 1 and account_id = #{accountId}
+           </where>            
+    </select>
     
     
 </mapper>

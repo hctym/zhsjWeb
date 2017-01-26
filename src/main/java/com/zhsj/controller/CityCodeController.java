@@ -9,7 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zhsj.model.CityCode;
 import com.zhsj.service.CityCodeService;
 import com.zhsj.util.CommonResult;
-
+/**
+ * 
+ * 项目名称：zhsjWeb   
+ *
+ * 类描述：城市编号
+ * 类名称：com.zhsj.controller.CityCodeController     
+ * 创建人：xulinchuang
+ * 创建时间：2017年1月20日 下午2:00:40
+ */
 @RestController
 @RequestMapping("city")
 public class CityCodeController {

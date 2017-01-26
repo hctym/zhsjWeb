@@ -33,8 +33,96 @@
          )
     </insert>
     
+    <!-- 验证用户账号 唯一 -->
+    <select id="getByAccount" parameterType="java.lang.String" resultType="com.zhsj.model.Account">
+            select 
+              a.id,
+	          a.account,
+	          a.password,
+	          a.open_id 'openId',
+	          a.name,
+	          a.head_img 'headImg',
+	          a.gender,
+	          a.mobile,
+	          a.email,
+	          a.status,
+	          a.valid,
+	          a.utime,
+	          a.ctime
+         from tb_account a
+         <where>
+             a.account= #{account}
+         </where>
+    
+    </select>
+    
+    <!-- 通过id查询用户 -->
+    <select id="getById" parameterType="java.lang.Long" resultType="com.zhsj.model.Account">
+         select 
+              a.id,
+	          a.account,
+	          a.password,
+	          a.open_id 'openId',
+	          a.name,
+	          a.head_img 'headImg',
+	          a.gender,
+	          a.mobile,
+	          a.email,
+	          a.status,
+	          a.valid,
+	          a.utime,
+	          a.ctime
+         from tb_account a
+         <where>
+            a.id = #{id}
+         </where>
+    </select>
+    
+    <!-- update account -->
+    <update id="update" parameterType="com.zhsj.model.Account">
+          update tb_account
+          <trim prefix="set" suffixOverrides=",">
+		          <if test="account != null and account != ''">
+		               account = #{account},       
+		          </if>
+		          <if test="password != null and password != ''">
+		              password = #{password},
+		          </if>
+		          <if test="openId != null and openId != ''">
+		              openId = #{openId},
+		          </if>
+		          <if test="name != null and name != ''">
+		              name = #{name},
+		          </if>
+		          <if test="headImg != null and headImg != ''">
+		              head_img = #{headImg},
+		          </if>
+		          <if test="gender != null and gender != ''">
+		              gender = #{gender},
+		          </if>
+		          <if test="mobile != null and mobile != ''">
+		              mobile = #{mobile},
+		          </if>
+		          <if test="email != null and email != ''">
+		              email = #{email},
+		          </if>
+		          <if test="status != null">
+		              status = #{status},
+		          </if>
+		          <if test="valid != null">
+		              valid = #{valid},
+		          </if>
+		          <if test="utime != null and utime != ''">
+		              utime = #{utime},
+		          </if>
+          </trim>
+          <where>
+              id = #{id}
+          </where>
+    </update>
+    
     <!-- 通过用户名和加密的密码查询用户 -->
-    <select id="getByNameAndMd5Password" resultMap="accountRoleOrg">
+    <select id="getByNameAndMd5Password" resultType="com.zhsj.model.Account">
            select 
 	          a.id,
 	          a.account,
@@ -48,40 +136,16 @@
 	          a.status,
 	          a.valid,
 	          a.utime,
-	          a.ctime,
-	          role.role_id rid,
-	          org.org_id oid
+	          a.ctime 
 	       from tb_account a
-	       left join tb_account_bind_role role
-	       on a.id = role.account_id
-	       left join tb_account_bind_org org
-	       on a.id = org.account_id
-           where account = #{username} and password = #{md5password}
+	       <where>
+	          a.account = #{username} and a.password = #{md5password}
+	       </where>
     </select>
     
-    <resultMap type="com.zhsj.model.Account" id="accountRoleOrg">
-       <id column="id" property="id"/>
-       <result column="account" property="account"/>
-       <result column="password" property="password"/>
-       <result column="open_id" property="openId"/>
-       <result column="name" property="name"/>
-       <result column="head_img" property="headImg"/>
-       <result column="gender" property="gender"/>
-       <result column="mobile" property="mobile"/>
-       <result column="email" property="email"/>
-       <result column="status" property="status"/>
-       <result column="valid" property="valid"/>
-       <result column="ctime" property="ctime"/>
-       <result column="utime" property="utime"/>
-       <association property="role"  javaType="com.zhsj.model.Role">
-	       <id column="rid" property="id"/>
-       </association>
-       <association property="org" javaType="com.zhsj.model.Org">
-           <id column="oid" property="id"/>
-       </association>
-    </resultMap>
+    
     <!-- 通过账户名称查询用户 -->
-    <select id="getByName" resultMap="accountRoleOrg">
+    <select id="getByName" resultType="com.zhsj.model.Account">
        select 
           a.id,
           a.account,
@@ -95,15 +159,11 @@
           a.status,
           a.valid,
           a.utime,
-          a.ctime,
-          role.role_id rid,
-          org.org_id oid
+          a.ctime
        from tb_account a
-       left join tb_account_bind_role role
-       on a.id = role.account_id
-       left join tb_account_bind_org org
-       on a.id = org.account_id
-       where a.valid = 1 and a.account = #{accountName} 
+          <where>
+            a.valid = 1 and a.account = #{accountName} 
+          </where>
     </select>
     
     <!-- 通过账户id  获取角色 -->
@@ -116,28 +176,9 @@
        left join tb_account_bind_role abr
        on role.id = abr.role_id where role.valid = 1 and abr.account_id = #{id}
     </select>
-    <!-- accountRole -->
-    <resultMap type="com.zhsj.model.Account" id="accountRole">
-       <id column="id" property="id"/>
-       <result column="account" property="account"/>
-       <result column="password" property="password"/>
-       <result column="open_id" property="openId"/>
-       <result column="name" property="name"/>
-       <result column="head_img" property="headImg"/>
-       <result column="gender" property="gender"/>
-       <result column="mobile" property="mobile"/>
-       <result column="email" property="email"/>
-       <result column="status" property="status"/>
-       <result column="valid" property="valid"/>
-       <result column="ctime" property="ctime"/>
-       <result column="utime" property="utime"/>
-       <association property="role"  javaType="com.zhsj.model.Role">
-	       <id column="cid" property="id"/>
-	       <result column="rname" property="name"/>
-       </association>
-    </resultMap>
     
-    <select id="getListByPage" resultMap="accountRole">
+    <!-- 根据组织查找用户 -->
+    <select id="getListByPage" resultType="com.zhsj.model.Account">
        select 
           a.id,
           a.account,
@@ -151,15 +192,8 @@
           a.status,
           a.valid,
           a.utime,
-          a.ctime,
-          <!--  -->
-          role.id cid,
-          role.name rname
+          a.ctime
         from tb_account a 
-        left join tb_account_bind_role abr
-        on a.id = abr.account_id
-        left join tb_role role
-        on role.id=abr.role_id
         left join tb_account_bind_org ao
         on a.id = ao.account_id
         where ao.org_id = #{orgId} limit #{row},#{pageSize} 

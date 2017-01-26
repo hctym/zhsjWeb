@@ -1,8 +1,10 @@
-<%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 String url = "";
 if("account".equals(flag)){
 	url="order/getListByPageAndParamOrgId";
@@ -99,6 +101,8 @@ if("account".equals(flag)){
 	}
 	.start,.zhi,.end{
 	   float:left;
+	}
+	.orderIdInput,.zhi,.end{
 	   margin-left:10px;
 	}
 	.zhi{
@@ -154,14 +158,14 @@ if("account".equals(flag)){
 			   var options = {
 					   startTime:$("#startTime").val() != ""?(new Date($("#startTime").val()).getTime()/1000):0,
 					   endTime:$("#endTime").val() != ""?(new Date($("#endTime").val()).getTime()/1000):0,
-					   payType:$("input[name=payType]:checked").val(),
-					   payMethod:$("input[name=payMethod]:checked").val(),
-					   status:$("input[name=payStatus]:checked").val(),
+					   payType:$("#payType").val(),
+					   payMethod:$("#payMethod").val(),
+					   status:$("#payStatus").val(),
 					   startAmount:$("#startAmount").val(),
 					   endAmount:$("#endAmount").val(),
 					   orderId:$("#orderId").val()
 			   };
-// 			   console.log($.extend(options,{page:page,pageSize:pageSize}));
+			   console.log($.extend(options,{page:page,pageSize:pageSize}));
 // 			   return false;
 			   $.post('<%=url%>',$.extend(options,{
 				   page:page,
@@ -170,8 +174,6 @@ if("account".equals(flag)){
 				   if(result.code == 0){
 					   $("table").find("tr:not(:first)").remove();
 					   var tbody = $("tbody");
-					   console.log(result);
-// 					   return false;
 					   var list = result.data.list;
 					   for(var i in list){
 							if(list[i].ctime >0 ){
@@ -188,14 +190,14 @@ if("account".equals(flag)){
 								   .append($("<td>").text(list[i].discountId))
 								   .append($("<td>").text(list[i].ctime))
 								   .append($("<td>").text(list[i].status==0?"支付中":list[i].status==1?'支付成功':'支付失败'))
-								   .append($("<td>")
-										   .append($("<span>").text("查看").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   查看");
-										   }))
+// 								   .append($("<td>")
+// 										   .append($("<span>").text("查看").attr("data-id",list[i].id).on("click",function(){
+// 											   alert($(this).attr("data-id")+"   查看");
+// 										   }))
 // 										   .append($("<span>").text("申请退款").attr("data-id",list[i].id).on("click",function(){
 // 											   alert($(this).attr("data-id")+"   申请退款");
 // 										   }))
-										   ));
+										   );
 					   }
 					   if(page == 1){
 						    createPage(pageSize,result.data.count);
@@ -249,46 +251,61 @@ if("account".equals(flag)){
 		                 <div class="group clearfix">
 		                   <div class="g-left">
 			                    <label>支付类型</label>
-			                    <div class="time clearfix" >
-			                       <div class="start">
-			                          <label><input type="radio" name="payType" value="0" checked />全部</label>
-			                       </div>
-			                       <div class="start">
-			                          <label><input type="radio" name="payType" value="1"/>中信</label>
-			                       </div>
-			                       <div class="end">
-			                          <label><input type="radio" name="payType" value="2"/>其他</label>
-			                       </div>
+			                    <div class="time " >
+			                        <select id="payType" class="form-control">
+			                           <option value="0">全部</option>
+			                           <option value="2">民生</option>
+			                        </select>
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="payType" value="0" checked />全部</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="payType" value="1"/>民生</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="end"> -->
+<!-- 			                          <label><input type="radio" name="payType" value="2"/>其他</label> -->
+<!-- 			                       </div> -->
 			                    </div>
 		                    </div>
 		                    <div class="g-right">
 			                    <label>支付方法</label>
-			                    <div class="time clearfix">
-			                       <div class="start">
-			                          <label><input type="radio" name="payMethod" value="0"checked/>全部</label>
-			                       </div>
-			                       <div class="start">
-			                          <label><input type="radio" name="payMethod" value="1"/>微信</label>
-			                       </div>
-			                       <div class="end">
-			                          <label><input type="radio" name="payMethod" value="2"/>支付宝</label>
-			                       </div>
+			                    <div class="time">
+			                           <select id="payMethod" class="form-control">
+			                               <option value="0">全部</option>
+			                               <option value="1">微信</option>
+			                               <option value="2">支付宝</option>
+			                           </select>
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="payMethod" value="0"checked/>全部</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="payMethod" value="1"/>微信</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="end"> -->
+<!-- 			                          <label><input type="radio" name="payMethod" value="2"/>支付宝</label> -->
+<!-- 			                       </div> -->
 			                    </div>
 		                    </div>
 		                 </div>
 		                 <div class="group clearfix">
 		                     <div class="g-left">
 				                    <label>支付状态</label>
-				                    <div class="time clearfix">
-				                       <div class="start">
-				                          <label><input type="radio" name="payStatus" value="0" checked/>支付中</label>
-				                       </div>
-				                       <div class="start">
-				                          <label><input type="radio" name="payStatus" value="1" />支付成功</label>
-				                       </div>
-				                       <div class="end">
-				                          <label><input type="radio" name="payStatus" value="2" />支付失败</label>
-				                       </div>
+				                    <div class="time">
+				                           <select id="payStatus" class="form-control">
+				                               <option value="3">全部</option>
+				                               <option value="0">支付中</option>
+				                               <option value="1">支付成功</option>
+				                               <option value="2">支付失败</option>
+				                           </select>
+<!-- 				                       <div class="start"> -->
+<!-- 				                          <label><input type="radio" name="payStatus" value="0" checked/>支付中</label> -->
+<!-- 				                       </div> -->
+<!-- 				                       <div class="start"> -->
+<!-- 				                          <label><input type="radio" name="payStatus" value="1" />支付成功</label> -->
+<!-- 				                       </div> -->
+<!-- 				                       <div class="end"> -->
+<!-- 				                          <label><input type="radio" name="payStatus" value="2" />支付失败</label> -->
+<!-- 				                       </div> -->
 				                    </div>
 		                    </div>
 		                    <div class="g-right">
@@ -308,7 +325,7 @@ if("account".equals(flag)){
 		                    <div class="g-left">
 			                    <label>订单号</label>
 			                    <div class="time">
-			                       <div class="start">
+			                       <div class="start orderIdInput" >
 			                          <input type="text" class="form-control" id="orderId" style="width:300px"/>
 			                       </div>
 			                    </div>
@@ -336,7 +353,6 @@ if("account".equals(flag)){
 									<th style="width:100px;">优惠类型</th>
 									<th style="width:200px;">交易时间</th>
 									<th style="width:100px;">交易状态</th>
-									<th style="width:200px;">操作</th>
 								</tr>
 							</thead>
 							<tbody>

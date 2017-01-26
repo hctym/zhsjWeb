@@ -1,9 +1,11 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 long id = (Long)request.getAttribute("id");
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 String url = "";
 if("account".equals(flag)){
 	url="page/storeList";
@@ -79,7 +81,11 @@ if("account".equals(flag)){
 		     },function(result){
 		    	 if(result.code == 0){
 		    		    var obj =result.data;
+		    		    console.log(obj);
 		    		    $("#name").val(obj.name);
+		    		    if(obj.cc != null){
+		    		    	$("#province").empty().append($("<option>").val(obj.cc.code).text(obj.cc.name));
+		    		    }
 	                    $("#cityCode").val(obj.cityCode);//test
 				    	$("#address").val(obj.address);
 				    	$("#phone").val(obj.phone);
@@ -87,10 +93,51 @@ if("account".equals(flag)){
 				    	$("#latitude").val(obj.latitude/1000000);
 				    	$("#longitude").val(obj.longitude/1000000);
 				    	$("#intro").val(obj.intro);
+				    	loadCity(0,$("#province"));
 		    	 }else{
 		    		 alert(result.msg);
 		    	 }
 		     });
+		     
+		     
+		     
+		       //编辑
+				function loadCity(code,pobj){
+					$.post("city/getListByCode",{
+						code:code
+					},function(result){
+						console.log(result);
+						if(result.code ==0){
+							var ctys = result.data;
+							pobj.find("option:not(:first)").remove();
+							for(var i in ctys){
+								pobj.append($("<option>").attr("value",ctys[i].code).text(ctys[i].name));
+							}
+						}else{
+							alert(result.msg);
+						}
+					});
+				}
+
+				$("#province").change(function(){
+					if($(this).val() != "0"){
+						loadCity($(this).val(),$("#city"));
+						$("#city").css("display","block");
+					}else{
+						$("#city").css("display","none").find("option:not(:first)").remove();
+					}
+						$("#county").css("display","none").find("option:not(:first)").remove();
+				});
+				$("#city").change(function(){
+					if($(this).val() != "0"){
+						loadCity($(this).val(),$("#county"));
+						$("#county").css("display","block");
+					}else{
+						$("#county").css("display","none").find("option:not(:first)").remove();
+					}
+				});
+		     
+		     
 		   $("#submit").click(function(){
 			   if($("#name").val() == ''){
 			    	alert("输入账户名称");
@@ -116,15 +163,16 @@ if("account".equals(flag)){
 				    alert("输入介绍");
 			    	return false;
 			   }
-// 			   if(($("#latitude").val()).indexOf(".") != -1 && ($("#longitude").val()).indexOf(".") != -1){
-// 				   $("#latitude").val(($("#latitude").val())*1000000);
-// 				   $("#longitude").val(($("#longitude").val())*1000000);
-// 			   }
+			    var cityCode = $("#county").val() != 0?$("#county").val():$("#city").val()!=0?$("#city").val():$("#province").val();
+				if(cityCode == 0){
+					alert("请选择城市");
+					return false;
+				}
 			   
 			    $.post("store/update",{
 			    	id:<%=id%>,
 			    	name:$("#name").val(),
-                    cityCode:$("#cityCode").val(),//test
+                    cityCode:cityCode,//test
 			    	address:$("#address").val(),
 			    	phone:$("#phone").val(),
 			    	shopLogo:$("#shopLogo").val(),
@@ -143,9 +191,6 @@ if("account".equals(flag)){
 		   });
 		   
 		   
-		   
-		   
-		   
 	   });
 	 
 	</script>
@@ -156,7 +201,7 @@ if("account".equals(flag)){
                  </div>
                  <div class="taps nav-tabs">
                      <span class="defaultSel">
-                                                                    添加门店
+                                                                    编辑门店
                      </span>
                  </div>
                  
@@ -174,15 +219,19 @@ if("account".equals(flag)){
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">
-						城市编号
-					</label>
-					<div class="col-sm-8 col-lg-9 col-xs-12">
-						<input type="text" class="form-control" id="cityCode" value="" placeholder="城市编号">
-						<div class="help-block">
-							请填写城市编号
+						<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">城市</label>
+						<div class="col-sm-8 col-lg-9 col-xs-12">
+							<select class="form-control" id="province">
+							   <option value="0">请选择</option>
+							</select>
+							<select class="form-control" id="city" style="display:none;">
+							   <option value="0">请选择</option>
+							</select>
+							<select class="form-control" id="county" style="display:none;">
+							   <option value="0">请选择</option>
+							</select>
+							
 						</div>
-					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">
@@ -448,3 +497,8 @@ if("account".equals(flag)){
                  </div>
 </body>
 </html>	
+<script type="text/javascript">
+  $(function(){
+	  
+  })
+</script>

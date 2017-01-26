@@ -1,14 +1,16 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 long orgId=0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
-    Org org = account.getOrg();
-    if(org != null){
-    	orgId = account.getOrg().getId();
+	Account account = (Account)map.get("user");
+	AccountBindOrg abrOrg = account.getAccountBindOrg();
+    if(abrOrg != null){
+    	orgId = abrOrg.getOrgId();
     }
 }
 %>
@@ -117,6 +119,8 @@ if("account".equals(flag)){
 						defaultOrgId = p.id;
 						$.fn.zTree.init($("#tree"), setting, data);  
 					}
+					
+					console.log(p);
                     $("#editOrgId").val(p.id);
                     $("#eorgname").val(p.name);
                     $("#eorgcontactPhone").val(p.contactPhone);
@@ -129,7 +133,9 @@ if("account".equals(flag)){
                     }else{
                     	$($("input[name=eisAllow]")[1]).prop("checked","true");
                     }
-					
+                    if(p.cityCode != null){
+                    	$("#eprovince").empty().append($("<option>").val(p.cityCode.code).text(p.cityCode.name));
+                    }
 					$("#curorg_name").text(p.name);//显示组织名称
 				}else{
 					alert(result.msg);
@@ -179,7 +185,7 @@ if("account".equals(flag)){
 				cityId:cityCode,
 				isAllow:$("input[name=isAllow]:checked").val()
 			},function(result){
-				console.log(result);
+// 				console.log(result);
 				if(result.code == 0){
 					alert("添加组织成功!");
 					location.reload();
@@ -202,14 +208,17 @@ if("account".equals(flag)){
 				alert("联系电话不允许为空");
 				return false;
 			}
-// 			var cityCode = $("#county").val() != 0?$("#county").val():$("#city").val()!=0?$("#city").val():$("#province").val();
-// 			if(cityCode == 0){
-// 				alert("请选择城市");
-// 				return false;
-// 			}
+			var cityCode = $("#ecounty").val() != 0?$("#ecounty").val():$("#ecity").val()!=0?$("#ecity").val():$("#eprovince").val();
+			if(cityCode == 0){
+				alert("请选择城市");
+				return false;
+			}
+// 			console.log(cityCode);
+// 			return false;
 			$.post("org/update",{
 				id:$("#editOrgId").val(),
 				name:$("#eorgname").val(),
+				cityId:cityCode,
 				contactPhone:$("#eorgcontactPhone").val(),
 				email:$("#eorgemail").val(),
 				isAllow:$("input[name=eisAllow]:checked").val()
@@ -226,7 +235,7 @@ if("account".equals(flag)){
 		
 		
 		 var page = 1;
-		   var pageSize = 2;
+		   var pageSize = 10;
 		   load(page);
 		   
 		   function createPage(pageSize, total) {
@@ -275,25 +284,9 @@ if("account".equals(flag)){
 								   .append($("<td>").text(list[i].gender==1?'男':'女'))
 								   .append($("<td>").text(list[i].mobile))
 								   .append($("<td>").text(list[i].email))
-								   .append($("<td>").text(list[i].role != null ?list[i].role.name:'没有角色'))
 								   .append($("<td>").text(list[i].status==1?'启用':'禁用'))
 								    .append($("<td>").text(list[i].valid==1?'有效':'无效'))
-								   .append($("<td>").text(list[i].ctime))
-								   .append($("<td>")
-										   .append($("<span>").text("编辑").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   编辑");
-										   }))
-										   .append($("<span>").text("删除").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   删除");
-										   }))
-										   .append($("<span>").text("分配角色").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   分配角色");
-//	                                             window.location.href="page/modules?id="+$(this).attr("data-id");
-										   }))
-										   .append($("<span>").text("查看角色").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   查看角色");
-//	                                             window.location.href="page/modules?id="+$(this).attr("data-id");
-										   }))));
+								   .append($("<td>").text(list[i].ctime)));
 					   }
 					   if(page == 1){
 						    createPage(pageSize,result.data.count);
@@ -463,21 +456,20 @@ if("account".equals(flag)){
 										<span class="help-block">请输入邮箱</span>
 									</div>
 								</div>
-<!-- 								<div class="form-group"> -->
-<!-- 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">城市</label> -->
-<!-- 									<div class="col-sm-10 col-lg-9 col-xs-12"> -->
-<!-- 										<select class="form-control" id="province"> -->
-<!-- 										   <option value="0">请选择</option> -->
-<!-- 										</select> -->
-<!-- 										<select class="form-control" id="city" style="display:none;"> -->
-<!-- 										   <option value="0">请选择</option> -->
-<!-- 										</select> -->
-<!-- 										<select class="form-control" id="county" style="display:none;"> -->
-<!-- 										   <option value="0">请选择</option> -->
-<!-- 										</select> -->
-										
-<!-- 									</div> -->
-<!-- 								</div> -->
+								<div class="form-group" id="eCityCode">
+									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">城市</label>
+									<div class="col-sm-10 col-lg-9 col-xs-12">
+										<select class="form-control" id="eprovince">
+										   <option value="0">请选择</option>
+										</select>
+										<select class="form-control" id="ecity" style="display:none;">
+										   <option value="0">请选择</option>
+										</select>
+										<select class="form-control" id="ecounty" style="display:none;">
+										   <option value="0">请选择</option>
+										</select>
+									</div>
+								</div>
 								<div class="form-group">
 									<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">是否允许招商</label>
 									<div class="col-sm-10 col-lg-9 col-xs-12">
@@ -574,11 +566,9 @@ if("account".equals(flag)){
 									<th style="width:50px;">性别</th>
 									<th style="width:100px;">手机</th>
 									<th style="width:100px;">邮箱</th>
-									<th style="width:100px;">角色</th>
-									<th style="width:100px;">状态</th>
-									<th style="width:50px;">是否有效</th>
+									<th style="width:50px;">状态</th>
+									<th style="width:100px;">是否有效</th>
 									<th style="width:100px;">创建时间</th>
-									<th style="width:200px;">操作</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -632,23 +622,44 @@ $("#submit").click(function(){
 				    alert("输入邮箱");
 			    	return false;
 			   }
-			    $.post("account/add",{
-			    	orgId:obj.id,
-			    	account:$("#account").val(),
-			    	password:$("#password").val(),
-			    	name:$("#name").val(),
-			    	gender:$("input[name='gender']:checked").val(),
-			    	mobile:$("#mobile").val(),
-			    	email:$("#email").val(),
-			    	roleId:$("#roleid").val()
-			    },function(data){
-			    	if(data.code == 0){
-			    		alert("添加用户成功");
-			    		location.href="page/accountList";
-			    	}else{
-			    		alert("添加用户失败");
-			    	}
-			    });
+			   $.ajax({
+				   url:"account/isRegisterByAccount",
+			       async: false,
+			       data:{
+			    	   account:account 
+			       },
+			       success:function(result){
+					   console.log(result);
+					   if(result.code == 1){
+						   alert("异常");
+						   return false;
+					   }else if(result.code == 0){
+						   alert("该手机号已经被注册了");
+						   return false;
+					   }else{
+						   $.post("account/add",{
+						    	orgId:obj.id,
+						    	account:$("#account").val(),
+						    	password:$("#password").val(),
+						    	name:$("#name").val(),
+						    	gender:$("input[name='gender']:checked").val(),
+						    	mobile:$("#mobile").val(),
+						    	email:$("#email").val(),
+						    	roleId:$("#roleid").val()
+						    },function(data){
+						    	if(data.code == 0){
+						    		alert("添加用户成功");
+// 						    		location.href="page/accountList";
+                                    location.reloade();
+						    	}else{
+						    		alert("添加用户失败");
+						    	}
+						    });
+						   
+					   }
+				   }
+			   });
+			    
 			   
 		   });
 		   
@@ -667,7 +678,7 @@ $("#submit").click(function(){
 			   }
 		   });
 		   
-
+            //添加
 		    loadCity(0,$("#province"));
 			function loadCity(code,pobj){
 				$.post("city/getListByCode",{
@@ -701,6 +712,43 @@ $("#submit").click(function(){
 					$("#county").css("display","block");
 				}else{
 					$("#county").css("display","none").find("option:not(:first)").remove();
+				}
+			});
+			
+			//编辑
+			loadCity(0,$("#eprovince"));
+			function loadCity(code,pobj){
+				$.post("city/getListByCode",{
+					code:code
+				},function(result){
+					console.log(result);
+					if(result.code ==0){
+						var ctys = result.data;
+						pobj.find("option:not(:first)").remove();
+						for(var i in ctys){
+							pobj.append($("<option>").attr("value",ctys[i].code).text(ctys[i].name));
+						}
+					}else{
+						alert(result.msg);
+					}
+				});
+			}
+
+			$("#eprovince").change(function(){
+				if($(this).val() != "0"){
+					loadCity($(this).val(),$("#ecity"));
+					$("#ecity").css("display","block");
+				}else{
+					$("#ecity").css("display","none").find("option:not(:first)").remove();
+				}
+					$("#ecounty").css("display","none").find("option:not(:first)").remove();
+			});
+			$("#ecity").change(function(){
+				if($(this).val() != "0"){
+					loadCity($(this).val(),$("#ecounty"));
+					$("#ecounty").css("display","block");
+				}else{
+					$("#ecounty").css("display","none").find("option:not(:first)").remove();
 				}
 			});
 

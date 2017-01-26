@@ -33,4 +33,13 @@ public interface ModuleBindRoleDao {
 	 * @return
 	 */
 	int deleteAllByRoleId(int roleId);
+	
+	/**
+	 * 
+	 * @Title: getModuleByRoleIds
+	 * @Description: 通过角色的集合 查找对应的 模块集合
+	 * @param objects
+	 * @return
+	 */
+	List<ModuleBindRole> getModuleByRoleIds(Object[] objects);
 }

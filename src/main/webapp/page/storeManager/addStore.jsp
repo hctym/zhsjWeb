@@ -1,14 +1,16 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 long orgId=0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
-    Org org = account.getOrg();
-    if(org != null){
-    	orgId = account.getOrg().getId();
+	Account account = (Account)map.get("user");
+	AccountBindOrg abrOrg = account.getAccountBindOrg();
+    if(abrOrg != null){
+    	orgId = abrOrg.getOrgId();
     }
 }
 String parentNo = (String)request.getAttribute("parentNo");

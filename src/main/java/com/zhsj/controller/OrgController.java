@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -71,16 +70,7 @@ public class OrgController {
 	@RequestMapping(value="getOrgById")
 	public Object getOrgById(HttpServletRequest request,int id){
 		try {
-//			String flag = (String)request.getSession().getAttribute("flag");
 			Org org = null;
-//			if("account".equals(flag)){
-//				Account account = (Account)request.getSession().getAttribute("user");
-//			    long id = 1;
-//			    Org org1 = account.getOrg();
-//			    if(org1 != null){
-//			    	id = org1.getId();
-//			    }
-//			}
 		    org = orgService.getOrgById(id);
 			return CommonResult.success("success",org);
 		} catch (Exception e) {
@@ -98,7 +88,7 @@ public class OrgController {
 	@RequestMapping(value="update")
 	public Object update(Org org){
 		try {
-			int code = orgService.update(org);
+		    orgService.update(org);
 			return CommonResult.success("success");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1,5 +1,8 @@
 package com.zhsj.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.zhsj.model.Account;
 import com.zhsj.model.StoreAccount;
 import com.zhsj.service.AccountService;
 import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -48,8 +53,10 @@ public class PageController {
 				if("1".equals(login)){
 					Account account = accountService.getByNameAndMd5Password(username, md5password);
 					if(account != null){
-						request.getSession().setAttribute("user", account);
-						request.getSession().setAttribute("flag", "account");
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("user", account);
+						map.put("flag", "account");
+						SessionThreadLocal.setSession(map);
 						try {
 							response.sendRedirect("main");
 						} catch (Exception e) {
@@ -60,8 +67,10 @@ public class PageController {
 				}else if("2".equals(login)){
 					StoreAccount storeAccount = storeAccountService.getByNameAndMd5PassWord(username,md5password);
 					if(storeAccount != null){
-						request.getSession().setAttribute("user", storeAccount);
-						request.getSession().setAttribute("flag", "storeAccount");
+						Map<String, Object> map = new HashMap<String,Object>();
+						map.put("user", storeAccount);
+						map.put("flag", "storeAccount");
+						SessionThreadLocal.setSession(map);
 						try {
 							response.sendRedirect("main");
 						} catch (Exception e) {
@@ -129,6 +138,20 @@ public class PageController {
 	}
 	/**
 	 * 
+	 * @Title: showRoleByAccountId
+	 * @Description: 通过用户的id 查看该用户当前的角色
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("page/showRoleByAccountId")
+	public ModelAndView showRoleByAccountId(long id){
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("id", id);
+		mv.setViewName("page/userManager/showRoleBy");
+		return mv;
+	}
+	/**
+	 * 
 	 * @Title: addAccount
 	 * @Description: 添加账户
 	 * @return
@@ -136,6 +159,21 @@ public class PageController {
 	@RequestMapping("page/addAccount")
 	public String addAccount(){
 		return "page/userManager/addAccount";
+	}
+	/**
+	 * 
+	 * @Title: editAccount
+	 * @Description: TODO
+	 * @param id
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("page/editAccount")
+	public ModelAndView editAccount(long id){
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("id", id);
+		mv.setViewName("page/userManager/editAccount");
+		return mv;
 	}
 	/**
 	 * 
@@ -296,5 +334,50 @@ public class PageController {
 	public String ruleList(int id,HttpServletRequest request){
 		request.setAttribute("id", id);
 		return "page/discount/ruleList";
+	}
+	/**
+	 * 
+	 * @Title: qrCode
+	 * @Description: 二维码
+	 * @return
+	 */
+	@RequestMapping("page/qrCode")
+	public String qrCode(){
+		return "page/qrCode/qrCode";
+	}
+	/**
+	 * 
+	 * @Title: payStyle
+	 * @Description: 支付方式
+	 * @return
+	 */
+	@RequestMapping("page/payStyle")
+	public String payStyle(){
+		return "page/pay/payStyle";
+	}
+	/**
+	 * 
+	 * @Title: addPayInfo
+	 * @Description: 添加支付方式
+	 * @return
+	 */
+	@RequestMapping("page/addPayInfo")
+	public String addPayInfo(){
+		return "page/pay/addPayInfo";
+	}
+	
+	/**
+	 * 
+	 * @Title: editPayInfo
+	 * @Description: 编辑支付方式
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("page/editPayInfo")
+	public ModelAndView editPayInfo(int id){
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("id", id);
+		mv.setViewName("page/pay/editPayInfo");
+		return mv;
 	}
 }

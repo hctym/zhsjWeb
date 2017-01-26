@@ -1,5 +1,7 @@
 package com.zhsj.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhsj.model.AccountBindOrg;
 
 /**
@@ -14,4 +16,13 @@ import com.zhsj.model.AccountBindOrg;
 public interface AccountBindOrgDao {
 
 	int add(AccountBindOrg accountBindOrg);
+	/**
+	 * 
+	 * @Title: getByAccountId
+	 * @Description: 通过用户的id 查询账户和组合的关联
+	 * @param accountId
+	 * @return
+	 */
+	AccountBindOrg getByAccountId(@Param("accountId")long accountId);
+	
 }

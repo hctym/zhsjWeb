@@ -28,6 +28,15 @@ public interface AccountDao {
      * @return
      */
 	Account getByName(@Param("accountName")String accountName);
+	
+	/**
+	 * 
+	 * @Title: getByAccount
+	 * @Description: 通过账号  验证是否 该手机号已被注册
+	 * @param account
+	 * @return
+	 */
+	Account getByAccount(@Param("account")String account);
 	/**
 	 * 
 	 * @Title: getByNameAndMd5Password
@@ -64,4 +73,19 @@ public interface AccountDao {
 	 * @return
 	 */
 	int getCount(@Param("orgId")long orgId);
+	/**
+	 * 
+	 * @Title: getById
+	 * @Description: 通过id查询用户
+	 * @param id
+	 * @return
+	 */
+	Account getById(@Param("id")long id);
+	/**
+	 * 
+	 * @Title: update
+	 * @Description: 更新用户
+	 * @param account
+	 */
+	void update(Account account);
 }

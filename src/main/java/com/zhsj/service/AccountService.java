@@ -1,5 +1,6 @@
 package com.zhsj.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.zhsj.model.Account;
@@ -59,4 +60,41 @@ public interface AccountService {
      * @return
      */
 	Map<String, Object> getList(int page, int pageSize,long orgId) throws Exception;
+	
+	/**
+	 * 
+	 * @Title: getById
+	 * @Description: 通过id 查询
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	Account getById(long id) throws Exception;
+	/**
+	 * 
+	 * @Title: update
+	 * @Description: 更新
+	 * @param account
+	 * @throws Exception
+	 */
+	void update(Account account) throws Exception;
+	/**
+	 * 
+	 * @Title: getRoleIdsByAccountId
+	 * @Description: 通过用户的id  查询关联角色id集合
+	 * @param accountId
+	 * @return
+	 * @throws Exception
+	 */
+	List<Integer> getRoleIdsByAccountId(int accountId) throws Exception;
+	
+	/**
+	 * 
+	 * @Title: isRegisterByAccount
+	 * @Description:手机号是否注册
+	 * @param account
+	 * @return
+	 * @throws Exception
+	 */
+	boolean isRegisterByAccount(String account) throws Exception;
 }

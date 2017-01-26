@@ -1,9 +1,11 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.zhsj.model.StoreAccount"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-StoreAccount storeAccount = (StoreAccount)request.getSession().getAttribute("user");
+Map<String,Object> map = SessionThreadLocal.getSession();
+StoreAccount storeAccount = (StoreAccount)map.get("user");
 long id = storeAccount.getId();
 %>
 

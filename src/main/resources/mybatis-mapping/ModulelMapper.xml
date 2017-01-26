@@ -24,10 +24,18 @@
     <!-- 通过父模块的id 查询父模块下面的子模块集合 -->
     <select id="getModulesByParentMonduleId" parameterType="java.lang.Integer" 
                        resultType="com.zhsj.model.Module">
-              select 
+              select
+                module.id, 
                 module.name,
-                module.url 
-              from tb_module module where module.parent_id = #{parntId}
+                module.url,
+                module.parent_id parentId,
+                module.valid valid,
+                module.utime,
+                module.ctime
+              from tb_module module 
+              <where>
+                  module.valid = 1 and module.parent_id = #{parntId} 
+              </where>
     </select>
     
     <!-- resultMap映射 -->
@@ -79,5 +87,24 @@
         where m.valid = 1
               and m.parent_id = #{parentModuleId} 
               and mbr.role_id = #{roleId}
+    </select>
+    
+    <!--  -->
+    <select id="getModulesByCms" resultType="com.zhsj.model.Module">
+        select 
+           m.id id,
+           m.name name,
+           m.url url,
+           m.parent_id parentId,
+           m.valid,
+           m.utime,
+           m.ctime
+        from tb_module m
+           <where>
+               m.valid = 1 and m.id in 
+               <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+               </foreach>
+           </where>
     </select>
 </mapper>

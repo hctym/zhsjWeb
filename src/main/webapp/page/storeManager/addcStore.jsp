@@ -64,6 +64,46 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</style>
 	<script type="text/javascript">
 	   $(function(){
+		   
+
+		   loadCity(0,$("#province"));//省
+			function loadCity(code,pobj){
+				$.post("city/getListByCode",{
+					code:code
+				},function(result){
+					console.log(result);
+					if(result.code ==0){
+						var ctys = result.data;
+						pobj.find("option:not(:first)").remove();
+						for(var i in ctys){
+							pobj.append($("<option>").attr("value",ctys[i].code).text(ctys[i].name));
+						}
+					}else{
+						alert(result.msg);
+					}
+				});
+			}
+            //市
+			$("#province").change(function(){
+				if($(this).val() != "0"){
+					loadCity($(this).val(),$("#city"));
+					$("#city").css("display","block");
+				}else{
+					$("#city").css("display","none").find("option:not(:first)").remove();
+				}
+					$("#county").css("display","none").find("option:not(:first)").remove();
+			});
+			//县
+			$("#city").change(function(){
+				if($(this).val() != "0"){
+					loadCity($(this).val(),$("#county"));
+					$("#county").css("display","block");
+				}else{
+					$("#county").css("display","none").find("option:not(:first)").remove();
+				}
+			});
+			
+			
 		   $("#submit").click(function(){
 			   if($("#name").val() == ''){
 			    	alert("输入账户名称");
@@ -89,9 +129,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				    alert("输入介绍");
 			    	return false;
 			   }
+			   var cityCode = $("#county").val() != 0?$("#county").val():$("#city").val()!=0?$("#city").val():$("#province").val();
+				if(cityCode == 0){
+					alert("请选择城市");
+					return false;
+				}
 			    $.post("store/addc",{
 			    	name:$("#name").val(),
-                    cityCode:$("#cityCode").val(),//test
+                    cityCode:cityCode,
 			    	address:$("#address").val(),
 			    	phone:$("#phone").val(),
 			    	shopLogo:$("#shopLogo").val(),
@@ -145,10 +190,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						城市编号
 					</label>
 					<div class="col-sm-8 col-lg-9 col-xs-12">
-						<input type="text" class="form-control" id="cityCode" value="" placeholder="城市编号">
-						<div class="help-block">
-							请填写城市编号
-						</div>
+						<select class="form-control" id="province">
+						   <option value="0">请选择</option>
+						</select>
+						<select class="form-control" id="city" style="display:none;">
+						   <option value="0">请选择</option>
+						</select>
+						<select class="form-control" id="county" style="display:none;">
+						   <option value="0">请选择</option>
+						</select>
 					</div>
 				</div>
 				<div class="form-group">

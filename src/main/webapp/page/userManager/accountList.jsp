@@ -1,14 +1,16 @@
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@ page language="java" import="java.util.*,com.zhsj.model.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 long orgId=0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
-    Org org = account.getOrg();
-    if(org != null){
-    	orgId = account.getOrg().getId();
+	Account account = (Account)map.get("user");
+	AccountBindOrg abrOrg = account.getAccountBindOrg();
+    if(abrOrg != null){
+    	orgId = abrOrg.getOrgId();
     }
 }
 %>
@@ -90,7 +92,7 @@ if("account".equals(flag)){
 // 			   alert("数据疯狂加载中..");
 // 		   }); 
 		   var page = 1;
-		   var pageSize = 2;
+		   var pageSize = 10;
 		   load(page);
 		   
 		   function createPage(pageSize, total) {
@@ -128,25 +130,35 @@ if("account".equals(flag)){
 								   .append($("<td>").text(list[i].gender==1?'男':'女'))
 								   .append($("<td>").text(list[i].mobile))
 								   .append($("<td>").text(list[i].email))
-								   .append($("<td>").text(list[i].role != null ?list[i].role.name:'没有角色'))
 								   .append($("<td>").text(list[i].status==1?'启用':'禁用'))
-								    .append($("<td>").text(list[i].valid==1?'有效':'无效'))
+								   .append($("<td>").text(list[i].valid==1?'有效':'无效'))
 								   .append($("<td>").text(list[i].ctime))
 								   .append($("<td>")
 										   .append($("<span>").text("编辑").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   编辑");
+											   location.href="page/editAccount?id="+$(this).attr("data-id");
 										   }))
-										   .append($("<span>").text("删除").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   删除");
+										   .append($("<span>").text(list[i].status==1?'禁用':'启用')
+												   .attr("data-id",list[i].id)
+												   .attr("data-status",list[i].status==1?0:1)
+												   .on("click",function(){
+// 											   alert($(this).attr("data-id")+"   ------");
+                                               $.post("account/update",{
+                                            	   id:$(this).attr("data-id"),
+                                            	   status:$(this).attr("data-status")
+                                               },function(result){
+                                            	   if(result.code == 0){
+                                            		   alert("修改成功");
+                                            		   location.reload();
+                                            	   }else{
+                                            		   alert("修改失败");
+                                            	   }
+                                               });
 										   }))
 										   .append($("<span>").text("分配角色").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   分配角色");
-//	                                             window.location.href="page/modules?id="+$(this).attr("data-id");
+// 											   alert($(this).attr("data-id")+"   分配角色");
+	                                             window.location.href="page/showRoleByAccountId?id="+$(this).attr("data-id");
 										   }))
-										   .append($("<span>").text("查看角色").attr("data-id",list[i].id).on("click",function(){
-											   alert($(this).attr("data-id")+"   查看角色");
-//	                                             window.location.href="page/modules?id="+$(this).attr("data-id");
-										   }))));
+										   ));
 					   }
 					   if(page == 1){
 						    createPage(pageSize,result.data.count);
@@ -154,7 +166,7 @@ if("account".equals(flag)){
 				   }else{
 					   alert(result.msg);
 				   }
-			   }); 
+			   }); 	
 			   
 		   }
 		   
@@ -187,10 +199,9 @@ if("account".equals(flag)){
 									<th style="width:50px;">性别</th>
 									<th style="width:100px;">手机</th>
 									<th style="width:100px;">邮箱</th>
-									<th style="width:100px;">角色</th>
 									<th style="width:100px;">状态</th>
-									<th style="width:50px;">是否有效</th>
-									<th style="width:100px;">创建时间</th>
+									<th style="width:100px;">是否有效</th>
+									<th style="width:200px;">创建时间</th>
 									<th style="width:200px;">操作</th>
 								</tr>
 							</thead>

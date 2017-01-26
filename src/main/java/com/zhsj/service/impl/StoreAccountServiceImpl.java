@@ -32,7 +32,12 @@ public class StoreAccountServiceImpl implements StoreAccountService {
 	 */
 	@Override
 	public StoreAccount getByName(String storeAccountName) throws Exception {
-		return storeAccountDao.getByName(storeAccountName);
+		StoreAccount storeAccount = storeAccountDao.getByName(storeAccountName);
+		if(storeAccount != null){
+			List<StoreAccountBindRole> list = storeAccountBindRoleDao.getListByAccountId(storeAccount.getId());
+			storeAccount.setStoreAccountBindRoles(list);
+		}
+		return storeAccount;
 	}
 
 	/**
@@ -42,8 +47,10 @@ public class StoreAccountServiceImpl implements StoreAccountService {
 	@Override
 	public StoreAccount getByNameAndMd5PassWord(String username,
 			String md5password) {
-		// TODO Auto-generated method stub
-		return storeAccountDao.getByNameAndMd5PassWord(username,md5password);
+		StoreAccount storeAccount = storeAccountDao.getByNameAndMd5PassWord(username,md5password);
+		List<StoreAccountBindRole> list = storeAccountBindRoleDao.getListByAccountId(storeAccount.getId());
+		storeAccount.setStoreAccountBindRoles(list);
+		return storeAccount;
 	}
 
 	/**

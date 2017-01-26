@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.zhsj.model.Store;
+import com.zhsj.model.StorePayInfo;
 
 public interface StoreService {
 
@@ -71,4 +72,41 @@ public interface StoreService {
 	 * @return
 	 */
 	int update(Store store) throws Exception;
+	
+	/**
+	 * 
+	 * @Title: addPayInfo
+	 * @Description: 门店添加支付方式
+	 * @param storePayInfo
+	 * @return
+	 * @throws Exception
+	 */
+	int addPayInfo(StorePayInfo storePayInfo) throws Exception;
+	/**
+	 * 
+	 * @Title: getPayInfoListByStoreNo
+	 * @Description: 通过门店编号查询 支付方式
+	 * @return
+	 * @throws Exception
+	 */
+	List<StorePayInfo> getPayInfoListByStoreNo() throws Exception;
+	/**
+	 * 
+	 * @Title: updatePayInfo
+	 * @Description: 更新
+	 * @param storePayInfo
+	 * @return
+	 * @throws Exception
+	 */
+	int updatePayInfo(StorePayInfo storePayInfo) throws Exception;
+	
+	/**
+	 * 
+	 * @Title: getPayInfoByPayInfoId
+	 * @Description: 通过id  查询该条记录 用于编辑
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	StorePayInfo getPayInfoByPayInfoId(int id) throws Exception;
 }

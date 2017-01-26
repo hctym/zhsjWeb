@@ -19,4 +19,20 @@
          )
     </insert>
     
+    <!-- 通过用户账号查询  组合和账户的关联 -->
+    <select id="getByAccountId" parameterType="java.lang.Long" 
+                       resultType="com.zhsj.model.AccountBindOrg">
+            select 
+                id,
+                account_id accountId,
+                org_id orgId,
+                valid,
+                utime,
+                ctime
+            from tb_account_bind_org           
+            <where>
+               valid = 1 and account_id = #{accountId}
+            </where>         
+    </select>
+    
 </mapper>

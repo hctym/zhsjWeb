@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StorePayInfoDao">
+
+<!--     <sql id="storepayinfo"> -->
+    
+<!--     </sql> -->
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_store_pay_info (
+           store_no,
+           pay_type,
+           pay_method,
+           field1,
+           field2,
+           field3,
+           field4,
+           remark,
+           status,
+           valid,
+           utime,
+           ctime
+        ) values (
+           #{storeNo},
+           #{payType},
+           #{payMethod},
+           #{field1},
+           #{field2},
+           #{field3},
+           #{field4},
+           #{remark},
+           #{status},
+           #{valid},
+           #{utime},
+           #{ctime}
+        )
+    </insert>
+    <!-- 通过storeNo查询list -->
+    <select id="getListByStoreNo" parameterType="java.lang.String" 
+                              resultType="com.zhsj.model.StorePayInfo">
+       select 
+           id,
+           store_no storeNo,
+           pay_type payType,
+           pay_method payMethod,
+           field1,
+           field2,
+           field3,
+           field4,
+           remark,
+           status,
+           valid,
+           utime,
+           ctime 
+       from tb_store_pay_info
+       <where>
+          store_no = #{storeNo}
+       </where>
+    
+    </select>
+    
+    <!-- update -->
+    <update id="update" parameterType="com.zhsj.model.StorePayInfo">
+        update tb_store_pay_info 
+        <trim prefix="set" suffixOverrides=",">
+	        <if test="payType != null and payType != ''">
+	           pay_type = #{payType},
+	        </if>
+	        <if test="payMethod != null and payMethod != ''">
+	           pay_method = #{payMethod},
+	        </if>
+	        <if test="field1 != null and field1 != ''">
+	           field1 = #{field1},
+	        </if>
+	        <if test="field2 != null and field2 != ''">
+	           field1 = #{field2},
+	        </if>
+	        <if test="field3 != null and field3 != ''">
+	           field1 = #{field3},
+	        </if>
+	        <if test="field4 != null and field4 != ''">
+	           field1 = #{field4},
+	        </if>
+	        <if test="remark != null and remark != ''">
+	           remark = #{remark},
+	        </if>
+	        <if test="status != null and status != ''">
+	           status = #{status},
+	        </if>
+	        <if test="valid != null and valid != ''">
+	           valid = #{valid},
+	        </if>
+	        <if test="utime != null and utime != ''">
+	           utime = #{utime},
+	        </if>
+        </trim>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+    
+    
+    <!-- 根据主键id  查询 -->
+    <select id="getById" parameterType="java.lang.Integer" resultType="com.zhsj.model.StorePayInfo">
+              select 
+	               id,
+		           store_no storeNo,
+		           pay_type payType,
+		           pay_method payMethod,
+		           field1,
+		           field2,
+		           field3,
+		           field4,
+		           remark,
+		           status,
+		           valid,
+		           utime,
+		           ctime 
+               from tb_store_pay_info
+	           <where>
+	               id = #{id}
+	           </where>
+    </select>
+</mapper>

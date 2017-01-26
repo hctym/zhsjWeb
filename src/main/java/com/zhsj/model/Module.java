@@ -21,7 +21,7 @@ public class Module implements Serializable{
 	private int id;
 	private String name;//名称
 	private String url;//url
-	private String parentId;//父模块id
+	private int parentId;//父模块id
 	private int valid;//1、有效0、无效
 	private long utime;
 	private long ctime;
@@ -46,10 +46,11 @@ public class Module implements Serializable{
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getParentId() {
+	
+	public int getParentId() {
 		return parentId;
 	}
-	public void setParentId(String parentId) {
+	public void setParentId(int parentId) {
 		this.parentId = parentId;
 	}
 	public int getValid() {

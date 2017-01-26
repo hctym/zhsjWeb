@@ -1,5 +1,8 @@
 package com.zhsj.intercepter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +17,8 @@ import com.zhsj.model.StoreAccount;
 import com.zhsj.service.AccountService;
 import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
+import com.zhsj.util.SessionThreadLocal;
+
 
 
 /**
@@ -30,6 +35,7 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 	private StoreAccountService storeAccountService;
 	
 	private String[] paths;
+	
 	
 	public String[] getPaths() {
 		return paths;
@@ -66,9 +72,6 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 				return true;
 			}
 		}
-//		if(request.getSession().getAttribute("user") != null){
-//			return true;
-//		}
 		for(Cookie c:cookies){
 			if("thor".equals(c.getName())){
 				String value = c.getValue();
@@ -77,15 +80,19 @@ public class LoginCookieInterceptor implements HandlerInterceptor {
 				if("1".equals(strs[2]) ){
 					Account account = accountService.getByNameAndMd5Password(username, md5password);
 					if(account != null){
-						request.getSession().setAttribute("user", account);
-						request.getSession().setAttribute("flag", "account");
+						Map<String, Object> map = new HashMap<String,Object>();
+						map.put("user", account);
+						map.put("flag", "account");
+						SessionThreadLocal.setSession(map);
 						return true;
 					}
 				}else if("2".equals(strs[2])){
 					StoreAccount storeAccount = storeAccountService.getByNameAndMd5PassWord(username,md5password);
 					if(storeAccount != null){
-						request.getSession().setAttribute("user", storeAccount);
-						request.getSession().setAttribute("flag", "storeAccount");
+						Map<String, Object> map = new HashMap<String,Object>();
+						map.put("user", storeAccount);
+						map.put("flag", "storeAccount");
+						SessionThreadLocal.setSession(map);
 						return true;
 					}
 				}else{

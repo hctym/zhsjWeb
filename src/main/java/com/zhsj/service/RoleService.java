@@ -70,4 +70,21 @@ public interface RoleService {
      * @throws Exception
      */
 	void update(Role role) throws Exception;
+    /**
+     * 
+     * @Title: getParentModulesByRoleIds
+     * @Description: 通过角色id  查询该用户所有的父模块
+     * @param roleIds
+     * @return
+     */
+	List<Module> getParentModulesByRoleIds(List<Integer> roleIds) throws Exception;
+    /**
+     * 
+     * @Title: getModulesByPmIdAndRoleIds
+     * @Description: 通过父模块id和当前用户的角色集合 查找该模块的子模块
+     * @param moduleId
+     * @param roleIds
+     * @return
+     */
+	List<Module> getModulesByPmIdAndRoleIds(int moduleId, List<Integer> roleIds) throws Exception;
 }

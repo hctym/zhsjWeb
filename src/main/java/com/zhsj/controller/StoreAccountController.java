@@ -1,6 +1,8 @@
 package com.zhsj.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
 import com.zhsj.util.CommonResult;
 import com.zhsj.util.Md5;
+import com.zhsj.util.SessionThreadLocal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -53,8 +56,10 @@ public class StoreAccountController {
 			if(storeAccount != null){
 				if(storeAccount.getPassword().equals(Md5.encrypt(password))){
 					code = 1;
-					session.setAttribute("user", storeAccount);
-					session.setAttribute("flag", "storeAccount");
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("user", storeAccount);
+					map.put("flag", "storeAccount");
+					SessionThreadLocal.setSession(map);
 					Cookie cookie = new Cookie("thor",AES.encrypt(name+","+Md5.encrypt(password)+","+login));
 					cookie.setMaxAge(60 * 60 * 24);
 					cookie.setPath("/");

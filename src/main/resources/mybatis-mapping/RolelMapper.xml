@@ -87,4 +87,5 @@
            on m.parent_id = pm.id
            where pm.parent_id = 0 and mbr.role_id = #{roleId}
     </select>
+    
 </mapper>

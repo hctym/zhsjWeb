@@ -134,7 +134,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		   //加载的函数
 		   function load(page,obj){
 			       var params = {
-			    		   status:$("input[name='status']:checked").val(),
+// 			    		   status:$("input[name='status']:checked").val(),
+                           status:$("#status").val(),
 						   page:page,
 						   pageSize:pageSize
 					   };
@@ -168,7 +169,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 														   },function(result){
 															   alert("修改成功");
 															   location.reload();
-														   })
+														   });
 													   })).append($("<span style='margin-left:10px;'>").attr("class","label label-info")
 															   .attr("data-id",list[i].id).text("添加用户账号").on("click",function(){
 																   window.location.href="page/addStoreAccount?storeNo="+$(this).parent().attr("data-storeno");
@@ -208,15 +209,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		                   <div class="g-left">
 			                    <label>状态</label>
 			                    <div class="time clearfix" >
-			                       <div class="start">
-			                          <label><input type="radio" name="status" value="0" checked />全部</label>
-			                       </div>
-			                       <div class="start">
-			                          <label><input type="radio" name="status" value="1"/>上线</label>
-			                       </div>
-			                       <div class="end">
-			                          <label><input type="radio" name="status" value="2"/>下线</label>
-			                       </div>
+			                        <select id="status" class="form-control">
+			                           <option value="0">全部</option>
+			                           <option value="1">上线</option>
+			                           <option value="2">下线</option>
+			                        </select>
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="status" value="0" checked />全部</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="start"> -->
+<!-- 			                          <label><input type="radio" name="status" value="1"/>上线</label> -->
+<!-- 			                       </div> -->
+<!-- 			                       <div class="end"> -->
+<!-- 			                          <label><input type="radio" name="status" value="2"/>下线</label> -->
+<!-- 			                       </div> -->
 			                    </div>
 		                    </div>
 		                    <div>

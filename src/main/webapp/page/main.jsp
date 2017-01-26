@@ -1,30 +1,19 @@
-<%@page import="com.zhsj.model.Role"%>
+<%@page import="com.zhsj.util.SessionThreadLocal"%>
 <%@page import="com.zhsj.model.StoreAccount"%>
 <%@page import="com.zhsj.model.Account"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String flag = (String)request.getSession().getAttribute("flag");
+Map<String,Object> map = SessionThreadLocal.getSession();
+String flag = (String)map.get("flag");
 String name = "";
-long id=0;
-int roleId = 0;
 if("account".equals(flag)){
-	Account account = (Account)request.getSession().getAttribute("user");
+	Account account = (Account)map.get("user");
 	name = account.getName();
-    id = account.getId();
-    Role role = account.getRole();
-    if(role != null){
-       roleId = account.getRole().getId();
-    }
 }else if("storeAccount".equals(flag)){
-	StoreAccount storeAccount = (StoreAccount)request.getSession().getAttribute("user");
+	StoreAccount storeAccount = (StoreAccount)map.get("user");
     name = storeAccount.getName();
-    id = storeAccount.getId();
-    Role role = storeAccount.getRole();
-    if(role != null){
-       roleId = storeAccount.getRole().getId();
-    }
 }
 %>
 
@@ -259,9 +248,7 @@ if("account".equals(flag)){
 			   });
 		   });
 		   //
-					   $.post("role/getParentModulesByRoleId",{
-						  roleId:<%=roleId%>
-					   },function(result){
+					   $.post("role/getParentModuleByAccount",function(result){
 						  var arr = result.data,len=arr.length;
 						  for(var i =0;i<len;i++){
 							  if(i==0){
@@ -287,8 +274,7 @@ if("account".equals(flag)){
 					   });	
 					   
 					   function left(id){
-						   $.post("module/getModulesByParentModuleIdAndRoleId",{
-								  roleId:<%=roleId%>,
+						   $.post("role/getModulesByPmIdandAccount",{
 								  moduleId:id
 							  },function(obj){
 								  var leftnav = $("#leftUl");

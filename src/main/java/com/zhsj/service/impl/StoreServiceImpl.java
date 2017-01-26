@@ -7,16 +7,22 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zhsj.dao.CityCodeDao;
 import com.zhsj.dao.OrgDao;
 import com.zhsj.dao.StoreBindAccountDao;
 import com.zhsj.dao.StoreBindOrgDao;
 import com.zhsj.dao.StoreDao;
+import com.zhsj.dao.StorePayInfoDao;
+import com.zhsj.model.CityCode;
 import com.zhsj.model.Org;
 import com.zhsj.model.Store;
+import com.zhsj.model.StoreAccount;
 import com.zhsj.model.StoreBindAccount;
 import com.zhsj.model.StoreBindOrg;
+import com.zhsj.model.StorePayInfo;
 import com.zhsj.service.StoreService;
 import com.zhsj.util.NoUtil;
+import com.zhsj.util.SessionThreadLocal;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -29,6 +35,10 @@ public class StoreServiceImpl implements StoreService {
 	private OrgDao orgDao;
 	@Autowired
 	private StoreBindAccountDao storeBindAccountDao;
+	@Autowired
+	private CityCodeDao cityCodeDao;
+	@Autowired
+	private StorePayInfoDao storePayInfoDao;
 	
 	/**
 	 * 
@@ -101,7 +111,7 @@ public class StoreServiceImpl implements StoreService {
 		List<Store> stores = storeDao.getListByOrgIdAndPage(orgIds,
 				(page-1)*pageSize,pageSize,status);
 		int count = storeDao.getCount(orgIds,status);
-		Map<String,Object> map = new HashMap<String, Object>();
+		Map<String,Object> map = new HashMap<String, Object>(); 
 		map.put("list", stores);
 		map.put("count", count);
 		return map;
@@ -136,7 +146,10 @@ public class StoreServiceImpl implements StoreService {
 	 */
 	@Override
 	public Store getById(long id) throws Exception {
-		return storeDao.getById(id);
+		Store store = storeDao.getById(id);
+		CityCode cityCode = cityCodeDao.getBycode(String.valueOf(store.getCityCode()));
+		store.setCc(cityCode);
+		return store;
 	}
 	/**
 	 * 
@@ -147,6 +160,57 @@ public class StoreServiceImpl implements StoreService {
 		store.setUtime(System.currentTimeMillis()/1000);
 		return storeDao.update(store);
 	}
-	
+	/**
+	 * 
+	 * @see com.zhsj.service.StoreService#addPayInfo(com.zhsj.model.StorePayInfo)
+	 */
+	@Override
+	public int addPayInfo(StorePayInfo storePayInfo) throws Exception {
+		Map<String, Object> map = SessionThreadLocal.getSession();
+		StoreAccount storeAccount = (StoreAccount) map.get("user");
+		StoreBindAccount storeBindAccount = storeBindAccountDao.getByAccountId(storeAccount.getId());
+		List<StorePayInfo> list = storePayInfoDao.getListByStoreNo(storeBindAccount.getStoreNo());
+		
+		if(list.size() > 0){//只能添加一个支付方式
+			return 2;
+		}
+		storePayInfo.setStoreNo(storeBindAccount.getStoreNo());
+		storePayInfo.setStatus(1);
+		storePayInfo.setValid(1);
+		storePayInfo.setUtime(System.currentTimeMillis()/1000);
+		storePayInfo.setCtime(System.currentTimeMillis()/1000);
+	    int code = storePayInfoDao.add(storePayInfo);
+		return code;
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.StoreService#getPayInfoListByStoreNo(java.lang.String)
+	 */
+	@Override
+	public List<StorePayInfo> getPayInfoListByStoreNo()
+			throws Exception {
+		Map<String, Object> map = SessionThreadLocal.getSession();
+		StoreAccount storeAccount = (StoreAccount) map.get("user");
+		StoreBindAccount storeBindAccount = storeBindAccountDao.getByAccountId(storeAccount.getId());
+		List<StorePayInfo> list = storePayInfoDao.getListByStoreNo(storeBindAccount.getStoreNo());
+		return list;
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.StoreService#updatePayInfo(com.zhsj.model.StorePayInfo)
+	 */
+	@Override
+	public int updatePayInfo(StorePayInfo storePayInfo) throws Exception {
+		storePayInfo.setUtime(System.currentTimeMillis()/1000);
+		return storePayInfoDao.update(storePayInfo);
+	}
+	/**
+	 * 
+	 * @see com.zhsj.service.StoreService#getPayInfoByPayInfoId(int)
+	 */
+	@Override
+	public StorePayInfo getPayInfoByPayInfoId(int id) throws Exception {
+		return storePayInfoDao.getById(id);
+	}
 
 }

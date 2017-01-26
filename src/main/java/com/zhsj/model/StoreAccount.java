@@ -1,6 +1,7 @@
 package com.zhsj.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -32,7 +33,7 @@ public class StoreAccount implements Serializable{
 	private long utime;
 	private long ctime;
 	//transient
-	private transient Role role;
+	private transient List<StoreAccountBindRole> storeAccountBindRoles;
 	
 	public long getId() {
 		return id;
@@ -112,11 +113,12 @@ public class StoreAccount implements Serializable{
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
 	}
-	public Role getRole() {
-		return role;
+	public List<StoreAccountBindRole> getStoreAccountBindRoles() {
+		return storeAccountBindRoles;
 	}
-	public void setRole(Role role) {
-		this.role = role;
+	public void setStoreAccountBindRoles(
+			List<StoreAccountBindRole> storeAccountBindRoles) {
+		this.storeAccountBindRoles = storeAccountBindRoles;
 	}
 	
 }

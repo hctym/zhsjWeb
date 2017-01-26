@@ -32,6 +32,7 @@ public class Org implements Serializable{
 	private long ctime;
 	//2017
 	private transient List<Org> corg;
+	private transient CityCode cityCode;
 	
 	
 	public long getId() {
@@ -118,8 +119,12 @@ public class Org implements Serializable{
 	public void setCorg(List<Org> corg) {
 		this.corg = corg;
 	}
-	
-	
+	public CityCode getCityCode() {
+		return cityCode;
+	}
+	public void setCityCode(CityCode cityCode) {
+		this.cityCode = cityCode;
+	}
 	
 
 }

@@ -35,15 +35,36 @@
     
     <!-- update -->
     <update id="update" parameterType="com.zhsj.model.Org">
-      update tb_org set
-           name = #{name},
-           contact_phone = #{contactPhone},
-           email = #{email},
-           is_allow = #{isAllow},
-           valid = #{valid},
-           status = #{status},
-           utime = #{utime}
-      where id = #{id}
+       update tb_org
+         <trim prefix="set" suffixOverrides=",">
+           <if test="name != null and name !=''">
+               name = #{name},
+           </if>
+           <if test="contactPhone != null and contactPhone != ''">
+               contact_phone = #{contactPhone},
+           </if>
+           <if test="email != null and email != ''">
+               email = #{email},
+           </if>
+           <if test="isAllow != null and isAllow != ''">
+               is_allow = #{isAllow},
+           </if>
+           <if test="valid != null">
+               valid = #{valid},
+           </if>
+           <if test="cityId != null and cityId != ''">
+               city_id = #{cityId},
+           </if>
+           <if test="status != null and status != ''">
+               status = #{status},
+           </if>
+           <if test="utime != null">
+               utime = #{utime}
+           </if>
+        </trim>
+        <where>
+           id = #{id}
+        </where>
     </update>
     
     

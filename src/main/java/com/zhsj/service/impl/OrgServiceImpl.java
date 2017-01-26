@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.zhsj.dao.CityCodeDao;
 import com.zhsj.dao.OrgDao;
+import com.zhsj.model.CityCode;
 import com.zhsj.model.Org;
 import com.zhsj.service.OrgService;
 
@@ -14,6 +16,8 @@ public class OrgServiceImpl implements OrgService {
 
 	@Autowired
 	private OrgDao orgDao;
+	@Autowired
+	private CityCodeDao cityCodeDao;
 	/**
 	 * 
 	 * @see com.zhsj.service.OrgService#add(com.zhsj.model.Org)
@@ -42,8 +46,11 @@ public class OrgServiceImpl implements OrgService {
 	 */
 	@Override
 	public Org getOrgById(long id) throws Exception {
-		
-		return orgDao.getOrgById(id);
+		Org org = orgDao.getOrgById(id);
+		int code = org.getCityId();
+		CityCode cityCode = cityCodeDao.getBycode(String.valueOf(code));
+		org.setCityCode(cityCode);
+		return org;
 	}
 	/**
 	 * 
