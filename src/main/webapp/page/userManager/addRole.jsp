@@ -67,11 +67,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		   $("#submit").click(function(){
 			  
 			   if($("#name").val() == ''){
-				    alert("输入用户组名称");
+				    alert("请输入输入角色名称");
+			    	return false;
+			   }
+			   if($("#type").val() == '' || $("#type").val() == 0){
+				    alert("请选择一个所属类型");
 			    	return false;
 			   }
 			    $.post("role/add",{
-			    	name:$("#name").val()
+			    	name:$("#name").val(),
+			    	type:$("#type").val()
 			    },function(data){
 			    	if(data.code == 0){
 			    		alert("添加用户成功");
@@ -115,11 +120,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				     <div class="form-horizontal ajaxfrom" role="form" id="form-user">
 						<div class="form-group">
 							<label class="col-xs-12 col-sm-2 col-md-2 col-lg-2 control-label">角色名称</label>
-							<div class="col-sm-10 col-lg-9 col-xs-12">
+							<div class="col-sm-8 col-lg-9 col-xs-12">
 								<input id="name" name="name" type="text" class="form-control" placeholder="输入角色名称">
 								<span class="help-block">请输入角色名称</span>
 							</div>
 						</div>
+						<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">
+						选择所属类型
+					</label>
+					<div class="col-sm-8 col-lg-9 col-xs-12">
+							<select class="form-control" id="type">
+							   <option value="">请选择</option>
+							   <option value="0">管理员</option>
+							   <option value="1">代理商</option>
+							   <option value="2">商家</option>
+							</select>
+				    </div>
+				</div>
 					   <div class="form-group">
 							<div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-1 col-xs-12 col-sm-10 col-md-10 col-lg-11">
 								<input type="submit" id="submit" class="btn btn-primary span3" name="submit" value="提交">

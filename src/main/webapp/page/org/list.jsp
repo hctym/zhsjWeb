@@ -280,7 +280,7 @@ if("account".equals(flag)){
 								   .append($("<td>").text(list[i].id))
 								   .append($("<td>").text(list[i].account))
 								   .append($("<td>").text(list[i].name))
-								   .append($("<td>").text(list[i].headImg))
+								   .append($("<td>").append($("<img>").attr("src",list[i].headImg).width("30px")))
 								   .append($("<td>").text(list[i].gender==1?'男':'女'))
 								   .append($("<td>").text(list[i].mobile))
 								   .append($("<td>").text(list[i].email))
@@ -665,9 +665,8 @@ $("#submit").click(function(){
 		   
 		   
 		   //获取角色
-		   $.post("role/getList",{
-			   page:1,
-			   pageSize:100
+		   $.post("role/getListByType",{
+			   type:1
 		   },function(result){
 			   if(result.code == 0){
 				   for(var i in result.data){

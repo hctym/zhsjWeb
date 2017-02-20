@@ -87,4 +87,12 @@ public interface RoleService {
      * @return
      */
 	List<Module> getModulesByPmIdAndRoleIds(int moduleId, List<Integer> roleIds) throws Exception;
+    /**
+     * 
+     * @Title: getListByType
+     * @Description: 通过角色所属的类型  获取角色
+     * @param type
+     * @return
+     */
+	List<Role> getListByType(int type) throws Exception;
 }

@@ -50,10 +50,19 @@ String storeNo = (String)request.getAttribute("storeNo");
 	.nav-tabs {
 	    border-bottom: 1px solid #ddd;
 	}
-	.defaultSel{
+	.defaultSel, .add{
 	   background:#44b549;
 	   color:#fff;
 	   padding:10px;
+	   margin-right:10px;
+	   cursor:pointer;
+	   dispaly:block;
+	}
+	.defaultSel{
+	   float:left;
+	}
+	.add{
+	   float:right;
 	}
 	.content{
 	   margin-top:10px;
@@ -109,10 +118,13 @@ String storeNo = (String)request.getAttribute("storeNo");
                  <div class="contentNav">
                       /&nbsp;&nbsp;<span>商户门店账户列表</span>
                  </div>
-                 <div class="taps nav-tabs">
+                 <div class="taps nav-tabs clearfix">
                      <span class="defaultSel">
                                                                     商户门店账户列表
                      </span>
+                     <a class="add" href="page/store/addAccount?storeNo=<%=storeNo%>">
+                                                                    添加门店账户
+                     </a>
                  </div>
                  <div class="content">
                     <div class="table-responsive panel-body">

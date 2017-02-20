@@ -6,11 +6,14 @@
     <insert id="add">
         insert into tb_role (
 	         name,
+	         type,
 	         valid,
 	         utime,
 	         ctime
+	         
          ) values (
 	          #{name},
+	          #{type},
 		      #{valid},
 		      #{utime},
 		      #{ctime}
@@ -24,10 +27,26 @@
        <if test="name != null and name != ''">
           name = #{name},
        </if>
-          valid = #{valid},
-          utime = #{utime}
-          where id = #{id}
+	          valid = #{valid},
+	          utime = #{utime}
+        <where>
+              id = #{id}
+        </where>
     </update>
+    
+    <!-- 通过类型查询role -->
+    <select id="getListByType" parameterType="java.lang.Integer" resultType="com.zhsj.model.Role">
+           select 
+	         role.id,
+	         role.name
+	       from tb_role role
+           <where>
+             <if test="type != 0 || type != ''">
+                    role.type = #{type}
+             </if>
+             and role.valid = 1
+           </where>
+    </select>
     
     
     <!-- 删除根据id -->

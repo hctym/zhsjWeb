@@ -104,6 +104,25 @@ public class RoleController {
 	}
 	/**
 	 * 
+	 * @Title: getRolesByType
+	 * @Description: 通过类型获取该类型所有可用的角色
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping(value="getListByType",method={RequestMethod.GET,RequestMethod.POST})
+	public Object getRolesByType(int type){
+		   try {
+			List<Role> roles = roleService.getListByType(type);
+			return CommonResult.success("", roles);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return CommonResult.defaultError("");	
+		}
+	       
+	}
+	/**
+	 * 
 	 * @Title: getModulesByRoleId
 	 * @Description: 通过角色id查询父模块
 	 * @param roleId
@@ -197,7 +216,6 @@ public class RoleController {
 			List<Module> modules = roleService.getModulesByPmIdAndRoleIds(moduleId,roleIds);
 			return CommonResult.success("success", modules);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return CommonResult.defaultError("fail");
 		}

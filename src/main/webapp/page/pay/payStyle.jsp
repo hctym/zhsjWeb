@@ -67,7 +67,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		   border:1px solid #ccc;
 		}
 		td span{
-		  margin-left:10px;
 		  color:#428bca;
 		  cursor:pointer;
 		}
@@ -94,9 +93,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     				    		  .append($("<td>").text(obj[i].status==1?'启用':'禁用'))
     				    		  .append($("<td>").text(obj[i].valid==1?'有效':'无效'))
     				    		  .append($("<td>")
-    				    				  .append($("<span>").text("编辑").attr("data-id",obj[i].id).on("click",function(){
-									              location.href="page/editPayInfo?id="+$(this).attr("data-id");
-								         }))
+//     				    				  .append($("<span>").text("编辑").attr("data-id",obj[i].id).on("click",function(){
+// 									              location.href="page/editPayInfo?id="+$(this).attr("data-id");
+// 								         }))
 								         .append($("<span>").text(obj[i].status==1?'禁用':'启用').attr("data-id",obj[i].id).attr("data-status",obj[i].status)
 								        		 .on("click",function(){
 									              $.post("store/updateStorePayInfo",{

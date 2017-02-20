@@ -9,12 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sun.tools.internal.ws.processor.model.Request;
 import com.zhsj.model.Account;
 import com.zhsj.model.StoreAccount;
+import com.zhsj.model.StoreBindAccount;
 import com.zhsj.service.AccountService;
 import com.zhsj.service.StoreAccountService;
 import com.zhsj.util.AES;
@@ -252,6 +255,41 @@ public class PageController {
 	public String storeAccountList(String storeNo,HttpServletRequest request){
 		request.setAttribute("storeNo", storeNo);
 		return "page/storeManager/storeAccountList";
+	}
+	/**
+	 * 
+	 * @Title: storeAddAccount
+	 * @Description: 商户添加账户(店长、收银员)  (针对商户门店)
+	 * @return
+	 */
+	@RequestMapping(value="page/store/addAccount")
+	public String  storeAddAccount(String storeNo,HttpServletRequest request){
+		request.setAttribute("storeNo", storeNo);
+		return "page/storeManager/store/addStoreAccount";
+	}
+	/**
+	 * 
+	 * @Title: storeAccountList
+	 * @Description: 门店账户的列表  (针对商户门店)
+	 * @return
+	 */
+	@RequestMapping(value="page/store/accountlist")
+	public String storeAccountList(HttpServletRequest request){
+		Map<String,Object> map = SessionThreadLocal.getSession();
+		String flag = (String)map.get("flag");
+		String storeNo = "";
+		if(!"account".equals(flag)){
+			StoreAccount storeAccount = (StoreAccount)map.get("user");
+			long  accountId  = storeAccount.getId();
+			try {
+				StoreBindAccount sbaAccount = storeAccountService.getSbaByAccountId(accountId);
+				storeNo = sbaAccount.getStoreNo();
+				request.setAttribute("storeNo", storeNo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return "page/storeManager/store/storeAccountList";
 	}
 	/**
 	 * 

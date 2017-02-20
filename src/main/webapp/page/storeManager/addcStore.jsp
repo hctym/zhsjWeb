@@ -17,6 +17,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="shortcut icon" href="image/wechat.jpg">
 	<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="js/lib/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/ajaxfileupload.js"></script>
 	<style>
 	*{
 	    box-sizing: border-box;
@@ -102,7 +103,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					$("#county").css("display","none").find("option:not(:first)").remove();
 				}
 			});
-			
+			var logo = "";
+			$("#uploadLogo").click(function(){
+				$.ajaxFileUpload({
+			        url : 'image/upload',
+			        type : 'POST',
+			        fileElementId : 'logoImage',  //这里对应html中上传file的id
+			        dataType: 'JSON',
+			        success: function(data){
+			           console.log($.parseJSON($(data).text()));
+			           var obj = $.parseJSON($(data).text());
+			           if(obj.code == 0){
+			        	   $("#showImg").prop("src","<%=basePath%>"+obj.data);
+			        	   logo = obj.data;
+			           }else{
+			        	   alert("上传图片失败");
+			           }
+			        }
+			    });
+			});
+			//删除按钮
+			$("#deleteLogo").on("click",function(){
+				logo = "";
+				$("#showImg").prop("src","image/nopic.jpg");
+			});
 			
 		   $("#submit").click(function(){
 			   if($("#name").val() == ''){
@@ -121,7 +145,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				    alert("联系人手机号");
 			    	return false;
 			   }
-			   if($("#shopLogo").val() == ''){
+			   if(logo == ''){
 				    alert("添加门店图片logo");
 			    	return false;
 			   }
@@ -139,7 +163,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     cityCode:cityCode,
 			    	address:$("#address").val(),
 			    	phone:$("#phone").val(),
-			    	shopLogo:$("#shopLogo").val(),
+			    	shopLogo:logo,
 			    	latitude:($("#latitude").val())*1000000,
 			    	longitude:($("#longitude").val())*1000000,
 			    	intro:$("#intro").val()
@@ -230,47 +254,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<div class="col-sm-8 col-lg-9 col-xs-12">
 						
 		<script type="text/javascript">
-			function showImageDialog(elm, opts, options) {
-				require(["util"], function(util){
-					var btn = $(elm);
-					var ipt = btn.parent().prev();
-					var val = ipt.val();
-					var img = ipt.parent().next().children();
-					options = {'dest_dir':'articles','global':false,'class_extra':'','direct':true,'multiple':false};
-					util.image(val, function(url){
-						if(url.url){
-							if(img.length > 0){
-								img.get(0).src = url.url;
-							}
-							ipt.val(url.attachment);
-							ipt.attr("filename",url.filename);
-							ipt.attr("url",url.url);
-						}
-						if(url.media_id){
-							if(img.length > 0){
-								img.get(0).src = "";
-							}
-							ipt.val(url.media_id);
-						}
-					}, null, options);
-				});
-			}
-			function deleteImage(elm){
-				require(["jquery"], function($){
-					$(elm).prev().attr("src", "image/nopic.jpg");
-					$(elm).parent().prev().find("input").val("");
-				});
-			}
+			
 		</script>
 		<div class="input-group ">
-			<input type="text" name="shopLogo" id="shopLogo" class="form-control" autocomplete="off">
+			<input type="file" name="logoImage" class="form-control" id="logoImage">
 			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" onclick="showImageDialog(this);">选择图片</button>
+				<button class="btn btn-default" type="button" id="uploadLogo">上传</button>
 			</span>
 		</div>
 		<div class="input-group " style="margin-top:.5em;">
-			<img src="image/nopic.jpg" onerror="this.src='image/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail" width="150">
-			<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+			<img src="image/nopic.jpg" onerror="this.src='image/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail" width="150"  id="showImg">
+			<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" id="deleteLogo">×</em>
 		</div>					</div>
 				</div>
 

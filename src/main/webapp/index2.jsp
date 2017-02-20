@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="pragma" content="no-cache">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="pragma" content="no-cache">
-
+    <link rel="shortcut icon" href="image/wechat.jpg">
 	<link href="css/dpl-min.css" type="text/css" media="screen" rel="stylesheet">
 	<link href="css/bui-min.css" type="text/css" media="screen" rel="stylesheet">
 	<link href="css/dingmore-style-20140528.css?t=20140528" type="text/css" rel="stylesheet">

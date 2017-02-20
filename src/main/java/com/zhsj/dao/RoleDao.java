@@ -44,6 +44,14 @@ public interface RoleDao {
 	int deleteById(int id);
     
 	void update(Role role);
+    /**
+     * 
+     * @Title: getListByType
+     * @Description: 通过类型获取 该类型的所拥有的角色
+     * @param type
+     * @return
+     */
+	List<Role> getListByType(@Param("type")int type);
 	
 	
 	

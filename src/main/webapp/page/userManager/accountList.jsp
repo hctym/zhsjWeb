@@ -121,12 +121,12 @@ if("account".equals(flag)){
 							if(list[i].ctime >0 ){
 								list[i].ctime =  new Date(list[i].ctime*1000).Format("yyyy-MM-dd hh:mm:ss");
 							}
-							console.log(result.data[i]);
+							//console.log(result.data[i]);
 						   tbody.append($("<tr>")
 								   .append($("<td>").text(list[i].id))
 								   .append($("<td>").text(list[i].account))
 								   .append($("<td>").text(list[i].name))
-								   .append($("<td>").text(list[i].headImg))
+								   .append($("<td>").append($("<img width='30px;'>").attr("src",list[i].headImg)))
 								   .append($("<td>").text(list[i].gender==1?'男':'女'))
 								   .append($("<td>").text(list[i].mobile))
 								   .append($("<td>").text(list[i].email))

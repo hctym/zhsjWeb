@@ -22,6 +22,8 @@ public class Role implements Serializable{
 	private int valid;//1、有效0、无效
 	private long utime;
 	private long ctime;
+	//新加2017-02-14
+	private int type;//所属单位 
 	
 	
 	public int getId() {
@@ -54,7 +56,11 @@ public class Role implements Serializable{
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
 	}
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
 	
-	
-
 }

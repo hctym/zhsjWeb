@@ -138,4 +138,14 @@ public class RoleServiceImpl implements RoleService {
 		return cList;
 	}
 
+	/**
+	 * 
+	 * @see com.zhsj.service.RoleService#getListByType(int)
+	 */
+	@Override
+	public List<Role> getListByType(int type) throws Exception {
+		List<Role> roles = roleDao.getListByType(type);
+		return roles;
+	}
+
 }

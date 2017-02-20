@@ -87,43 +87,6 @@ var time_compare = function(time1, time2){
     var diff = parseInt((t1.getTime() - t2.getTime())/1000/60) ;
     return diff;
 };
-//获取上下班缺勤的时间
-var absence_compare = function(time,Flex,status){
-    if(status=="work"){
-    	var h=time.split(":")[0];
-    	var m=time.split(":")[1];
-    	var newm=parseInt(m)+parseInt(Flex);
-    	if(newm%60=="0"){
-    		var finaltime=parseInt(h)+parseInt(newm/60)+":"+newm%60+"0";
-    	}else if(newm%60<10){
-    		var finaltime=parseInt(h)+parseInt(newm/60)+":"+"0"+newm%60;
-    	}else{
-    		var finaltime=parseInt(h)+parseInt(newm/60)+":"+newm%60;
-    	}
-    	return finaltime;
-    }else if(status=="off"){
-    	var h=time.split(":")[0];
-    	var m=time.split(":")[1];
-    	var nm=parseInt(m)-parseInt(Flex);
-    	if(nm<0){
-    		var newm=Math.abs(nm);
-        	if(newm%60=="0"){
-        		var finaltime=parseInt(h)- Math.ceil(newm/60)+":"+newm%60+"0";
-        	}else{
-        		var finaltime=parseInt(h)- Math.ceil(newm/60)+":"+(60-newm%60);
-        	}
-    	}else{
-    		if(nm%60=="0"){
-        		var finaltime=parseInt(h)+":"+nm%60+"0";
-        	}else if(nm%60<10){
-        		var finaltime=parseInt(h)+":"+"0"+(60-(60-nm%60));
-        	}else{
-        		var finaltime=parseInt(h)+":"+(60-(60-nm%60));
-        	}
-    	}
-    	return finaltime;
-    }
-};
 
 
 

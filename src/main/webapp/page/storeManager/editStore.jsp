@@ -89,7 +89,9 @@ if("account".equals(flag)){
 	                    $("#cityCode").val(obj.cityCode);//test
 				    	$("#address").val(obj.address);
 				    	$("#phone").val(obj.phone);
-				    	$("#shopLogo").val(obj.shopLogo);
+				    	$("#showImg").attr("src","<%=basePath%>"+obj.shopLogo).on("error",function(){
+				    		$("#showImg").attr("src","<%=basePath%>image/nopic.jpg");
+				    	});
 				    	$("#latitude").val(obj.latitude/1000000);
 				    	$("#longitude").val(obj.longitude/1000000);
 				    	$("#intro").val(obj.intro);
@@ -98,8 +100,31 @@ if("account".equals(flag)){
 		    		 alert(result.msg);
 		    	 }
 		     });
-		     
-		     
+		        
+		       var logo = "";
+				$("#uploadLogo").click(function(){
+					$.ajaxFileUpload({
+				        url : 'image/upload',
+				        type : 'POST',
+				        fileElementId : 'logoImage',  //这里对应html中上传file的id
+				        dataType: 'JSON',
+				        success: function(data){
+				           console.log($.parseJSON($(data).text()));
+				           var obj = $.parseJSON($(data).text());
+				           if(obj.code == 0){
+				        	   $("#showImg").prop("src","<%=basePath%>"+obj.data);
+				        	   logo = obj.data;
+				           }else{
+				        	   alert("上传图片失败");
+				           }
+				        }
+				    });
+				});
+		        //删除按钮
+				$("#deleteLogo").on("click",function(){
+					logo = "";
+					$("#showImg").prop("src","image/nopic.jpg");
+				});
 		     
 		       //编辑
 				function loadCity(code,pobj){
@@ -155,7 +180,7 @@ if("account".equals(flag)){
 				    alert("联系人手机号");
 			    	return false;
 			   }
-			   if($("#shopLogo").val() == ''){
+			   if(logo == ''){
 				    alert("添加门店图片logo");
 			    	return false;
 			   }
@@ -175,7 +200,7 @@ if("account".equals(flag)){
                     cityCode:cityCode,//test
 			    	address:$("#address").val(),
 			    	phone:$("#phone").val(),
-			    	shopLogo:$("#shopLogo").val(),
+			    	shopLogo:logo,
 			    	latitude:($("#latitude").val())*1000000,
 			    	longitude:($("#longitude").val())*1000000,
 			    	intro:$("#intro").val()
@@ -295,14 +320,14 @@ if("account".equals(flag)){
 			}
 		</script>
 		<div class="input-group ">
-			<input type="text" name="shopLogo" id="shopLogo" class="form-control" autocomplete="off">
+			<input type="file" name="logoImage" class="form-control" id="logoImage">
 			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" onclick="showImageDialog(this);">选择图片</button>
+				<button class="btn btn-default" type="button" id="uploadLogo">上传</button>
 			</span>
 		</div>
 		<div class="input-group " style="margin-top:.5em;">
-			<img src="image/nopic.jpg" onerror="this.src='image/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail" width="150">
-			<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="deleteImage(this)">×</em>
+			<img src="image/nopic.jpg" onerror="this.src='image/nopic.jpg'; this.title='图片未找到.'" class="img-responsive img-thumbnail" width="150" id="showImg">
+			<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" id="deleteLogo">×</em>
 		</div>					</div>
 				</div>
 

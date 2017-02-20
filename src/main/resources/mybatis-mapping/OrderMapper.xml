@@ -111,7 +111,7 @@
              and org_ids like "${orgIds}%"
           </if>
        </where>
-       limit #{start},#{pageSize}         
+            order by ctime desc limit #{start},#{pageSize}         
     </select>
     
     <!-- 通过组织id 以及条件查询 总数  分页 -->
@@ -190,10 +190,11 @@
               and order_id = #{orderId}
           </if>
           <if test="storeNo != null and storeNo != ''">
-              and store_no = #{storeNo} or parent_store_no = #{storeNo}
+              and (store_no = #{storeNo} or parent_store_no = #{storeNo})
           </if>
        </where>
-       limit #{start},#{pageSize}         
+       order by ctime desc limit #{start},#{pageSize}     
+           
     
     
     </select>
@@ -226,7 +227,7 @@
               and order_id = #{orderId}
           </if>
           <if test="storeNo != null and storeNo != ''">
-              and store_no = #{storeNo} or parent_store_no = #{storeNo}
+              and (store_no = #{storeNo} or parent_store_no = #{storeNo})
           </if>
        </where>
     </select>
