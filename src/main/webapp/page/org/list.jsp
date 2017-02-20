@@ -622,13 +622,9 @@ $("#submit").click(function(){
 				    alert("输入邮箱");
 			    	return false;
 			   }
-			   $.ajax({
-				   url:"account/isRegisterByAccount",
-			       async: false,
-			       data:{
-			    	   account:account 
-			       },
-			       success:function(result){
+			   $.post("account/isRegisterByAccount",{
+				    	   account:$("#account").val() 
+				       },function(result){
 					   console.log(result);
 					   if(result.code == 1){
 						   alert("异常");
@@ -657,10 +653,8 @@ $("#submit").click(function(){
 						    });
 						   
 					   }
-				   }
 			   });
 			    
-			   
 		   });
 		   
 		   
