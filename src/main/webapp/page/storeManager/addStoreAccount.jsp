@@ -104,11 +104,7 @@ String falg = (String)request.getAttribute("flag");
 			    },function(data){
 			    	if(data.code == 0){
 			    		alert("添加门店账户成功");
-			    		if('<%=falg%>' == 'account'){
-			    		  location.href="page/storeList";
-			    		}else{
-			    	      location.href="page/stores";
-			    		}
+			    		location.href="page/storeList";
 			    	}else{
 			    		alert("添加门店失败");
 			    	}

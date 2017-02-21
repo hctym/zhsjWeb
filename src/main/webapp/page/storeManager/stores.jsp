@@ -174,7 +174,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 														   });
 													   })).append($("<span style='margin-left:10px;'>").attr("class","label label-info")
 															   .attr("data-id",list[i].id).text("添加用户账号").on("click",function(){
-																   window.location.href="page/addStoreAccount?storeNo="+$(this).parent().attr("data-storeno");
+																   window.location.href="page/store/addAccount?storeNo="+$(this).parent().attr("data-storeno");
 															   })).append($("<span style='margin-left:10px;'>").attr("class","label label-info")
 																	   .attr("data-id",list[i].id).text("查看用户账号").on("click",function(){
 				 														     window.location.href ="page/storeAccountList?storeNo="+$(this).parent().attr("data-storeno");
