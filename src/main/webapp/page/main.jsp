@@ -160,6 +160,9 @@ if("account".equals(flag)){
 	}
 	.leftnav ul li a{
 	    color: #fff;
+	    display: block;
+        width: 100%;
+        height: 100%;
 	}
 	.leftnav .sel {
 	    background: #44b549;

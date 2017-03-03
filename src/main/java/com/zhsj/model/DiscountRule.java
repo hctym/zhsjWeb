@@ -24,6 +24,9 @@ public class DiscountRule implements Serializable{
 	private BigDecimal discount1;//第一个参数
 	private BigDecimal discount2;//第二参数
 	private long ctime;
+	private long utime;//
+	private BigDecimal planAmount;//计划活动金额，默认为0不限制钱数
+	private BigDecimal actualAmount;//实际活动花费金额 
 	
 	
 	public int getId() {
@@ -62,7 +65,23 @@ public class DiscountRule implements Serializable{
 	public void setCtime(long ctime) {
 		this.ctime = ctime;
 	}
+	public long getUtime() {
+		return utime;
+	}
+	public void setUtime(long utime) {
+		this.utime = utime;
+	}
+	public BigDecimal getPlanAmount() {
+		return planAmount;
+	}
+	public void setPlanAmount(BigDecimal planAmount) {
+		this.planAmount = planAmount;
+	}
+	public BigDecimal getActualAmount() {
+		return actualAmount;
+	}
+	public void setActualAmount(BigDecimal actualAmount) {
+		this.actualAmount = actualAmount;
+	}
 	
-	
-
 }

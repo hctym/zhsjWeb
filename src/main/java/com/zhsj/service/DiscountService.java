@@ -54,4 +54,29 @@ public interface DiscountService {
      */
 	List<DiscountRule> getRuleListByDiscountId(int discountId) throws Exception;
 	
+	/**
+	 * 
+	 * @Title: addDiscountAndRules
+	 * @Description: 添加优惠规则
+	 * @param name
+	 * @param startTime
+	 * @param endTime
+	 * @param type
+	 * @param rule
+	 * @param storeNos  
+	 * @param aStyle
+	 * @param payStyle 
+	 * @return
+	 * @throws Exception
+	 */
+	Object addDiscountAndRules(String name,String startTime,String endTime,int type,
+			String rule,String[] storeNos,int aStyle,String[] payStyle,String sumPlanAmount) throws Exception;
+    
+	Map<String,Object> getListByParam(int startTime, int endTime, int status, int type,
+			String name, int page, int pageSize) throws Exception;
+
+	Object del(int discountId) throws Exception;
+
+	Object update(int discountId) throws Exception;
+	
 }

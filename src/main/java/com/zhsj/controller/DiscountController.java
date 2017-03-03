@@ -92,4 +92,48 @@ public class DiscountController {
 			return CommonResult.defaultError("fail");
 		}
 	}
+	
+	
+	@RequestMapping(value="addDiscountAndRules")
+	public Object addDiscountAndRules(String name,String startTime,String endTime,
+			int type,String rules,String[] storeNos,int aStyle,String[] payStyle,String sumPlanAmount){
+		try {
+			return discountService.addDiscountAndRules(name, startTime, endTime, type, rules, storeNos,aStyle,payStyle,sumPlanAmount);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return CommonResult.defaultError("系统错误");
+	}
+	
+	@RequestMapping(value="getListByParam")
+	public Object getListByParam(int startTime,int endTime,int status,int type,String name,int page,int pageSize){
+		
+		try {
+			Map<String, Object> map = discountService.getListByParam(startTime,endTime,status,type,name,page,pageSize);
+			return CommonResult.success("", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return CommonResult.defaultError("系统错误");
+	}
+	
+	@RequestMapping(value="del")
+	public Object del(int discountId){
+		try {
+			return discountService.del(discountId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value="update")
+	public Object update(int discountId){
+		try {
+			return discountService.update(discountId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

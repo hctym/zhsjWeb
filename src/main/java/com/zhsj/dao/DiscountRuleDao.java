@@ -2,6 +2,8 @@ package com.zhsj.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.zhsj.model.DiscountRule;
 
 /**
@@ -24,4 +26,13 @@ public interface DiscountRuleDao {
 	 * @return
 	 */
 	List<DiscountRule> getListByDiscountId(int discountId);
+	
+	/**
+	 * 
+	 * @Title: addMore
+	 * @Description: TODO
+	 * @param beans
+	 * @return
+	 */
+	int addMore(@Param("beans")List<DiscountRule> beans);
 }

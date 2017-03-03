@@ -1,6 +1,7 @@
 package com.zhsj.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 /**
  * 
  * 项目名称：zhsjWeb   
@@ -25,7 +26,10 @@ public class Discount implements Serializable{
 	private int valid;//1、有效0、无效
 	private long utime;
 	private long ctime;
-	private int type;
+	private int type;//活动类型
+	private int status;//1 开始  2 结束
+	private int aType;//1 排它优惠 2 商家优惠 3普通优惠    （优先级为1，3，2）
+	private BigDecimal planAmount;//计划活动总金额，0表示不限制金额
 	
 	
 	public int getId() {
@@ -82,7 +86,24 @@ public class Discount implements Serializable{
 	public void setType(int type) {
 		this.type = type;
 	}
-	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	public int getaType() {
+		return aType;
+	}
+	public void setaType(int aType) {
+		this.aType = aType;
+	}
+	public BigDecimal getPlanAmount() {
+		return planAmount;
+	}
+	public void setPlanAmount(BigDecimal planAmount) {
+		this.planAmount = planAmount;
+	}
 	
 
 }

@@ -27,4 +27,55 @@
     <select id="getCountByStoreNo" resultType="java.lang.Integer">
        select count(id) from tb_store_discount where store_no = #{storeNo}
     </select>
+    
+    
+    <select id="getByParam" resultType="com.zhsj.model.Discount">
+       select store_no,discount_id
+        from tb_store_discount
+        where (#{start}  BETWEEN start_time AND end_time or #{end} BETWEEN start_time and end_time)
+        <choose>
+            <when test="storeNoList != null and storeNoList.size() > 0">
+                AND store_no IN
+                <foreach collection="storeNoList" item="storeNo"
+                         open="(" separator="," close=")" >
+                    #{storeNo}
+                </foreach>
+            </when>
+            <otherwise>
+                AND 1 = 0
+            </otherwise>
+        </choose>
+        AND valid = 1 and status = 1
+       
+    </select>
+    
+    
+    
+    <insert id="addMore">
+        INSERT INTO tb_store_discount
+        (store_no,discount_id,start_time,end_time,valid,utime,ctime,parent_store_no,status)
+        VALUES
+        <foreach collection="storeList" item="store" index="index" separator=",">
+            (#{store.storeNo},
+            #{discountId},
+            #{start},
+            #{end},
+            1,
+            unix_timestamp(now()),
+            unix_timestamp(now()),
+            #{store.parentNo},1
+            )
+        </foreach>
+    </insert>
+    
+    
+    <update id="upDateValidByDiscountId">
+       update tb_store_discount set
+       valid = 0 where discount_id = #{discountId}
+    </update>
+    
+    <update id="updateStatusByDiscountId">
+       update tb_store_discount set
+       status = 2 where discount_id = #{discountId}
+    </update>
 </mapper>

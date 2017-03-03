@@ -48,7 +48,7 @@ public class StoreServiceImpl implements StoreService {
 	public int add(Store store,long orgId) throws Exception{
 		Org org = orgDao.getOrgById(orgId);
 		store.setOrgIds(org.getOrgIds()+","+orgId);//
-		store.setStoreNo(NoUtil.getStoreNO());
+		store.setStoreNo(NoUtil.getStoreNO(0L));
 		store.setStatus(1);//1 正常 2：下线
 		store.setValid(1);//0 无效 1：有效
 		store.setUtime(System.currentTimeMillis()/1000);
@@ -73,7 +73,7 @@ public class StoreServiceImpl implements StoreService {
 		Store pStore = storeDao.getByStoreNo(sba.getStoreNo());
 		store.setOrgIds(pStore.getOrgIds());//
 		store.setParentNo(sba.getStoreNo());
-		store.setStoreNo(NoUtil.getStoreNO());
+		store.setStoreNo(NoUtil.getStoreNO(0L));
 		store.setStatus(1);//1 正常 2：下线
 		store.setValid(1);//0 无效 1：有效
 		store.setUtime(System.currentTimeMillis()/1000);

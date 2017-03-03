@@ -32,4 +32,14 @@
         from tb_discount_rule dr where dr.discount_id = #{discountId}
     </select>
     
+    
+    <insert id="addMore" >
+        INSERT INTO tb_discount_rule
+        (discount_id,expend_amount,discount1,discount2,ctime,plan_amount)
+        VALUES
+         <foreach collection="beans" item="bean" index="index" separator=",">
+         	(#{bean.discountId},#{bean.expendAmount},#{bean.discount1},#{bean.discount2},unix_timestamp(now()),#{bean.planAmount})
+         </foreach>
+    </insert>
+    
 </mapper>

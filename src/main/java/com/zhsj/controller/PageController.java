@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sun.tools.internal.ws.processor.model.Request;
 import com.zhsj.model.Account;
 import com.zhsj.model.StoreAccount;
 import com.zhsj.model.StoreBindAccount;
@@ -418,4 +416,36 @@ public class PageController {
 		mv.setViewName("page/pay/editPayInfo");
 		return mv;
 	}
+	
+	/**
+	 * 
+	 * @Title: minus
+	 * @Description: 立减
+	 * @return
+	 */
+	@RequestMapping("page/minus")
+	public String minus(){
+		return "page/discount_new/minus";
+	}
+	/**
+	 * 
+	 * @Title: discount
+	 * @Description: 折扣
+	 * @return
+	 */
+	@RequestMapping("page/discount")
+	public String discount(){
+		return "page/discount_new/discount";
+	}
+	/**
+	 * 
+	 * @Title: discounts
+	 * @Description: 优惠列表
+	 * @return
+	 */
+	@RequestMapping("page/discounts")
+	public  String discounts(){
+		return "page/discount_new/list";
+	}
+	
 }

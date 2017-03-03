@@ -646,7 +646,7 @@ $("#submit").click(function(){
 						    	if(data.code == 0){
 						    		alert("添加用户成功");
 // 						    		location.href="page/accountList";
-                                    location.reloade();
+                                    location.reload();
 						    	}else{
 						    		alert("添加用户失败");
 						    	}
