@@ -30,6 +30,7 @@ public class Discount implements Serializable{
 	private int status;//1 开始  2 结束
 	private int aType;//1 排它优惠 2 商家优惠 3普通优惠    （优先级为1，3，2）
 	private BigDecimal planAmount;//计划活动总金额，0表示不限制金额
+	private String payMethod;//支付方式
 	
 	
 	public int getId() {
@@ -103,6 +104,12 @@ public class Discount implements Serializable{
 	}
 	public void setPlanAmount(BigDecimal planAmount) {
 		this.planAmount = planAmount;
+	}
+	public String getPayMethod() {
+		return payMethod;
+	}
+	public void setPayMethod(String payMethod) {
+		this.payMethod = payMethod;
 	}
 	
 

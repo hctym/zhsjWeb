@@ -99,7 +99,7 @@ public class DiscountServiceImpl implements DiscountService {
 	@Transactional
 	@Override
 	public Object addDiscountAndRules(String name, String startTime,
-			String endTime, int type, String rule, String[] storeNos,int aStyle,String[] payStyle,String sumPlanAmount)
+			String endTime, int type, String rule, String[] storeNos,int aStyle,String payStyle,String sumPlanAmount)
 			throws Exception {
 		int start = new Long(DateUtil.formatStringUnixTime(startTime, "yyyy-MM-dd HH:mm")).intValue();
         int end = new Long(DateUtil.formatStringUnixTime(endTime, "yyyy-MM-dd HH:mm")).intValue();
@@ -132,8 +132,9 @@ public class DiscountServiceImpl implements DiscountService {
 		discount.setType(type);
 		discount.setCtime(System.currentTimeMillis()/1000);
 		discount.setPlanAmount(BigDecimal.valueOf(Double.valueOf(sumPlanAmount)));
+		discount.setPayMethod(payStyle);
 		//添加优惠
-		int did = discountDao.add(discount);
+		discountDao.add(discount);
 		
 		List<Map<String,String>> list = JSON.parseObject(rule,List.class);
 		List<DiscountRule> dRules = new ArrayList<DiscountRule>();

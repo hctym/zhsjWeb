@@ -70,7 +70,7 @@ public interface DiscountService {
 	 * @throws Exception
 	 */
 	Object addDiscountAndRules(String name,String startTime,String endTime,int type,
-			String rule,String[] storeNos,int aStyle,String[] payStyle,String sumPlanAmount) throws Exception;
+			String rule,String[] storeNos,int aStyle,String payStyle,String sumPlanAmount) throws Exception;
     
 	Map<String,Object> getListByParam(int startTime, int endTime, int status, int type,
 			String name, int page, int pageSize) throws Exception;

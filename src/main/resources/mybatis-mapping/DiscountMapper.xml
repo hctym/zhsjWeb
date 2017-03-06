@@ -22,7 +22,8 @@
 	         type,
 	         status,
 	         a_type,
-	         plan_amount
+	         plan_amount,
+	         pay_method
          ) values (
              #{name},
              #{content},
@@ -34,7 +35,8 @@
 	         #{type},
 	         #{status},
 	         #{aType},
-	         #{planAmount}
+	         #{planAmount},
+	         #{payMethod}
          )
     </insert>
     

@@ -96,7 +96,7 @@ public class DiscountController {
 	
 	@RequestMapping(value="addDiscountAndRules")
 	public Object addDiscountAndRules(String name,String startTime,String endTime,
-			int type,String rules,String[] storeNos,int aStyle,String[] payStyle,String sumPlanAmount){
+			int type,String rules,String[] storeNos,int aStyle,String payStyle,String sumPlanAmount){
 		try {
 			return discountService.addDiscountAndRules(name, startTime, endTime, type, rules, storeNos,aStyle,payStyle,sumPlanAmount);
 		} catch (Exception e) {

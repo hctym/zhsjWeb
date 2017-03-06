@@ -741,8 +741,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             			"sumPlanAmount":ljInfo.sum,
             			"aStyle":ljInfo.aStyle,
             	  };
-            	  console.log(data);
-            	  console.log(ljInfo);
+//             	  console.log(data);
+//             	  console.log(ljInfo);
             	  $.post("discount/addDiscountAndRules",data,function(result){
             		  console.log(result);
             		  if(result.code == 1){
