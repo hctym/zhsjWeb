@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StoreDao">
+
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_store (
+	        parent_no,
+	        store_no,
+	        org_ids,
+	        name,
+	        city_code,
+	        address,
+	        phone,
+	        shop_logo,
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+         ) values (
+             #{parentNo},
+             #{storeNo},
+             #{orgIds},
+             #{name},
+             #{cityCode},
+             #{address},
+             #{phone},
+             #{shopLogo},
+             #{intro},
+             #{status},
+             #{latitude},
+             #{longitude},
+             #{valid},
+             #{utime},
+             #{ctime}
+         )
+    </insert>
+    
+    
+    <!-- 删除 -->
+<!--     <delete id="deleteById" parameterType="java.lang.Long"> -->
+<!--        delete from tb_store where id = #{id} -->
+<!--     </delete> -->
+    
+    <!-- getListBy -->
+    <select id="getListBy" resultType="com.zhsj.model.Store">
+       select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+       from tb_store limit #{row},#{pageSize}
+    </select>
+    
+    <!-- 根据组织id查找门店  分页  (商户组织) -->
+    <select id="getListByOrgIdAndPage" resultType="com.zhsj.model.Store">
+          select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+       from tb_store 
+       <where>
+          <if test="orgIds != null and orgIds != ''">
+             org_ids like "${orgIds}%"
+          </if>
+          <if test="status != null and status != '' and status != 0">
+             and status = #{status}
+          </if>
+          limit #{row},#{pageSize}
+       </where>
+       
+    </select>
+    <!-- 根据组织id 查找门店 总数(商户组织) -->
+    <select id="getCount" resultType="java.lang.Integer">
+      select count(id) from tb_store  
+      <where>
+         <if test="orgIds != null and orgIds != ''">
+             org_ids like "${orgIds}%"
+         </if>
+         <if test="status != null and status != '' and status != 0">
+             and status = #{status}
+         </if>
+      </where>
+    </select>
+    
+    <!-- 根据门店编号  查找门店以及子门店 分页 -->
+    <select id="getListByStoreNoAndPage" resultType="com.zhsj.model.Store">
+        select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+       from tb_store 
+       <where>
+          <if test="status != null and status != '' and status != 0">
+             status = #{status}
+          </if>
+          <if test="storeNo != null and storeNo != null">
+	          and store_no = #{storeNo} or parent_no = #{storeNo} 
+	       </if>
+	       limit #{row},#{pageSize}
+       </where>
+    </select>
+    <!-- 根据门店编号  查找门店以及子门店  总数 -->
+    <select id="getCountByStoreNo" resultType="java.lang.Integer">
+          select count(id) from tb_store 
+          <where>
+	          <if test="status != null and status != '' and status != 0">
+	             status = #{status}
+	          </if>
+	          <if test="storeNo != null and storeNo != ''">
+		          and store_no = #{storeNo} or parent_no = #{storeNo} 
+		      </if>
+	      </where>
+    </select>
+    
+    
+    <!-- 通过门店编号查找门店 -->
+    <select id="getByStoreNo" parameterType="java.lang.String" 
+                            resultType="com.zhsj.model.Store">
+        select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        org_ids as "orgIds",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+	     from tb_store 
+	     <where>
+	        store_no = #{storeNo}   
+	     </where>
+    </select>
+    
+    
+    <select id="getListBystoreNos" parameterType="java.util.Set" 
+                               resultType="com.zhsj.model.Store">
+         select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        org_ids as "orgIds",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+	     from tb_store 
+	     <where>
+	         store_no in 
+	        <foreach collection="array" index="index" item="item" open="(" 
+	                            separator="," close=")">
+	              #{item}
+	        </foreach>
+	     </where>          
+                               
+    </select>
+    
+    <!--  -->
+    <select id="getById" parameterType="java.lang.Long" resultType="com.zhsj.model.Store">
+        select 
+            id,
+            parent_no as "parentNo",
+	        store_no as "storeNo",
+	        org_ids as "orgIds",
+	        name,
+	        city_code as "cityCode",
+	        address,
+	        phone,
+	        shop_logo as "shopLogo",
+	        intro,
+	        status,
+	        latitude,
+	        longitude,
+	        valid,
+	        utime,
+	        ctime
+	    from tb_store where id = #{id}
+    </select>
+    
+    <update id="update">
+       update tb_store 
+          <trim prefix="set" suffixOverrides=","> 
+	            <if test="name != null and name != ''">
+	       	        name = #{name},
+	            </if>
+	            <if test="cityCode !=null and cityCode != ''">
+		            city_code = #{cityCode},
+	            </if>
+	            <if test="address != null and address != ''">
+		            address = #{address},
+	            </if>
+	            <if test="phone != null and phone != ''">
+	      	        phone = #{phone},
+	            </if>
+	            <if test="shopLogo != null and shopLogo != ''">
+	    	        shop_logo = #{shopLogo},
+	            </if>
+	            <if test="intro != null and intro != ''">
+	     	        intro = #{intro},
+	            </if>
+	            <if test="status != null and status != ''">
+	    	        status = #{status},
+	            </if>
+	            <if test="latitude != null and latitude != ''">
+	    	        latitude = #{latitude},
+	            </if>
+	            <if test="longitude != null and longitude != ''">
+	    	        longitude = #{longitude},
+	            </if>
+	            <if test="valid != null and valid != ''">
+		            valid = #{valid},
+	            </if>
+	            <if test="utime != null and utime != ''">
+	                 utime = #{utime}
+	            </if>
+            </trim>
+               
+                where id = #{id}
+    </update>
+</mapper>

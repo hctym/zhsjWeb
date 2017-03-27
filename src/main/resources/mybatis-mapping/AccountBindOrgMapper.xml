@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.AccountBindOrgDao">
+
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_account_bind_org (
+	        account_id,
+	        org_id,
+	        valid,
+	        utime,
+	        ctime
+         ) values (
+            #{accountId},
+	        #{orgId},
+	        #{valid},
+	        #{utime},
+	        #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过用户账号查询  组合和账户的关联 -->
+    <select id="getByAccountId" parameterType="java.lang.Long" 
+                       resultType="com.zhsj.model.AccountBindOrg">
+            select 
+                id,
+                account_id accountId,
+                org_id orgId,
+                valid,
+                utime,
+                ctime
+            from tb_account_bind_org           
+            <where>
+               valid = 1 and account_id = #{accountId}
+            </where>         
+    </select>
+    
+</mapper>

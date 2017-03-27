@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StoreBindOrgDao">
+
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_store_bind_org (
+	         store_no,
+	         org_id,
+	         org_ids,
+	         valid,
+	         utime,
+	         ctime
+         ) values (
+             #{storeNo},
+	         #{orgId},
+	         #{orgIds},
+	         #{valid},
+	         #{utime},
+	         #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过门店编号查找关联的组织 -->
+    <select id="getByStoreNo" parameterType="java.lang.String" 
+                                    resultType="com.zhsj.model.StoreBindOrg">
+         select 
+            sbo.id,
+            sbo.store_no storeNo,
+            sbo.org_id orgId,
+            sbo.org_ids orgIds,
+            sbo.valid,
+            sbo.utime,
+            sbo.ctime
+         from  tb_store_bind_org  sbo
+         where sbo.store_no = #{storeNo}                   
+    </select>
+    
+</mapper>

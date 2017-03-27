@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.DiscountDao">
+
+    <sql id="FIELD">
+    
+    </sql>
+    
+    <sql id="TABLE">
+    
+    </sql>
+    <!-- 添加-->
+    <insert id="add" keyProperty="id">
+        insert into tb_discount (
+	         name,
+	         content,
+	         start_time,
+	         end_time,
+	         valid,
+	         utime,
+	         ctime,
+	         type,
+	         status,
+	         a_type,
+	         plan_amount,
+	         pay_method
+         ) values (
+             #{name},
+             #{content},
+             #{startTime},
+             #{endTime},
+             #{valid},
+	         #{utime},
+	         #{ctime},
+	         #{type},
+	         #{status},
+	         #{aType},
+	         #{planAmount},
+	         #{payMethod}
+         )
+    </insert>
+    
+    <!-- 分页查询列表 -->
+    <select id="getListByPageAndStoreNo" resultType="com.zhsj.model.Discount">
+       select
+         dis.id,
+         dis.name,
+	     dis.content,
+	     dis.start_time startTime,
+	     dis.end_time endTime,
+	     dis.valid,
+	     dis.utime,
+	     dis.ctime,
+	     dis.type,
+	     dis.status,
+	     dis.a_type
+       from tb_discount dis
+       left join tb_store_discount sd
+       on dis.id = sd.discount_id
+       where sd.store_no = #{storeNo} 
+       limit #{row},#{pageSize}
+    </select>
+    
+    
+    <select id="getListByParam" resultType="com.zhsj.model.Discount">
+        select 
+          dis.id,
+          dis.name,
+	      dis.content,
+	      dis.start_time startTime,
+	      dis.end_time endTime,
+	      dis.valid,
+	      dis.utime,
+	      dis.ctime,
+	      dis.type,
+	      dis.status,
+	      dis.a_type
+        from tb_discount dis
+       <where>
+              ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+          <if test = "status != '' and status != 0" >
+              and status = #{status}
+          </if>
+          <if test = "type != '' and type != 0">
+              and type = #{type}
+          </if>
+          <if test = "name != ''">
+              and name like '%${name}%'
+          </if>
+          order by ctime desc limit #{row},#{pageSize}    
+       </where>
+    </select>
+    
+    <select id="getCountByParam" resultType="java.lang.Integer">
+       select count(1) from
+       tb_discount 
+       <where>
+              ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+          <if test = "status != '' and status != 0" >
+              and status = #{status}
+          </if>
+          <if test = "type != '' and type != 0">
+              and type = #{type}
+          </if>
+          <if test = "name != ''">
+              and name like '%${name}%'
+          </if>
+       </where>
+    </select>
+    
+    
+    <update id="updateValidByDiscountId">
+        update tb_discount set
+        valid = 0 where id = #{discountId}
+    </update>
+    
+    <update id="updateStatusByDiscountId">
+       update tb_discount set 
+       status = 2 where id = #{discountId}
+    </update>
+</mapper>

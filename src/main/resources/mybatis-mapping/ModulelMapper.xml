@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.ModuleDao">
+
+    <!-- 添加 -->
+    <insert id="add">
+        insert into tb_module (
+	         name,
+	         url,
+	         parent_id,
+	         valid,
+	         utime,
+	         ctime
+         ) values (
+	          #{name},
+		      #{url},
+		      #{parentId},
+		      #{valid},
+		      #{utime},
+		      #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过父模块的id 查询父模块下面的子模块集合 -->
+    <select id="getModulesByParentMonduleId" parameterType="java.lang.Integer" 
+                       resultType="com.zhsj.model.Module">
+              select
+                module.id, 
+                module.name,
+                module.url,
+                module.parent_id parentId,
+                module.valid valid,
+                module.utime,
+                module.ctime
+              from tb_module module 
+              <where>
+                  module.valid = 1 and module.parent_id = #{parntId} 
+              </where>
+    </select>
+    
+    <!-- resultMap映射 -->
+    <resultMap type="com.zhsj.model.Module" id="allModules">
+       <id column="id" property="id"/>
+       <result column="name" property="name"/>
+       <result column="url" property="url"/>
+       <result column="parent_id" property="parentId"/>
+       <result column="valid" property="valid"/>
+<!--        <result column="utime" property="utime"/> -->
+<!--        <result column="ctime" property="ctime"/> -->
+       <collection property="childrens" ofType="com.zhsj.model.Module">
+	           <id column="chid" property="id"/>
+		       <result column="chname" property="name"/>
+		       <result column="churl" property="url"/>
+		       <result column="chparent_id" property="parentId"/>
+		       <result column="chvalid" property="valid"/>
+<!-- 		       <result column="chutime" property="utime"/> -->
+<!-- 		       <result column="chctime" property="ctime"/> -->
+       </collection>
+    </resultMap>
+    
+    <!-- 查询所有模块 -->
+    <select id="getModules" resultMap="allModules">
+       select 
+          m.id,
+          m.name,
+          m.url,
+          m.parent_id,
+          m.valid,
+          cm.id chid,
+          cm.name chname,
+          cm.url churl,
+          cm.parent_id chparent_id,
+          cm.valid chvalid
+       from tb_module m left join tb_module cm 
+       on m.id = cm.parent_id where m.parent_id = 0
+    </select>
+    
+    
+    <!-- 通过父模块id和角色id查询左边子模块 -->
+    <select id="getModulesByParentModuleIdAndRoleId" resultType="com.zhsj.model.Module">
+       select 
+          m.name,
+          m.url
+        from tb_module m 
+        left join tb_module_bind_role mbr
+        on m.id = mbr.module_id
+        where m.valid = 1
+              and m.parent_id = #{parentModuleId} 
+              and mbr.role_id = #{roleId}
+    </select>
+    
+    <!--  -->
+    <select id="getModulesByCms" resultType="com.zhsj.model.Module">
+        select 
+           m.id id,
+           m.name name,
+           m.url url,
+           m.parent_id parentId,
+           m.valid,
+           m.utime,
+           m.ctime
+        from tb_module m
+           <where>
+               m.valid = 1 and m.id in 
+               <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+               </foreach>
+           </where>
+    </select>
+</mapper>

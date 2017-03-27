@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.DiscountRuleDao">
+
+    <!-- 添加-->
+    <insert id="add" keyProperty="id">
+        insert into tb_discount_rule (
+	         discount_id,
+	         expend_amount,
+	         discount1,
+	         discount2,
+	         ctime
+         ) values (
+             #{discountId},
+             #{expendAmount},
+             #{discount1},
+             #{discount2},
+             #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过优惠的id 查询规则 -->
+    <select id="getListByDiscountId" parameterType="java.lang.Integer" 
+                         resultType="com.zhsj.model.DiscountRule">
+        select 
+           dr.id,
+           dr.discount_id discountId,
+           dr.expend_amount expendAmount,
+           dr.discount1,
+           dr.discount2,
+           dr.ctime
+        from tb_discount_rule dr where dr.discount_id = #{discountId}
+    </select>
+    
+    
+    <insert id="addMore" >
+        INSERT INTO tb_discount_rule
+        (discount_id,expend_amount,discount1,discount2,ctime,plan_amount)
+        VALUES
+         <foreach collection="beans" item="bean" index="index" separator=",">
+         	(#{bean.discountId},#{bean.expendAmount},#{bean.discount1},#{bean.discount2},unix_timestamp(now()),#{bean.planAmount})
+         </foreach>
+    </insert>
+    
+</mapper>

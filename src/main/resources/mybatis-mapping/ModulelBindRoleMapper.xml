@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.ModuleBindRoleDao">
+
+    <!--添加  -->
+    <insert id="add">
+        insert into tb_module_bind_role (
+	          role_id,
+		      module_id,
+		      valid,
+		      utime,
+		      ctime
+         ) values (
+	          #{roleId},
+		      #{moduleId},
+		      #{valid},
+		      #{utime},
+		      #{ctime}
+         )
+    </insert>
+    
+    <!-- 通过角色id删除所有关联的模块-->
+    <delete id="deleteAllByRoleId">
+       delete from tb_module_bind_role where role_id = #{roleId}
+    </delete>
+    
+    <!-- 通过id删掉 -->
+    <delete id="deleteById">
+       delete from tb_module_bind_role where id = #{id}
+    </delete>
+    
+    
+     <!-- 通过角色 查找 模块id的集合 -->
+    <select id="getModuleByRoleIds" resultType="com.zhsj.model.ModuleBindRole">
+          select 
+            mbr.id id,
+            mbr.role_id roleId,
+            mbr.module_id moduleId,
+            mbr.valid valid,
+            mbr.utime utime,
+            mbr.ctime ctime
+          from tb_module_bind_role mbr
+          <where>
+             mbr.valid = 1 and mbr.role_id in
+            <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+          </where>
+    </select>
+</mapper>

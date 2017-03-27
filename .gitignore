@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .idea/*
 .ideal/*.xml
 *.log
@@ -20,3 +21,6 @@ logs
 .tomcatplugin
 /target/
 /bin/
+=======
+/target
+>>>>>>> xlc

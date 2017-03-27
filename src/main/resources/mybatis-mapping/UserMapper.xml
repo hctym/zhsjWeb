@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" 
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.UserDao">
+
+     <select id="getByIds" resultType="com.zhsj.model.User">
+        select 
+           id,
+           open_id openId,
+           nick_name nickName,
+           head_img headImg,
+           sex,
+           city,
+           province,
+           country,
+           privilege,
+           unionid,
+           utime,
+           ctime
+        from tb_user 
+        <where>
+           id in 
+           <foreach collection="array" index="index" item="item" open="(" close=")" separator=",">
+                  #{item}
+           </foreach>
+        </where>
+     </select>
+     
+     
+     <select id="getById" parameterType="java.lang.Integer" 
+                                    resultType="com.zhsj.model.User">
+        select 
+           id,
+           open_id openId,
+           nick_name nickName,
+           head_img headImg,
+           sex,
+           city,
+           province,
+           country,
+           privilege,
+           unionid,
+           utime,
+           ctime
+        from tb_user 
+        <where>
+           id = #{id}
+        </where>
+     </select>
+</mapper>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.OrderDao">
+
+    <!-- 添加-->
+    <insert id="add" keyProperty="id">
+        insert into tb_order (
+	         order_id,
+	         org_ids,
+	         plan_charge_amount,
+	         actual_charge_amount,
+	         status,
+	         discount_type,
+	         discount_id,
+	         pay_type,
+	         pay_method,
+	         store_no,
+	         parent_store_no,
+	         org_id,
+	         user_id,
+	         utime,
+	         ctime
+         ) values (
+             #{orderId},
+             #{orgIds},
+	         #{planChargeAmount},
+	         #{actualChargeAmount},
+	         #{status},
+	         #{discountType},
+	         #{discountId},
+	         #{payType},
+	         #{payMethod},
+	         #{storeNo},
+	         #{parentStoreNo},
+	         #{orgId},
+	         #{userId},
+	         #{utime},
+	         #{ctime}
+         )
+    </insert>
+    
+    <!-- 分页查询列表 -->
+    <select id="getListByPage" resultType="com.zhsj.model.Order">
+       select
+         id,
+         order_id orderId,
+	     plan_charge_amount planChargeAmount,
+	     actual_charge_amount actualChargeAmount,
+	     status,
+	     discount_type discountType,
+	     discount_id discountId,
+	     pay_type payType,
+	     pay_method payMethod,
+	     store_no storeNo,
+	     parent_store_no parentStoreNo,
+	     org_id orgId,
+	     user_id userId,
+	     utime,
+	     ctime  
+       from tb_order
+       limit #{row},#{pageSize}
+    </select>
+    
+    <!-- 获取总数 -->
+    <select id="getCount" resultType="java.lang.Integer">
+       select count(id) from tb_order
+    </select>
+    <!-- 通过组织id查询订单  条件  分页 -->
+    <select id="getOrderListByMapOrgId" parameterType="java.util.Map" 
+                                            resultType="com.zhsj.model.Order">
+       select
+         id,
+         order_id orderId,
+         org_ids orgIds,
+	     plan_charge_amount planChargeAmount,
+	     actual_charge_amount actualChargeAmount,
+	     status,
+	     discount_type discountType,
+	     discount_id discountId,
+	     pay_type payType,
+	     pay_method payMethod,
+	     store_no storeNo,
+	     parent_store_no parentStoreNo,
+	     org_id orgId,
+	     user_id userId,
+	     utime,
+	     ctime  
+       from tb_order
+       <where>
+              ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+           <if test="payType != null and payType != '' and payType != 0"> 
+              and pay_type = #{payType}
+           </if> 
+           <if test="payMethod != null and payMethod != '' and payMethod != 0"> 
+              and pay_method = #{payMethod}
+           </if> 
+            <if test="status != 3">  
+              and status = #{status}
+            </if> 
+          <if test="startAmount != null and startAmount != ''">
+              and plan_charge_amount &gt;= #{startAmount}
+          </if>
+          <if test="endAmount != null and endAmount != ''">
+              and plan_charge_amount  &lt;= #{endAmount}
+          </if>
+          <if test="orderId != null and orderId != ''">
+              and order_id = #{orderId}
+          </if>
+          <if test="orgIds != null and ordIds != ''">
+             and org_ids like "${orgIds}%"
+          </if>
+       </where>
+            order by ctime desc limit #{start},#{pageSize}         
+    </select>
+    
+    <!-- 通过组织id 以及条件查询 总数  分页 -->
+    <select id="getCountByMapOrgId" parameterType="java.util.Map" 
+                            resultType="java.lang.Integer">
+      select
+        count(id) 
+       from tb_order
+       <where>
+               ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+           <if test="payType != null and payType != '' and payType != 0"> 
+              and pay_type = #{payType}
+           </if> 
+           <if test="payMethod != null and payMethod != '' and payMethod != 0"> 
+              and pay_method = #{payMethod}
+           </if> 
+           <if test="status != 3"> 
+              and status = #{status}
+           </if> 
+          <if test="startAmount != null and startAmount != ''">
+              and plan_charge_amount &gt;= #{startAmount}
+          </if>
+          <if test="endAmount != null and endAmount != ''">
+              and plan_charge_amount  &lt;= #{endAmount}
+          </if>
+          <if test="orderId != null and orderId != ''">
+              and order_id = #{orderId}
+          </if>
+          <if test="orgIds != null and ordIds != ''">
+             and org_ids like "${orgIds}%"
+          </if>
+       </where>
+    </select>
+    
+    <!-- 通过门店编号  以及条件查找 订单 -->
+    <select id="getOrderListByMapStoreNo" parameterType="java.util.Map" 
+                                            resultType="com.zhsj.model.Order">
+       select
+         id,
+         order_id orderId,
+         org_ids orgIds,
+	     plan_charge_amount planChargeAmount,
+	     actual_charge_amount actualChargeAmount,
+	     status,
+	     discount_type discountType,
+	     discount_id discountId,
+	     pay_type payType,
+	     pay_method payMethod,
+	     store_no storeNo,
+	     parent_store_no parentStoreNo,
+	     org_id orgId,
+	     user_id userId,
+	     utime,
+	     ctime  
+       from tb_order
+       <where>
+               ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+         <if test="payType != null and payType != '' and payType != 0">
+              and pay_type = #{payType}
+          </if>
+          <if test="payMethod != null and payMethod != '' and payMethod != 0">
+              and pay_method = #{payMethod}
+          </if>
+          <if test="status != 3">
+              and status = #{status}
+          </if>
+          <if test="startAmount != null and startAmount != ''">
+              and plan_charge_amount &gt;= #{startAmount}
+          </if>
+          <if test="endAmount != null and endAmount != ''">
+              and plan_charge_amount  &lt;= #{endAmount}
+          </if>
+          <if test="orderId != null and orderId != ''">
+              and order_id = #{orderId}
+          </if>
+          <if test="storeNo != null and storeNo != ''">
+              and (store_no = #{storeNo} or parent_store_no = #{storeNo})
+          </if>
+       </where>
+       order by ctime desc limit #{start},#{pageSize}     
+           
+    
+    
+    </select>
+    
+    <!-- 通过门店编号 以及条件查找 订单 总数  (用于分页) -->
+    <select id="getCountByMapStoreNo" parameterType="java.util.Map" 
+                            resultType="java.lang.Integer">
+      select
+         count(id)
+       from tb_order
+       <where>
+               ctime &gt;= #{startTime}
+              and  ctime  &lt;= #{endTime}
+          <if test="payType != null and payType != '' and payType != 0">
+              and pay_type = #{payType}
+          </if>
+          <if test="payMethod != null and payMethod != '' and payMethod != 0">
+              and pay_method = #{payMethod}
+          </if>
+          <if test="status != 3">
+              and status = #{status}
+          </if>
+          <if test="startAmount != null and startAmount != ''">
+              and plan_charge_amount &gt;= #{startAmount}
+          </if>
+          <if test="endAmount != null and endAmount != ''">
+              and plan_charge_amount  &lt;= #{endAmount}
+          </if>
+          <if test="orderId != null and orderId != ''">
+              and order_id = #{orderId}
+          </if>
+          <if test="storeNo != null and storeNo != ''">
+              and (store_no = #{storeNo} or parent_store_no = #{storeNo})
+          </if>
+       </where>
+    </select>
+</mapper>

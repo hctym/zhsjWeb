@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.OrgDao">
+
+    <!-- 添加-->
+    <insert id="add">
+        insert into tb_org (
+	         name,
+	         parent_id,
+	         org_ids,
+	         level_type,
+	         contact_phone,
+	         email,
+	         city_id,
+	         is_allow,
+	         valid,
+	         status,
+	         utime,
+	         ctime
+         ) values (
+             #{name},
+	         #{parentId},
+	         #{orgIds},
+	         #{levelType},
+	         #{contactPhone},
+	         #{email},
+	         #{cityId},
+	         #{isAllow},
+	         #{valid},
+	         #{status},
+	         #{utime},
+	         #{ctime}
+         )
+    </insert>
+    
+    <!-- update -->
+    <update id="update" parameterType="com.zhsj.model.Org">
+       update tb_org
+         <trim prefix="set" suffixOverrides=",">
+           <if test="name != null and name !=''">
+               name = #{name},
+           </if>
+           <if test="contactPhone != null and contactPhone != ''">
+               contact_phone = #{contactPhone},
+           </if>
+           <if test="email != null and email != ''">
+               email = #{email},
+           </if>
+           <if test="isAllow != null and isAllow != ''">
+               is_allow = #{isAllow},
+           </if>
+           <if test="valid != null">
+               valid = #{valid},
+           </if>
+           <if test="cityId != null and cityId != ''">
+               city_id = #{cityId},
+           </if>
+           <if test="status != null and status != ''">
+               status = #{status},
+           </if>
+           <if test="utime != null">
+               utime = #{utime}
+           </if>
+        </trim>
+        <where>
+           id = #{id}
+        </where>
+    </update>
+    
+    
+    <!-- 通过组织id  获取子组织列表 -->
+    <select id="getChildrenOrgByOrgId" parameterType="java.lang.Long" 
+                       resultType="com.zhsj.model.Org">
+      select 
+         org.id,
+         org.name,
+         org.parent_id parentId,
+         org.level_type levelType,
+         org.contact_phone contactPhone,
+         org.email,
+         org.city_id cityId,
+         org.is_allow isAllow,
+         org.valid,
+         org.status,
+         org.utime,
+         org.ctime
+      from tb_org org 
+      where org.parent_id = #{id}
+    </select>
+    
+    
+    <!-- 通过组织id查询 组织信息 -->
+    <select id="getOrgById" parameterType="java.lang.Long" resultType="com.zhsj.model.Org">
+         select 
+           org.id id,
+           org.parent_id parentId,
+           org.org_ids orgIds,
+           org.name name,
+           org.level_type levelType,
+           org.contact_phone contactPhone,
+           org.email email,
+           org.city_id cityId,
+           org.is_allow isAllow,
+           org.valid valid,
+           org.status status,
+           org.utime utime,
+           org.ctime ctime
+         from tb_org org 
+         where org.id = #{id}
+    </select>
+    
+</mapper>
