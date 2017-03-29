@@ -74,7 +74,8 @@
 	      dis.ctime,
 	      dis.type,
 	      dis.status,
-	      dis.a_type
+	      dis.a_type,
+	      dis.plan_amount planAmount
         from tb_discount dis
        <where>
               ctime &gt;= #{startTime}

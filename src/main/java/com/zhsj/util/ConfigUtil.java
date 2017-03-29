@@ -19,8 +19,9 @@ public class ConfigUtil {
 	public static String filepath;//
 	public static String imgpath;//
 	
+	static Properties properties = null;
 	static{
-		Properties properties = new Properties();
+		properties = new Properties();
 		InputStream is = null;
 		try {
 			is = ConfigUtil.class.getResourceAsStream("/config.properties");
@@ -32,9 +33,13 @@ public class ConfigUtil {
 		}
 	}
 	
-	
+	public static String getKey(String key){
+		return properties.getProperty(key);
+	}
 	public static void main(String[] args) {
 		System.err.println(ConfigUtil.filepath);
 		System.err.println(ConfigUtil.imgpath);
+		System.err.println(getKey("uploadpath"));
+		System.err.println(getKey("zippath"));
 	}
 }

@@ -163,45 +163,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							if(list[i].ctime >0 ){
 								list[i].ctime =  new Date(list[i].ctime*1000).Format("yyyy-MM-dd hh:mm");
 							}
-							console.log(result.data[i]);
-						   tbody.append($("<tr>")
+						   var tr = $("<tr>")
 								   .append($("<td>").text(list[i].id))
 								   .append($("<td>").text(list[i].type==1?'满立减':list[i].type==2?'随机立减':'折扣'))
 								   .append($("<td>").text(list[i].name))
 								   .append($("<td>").text(new Date(list[i].startTime*1000).Format("yyyy-MM-dd hh:mm")+"-"+new Date(list[i].endTime*1000).Format("yyyy-MM-dd hh:mm")))
 								   .append($("<td>").text(list[i].planAmount))
-								   .append($("<td>").text(list[i].status==1?'开始':'结束'))
-								   .append($("<td>").attr("data-id",list[i].id)
-										   .append($("<span>").text("详情").on("click",function(){
-											   alert("详情"+$(this).parent("td").attr("data-id"));
-										   }))
-										   .append($("<span>").text(list[i].valid==1?"失效":"已失效")
-												   .attr("data-valid",list[i].valid).on("click",function(){
-											   if($(this).attr("data-valid") == 0){
-												   alert('已失效');
-												   return false;
-											   }
-											   $.post("discount/del",{
-												   discountId:$(this).parent("td").attr("data-id")
-											   },function(){
-												   alert('操作成功');
-												   location.reload();
-											   });
-										   }))
-										   .append($("<span>").text(list[i].status != 2?"删除":"已经结束")
-												   .attr("data-status",list[i].status).on("click",function(){
-													   if($(this).attr("data-status" == 2)){
-														   alert('已结束');
-														   return false;
-													   }
-											   $.post("discount/update",{
-												   discountId:$(this).parent("td").attr("data-id")
-											   },function(){
-												   alert('操作成功');
-												   location.reload();
-											   });
-										   })))
-										   );
+								   .append($("<td>").text(list[i].status==0?'未开始':list[i].status==1?'进行中':'已结束'));
+						   var td = $("<td>").attr("data-id",list[i].id)
+						   .append($("<span>").text("详情").on("click",function(){
+							   alert("详情"+$(this).parent("td").attr("data-id"));
+						   }));
+						   
+						   if(list[i].status != 2){
+							   td.append($("<span>").text("结束")
+									   .attr("data-status",list[i].status).on("click",function(){
+								   $.post("discount/update",{
+									   discountId:$(this).parent("td").attr("data-id")
+								   },function(){
+									   alert('操作成功');
+									   location.reload();
+								   });
+							   }));
+						   }
+						   tbody.append(tr.append(td));
 					   }
 					   if(page == 1){
 						    createPage(pageSize,result.data.count);

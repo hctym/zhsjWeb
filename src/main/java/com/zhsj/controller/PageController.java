@@ -448,4 +448,14 @@ public class PageController {
 		return "page/discount_new/list";
 	}
 	
+	
+	@RequestMapping("page/qrCodeList")
+	public String qrcodeList(){
+		return "page/qrCode/MerchantCollection";
+	}
+	
+	@RequestMapping("page/createQrCode")
+	public String createQrCode(){
+		return "page/qrCode/Createmerchantcode";
+	}
 }

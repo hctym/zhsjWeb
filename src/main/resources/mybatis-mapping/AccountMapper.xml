@@ -106,10 +106,10 @@
 		          <if test="email != null and email != ''">
 		              email = #{email},
 		          </if>
-		          <if test="status != null">
+		          <if test="status >= 0">
 		              status = #{status},
 		          </if>
-		          <if test="valid != null">
+		          <if test="valid >= 0">
 		              valid = #{valid},
 		          </if>
 		          <if test="utime != null and utime != ''">
