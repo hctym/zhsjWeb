@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.StoreQrcodeDao">
+
+   <sql id="FIELD">
+      id,account_id accountId,count,des,status,resource_path resourcePath,ctime
+   </sql>
+   
+   <sql id="TABLE">
+      tb_store_qrcode
+   </sql>
+   
+   <insert id="insertOne" keyProperty="id">
+      insert into <include refid="TABLE"/> (
+        account_id,count,des,status,resource_path,valid,ctime
+      ) values (
+        #{accountId},#{count},#{des},1,#{resourcePath},1,unix_timestamp(now())
+      )
+   </insert>
+   
+   
+   <select id="getListByPage" resultType="com.zhsj.model.StoreQrcode">
+     select <include refid="FIELD"/>
+     from <include refid="TABLE"/>
+     order by ctime desc limit #{start},#{end}
+   </select>
+   
+   
+   <update id="updateByStatus">
+      update <include refid="TABLE"></include>
+      set status = #{status},
+      resource_path = #{random}
+      <where>
+         id= #{id}
+      </where>
+   </update>
+   
+   
+   <select id="getListByNogs" resultType="com.zhsj.model.StoreQrcode">
+     select <include refid="FIELD"/>
+     from <include refid="TABLE"/>
+     <where>
+        id in 
+        <foreach collection="nogIds" item="nogId" open="(" close=")" separator="," index="id">
+             #{nogId}
+        </foreach>
+     </where>
+   </select>
+   
+   
+   <select id="getCount" resultType="java.lang.Integer">
+     select count(1) from <include refid="TABLE"/>
+   </select>
+</mapper>

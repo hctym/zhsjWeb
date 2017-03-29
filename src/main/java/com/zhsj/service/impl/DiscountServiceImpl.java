@@ -166,11 +166,27 @@ public class DiscountServiceImpl implements DiscountService {
 		storeDiscountDao.addMore(storeList,discount.getStartTime(),discount.getEndTime(),discount.getId());
 		return CommonResult.success("");
 	}
+	/**
+	 * 
+	 * @see com.zhsj.service.DiscountService#getListByParam(int, int, int, int, java.lang.String, int, int)
+	 */
 	@Override
 	public Map<String,Object> getListByParam(int startTime, int endTime,
 			int status, int type, String name, int page, int pageSize) throws Exception {
 		List<Discount> dicountList = discountDao.getListByParam(startTime, endTime, status,
 				type, name, (page-1)*pageSize, pageSize);
+		long time = System.currentTimeMillis()/1000;
+		for(Discount discount : dicountList){
+			if(discount.getStatus() != 2){//2结束
+				if(discount.getStartTime() > time){
+					discount.setStatus(0);
+				}else if(discount.getStartTime() <= time && discount.getEndTime() >= time){
+					discount.setStatus(1);
+				}else if(discount.getEndTime() < time){
+					discount.setStatus(2);
+				}
+			}
+		}
 		int count = discountDao.getCountByParam(startTime, endTime, status, type, name);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("list", dicountList);

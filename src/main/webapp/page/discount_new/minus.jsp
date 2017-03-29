@@ -198,7 +198,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 	.count,.average{
         position: absolute;
-	    right: 200px;
+	    right: 0;
 	    top: 15px;
 	}
 	.hide{
@@ -946,8 +946,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                     <div class="jtgroup clear">
                                       <label>支付方式</label>
                                       <div class="jtright">
-                                         <label><input type="checkbox" name="paystyle" value="1">微信支付</label>
-                                         <label><input type="checkbox" name="paystyle" value="2">支付宝支付</label>
+                                         <label>
+                                         <input type="checkbox" name="paystyle" value="1" checked disabled>
+                                                                           微信支付</label>
+                                         <label>
+                                         <input type="checkbox" name="paystyle" value="2" checked disabled>支付宝支付</label>
                                       </div>
                                     </div>
                                     <div class="jtgroup clear">

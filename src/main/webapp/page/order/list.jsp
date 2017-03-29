@@ -179,17 +179,17 @@ if("account".equals(flag)){
 							if(list[i].ctime >0 ){
 								list[i].ctime =  new Date(list[i].ctime*1000).Format("yyyy-MM-dd hh:mm:ss");
 							}
-							console.log(result.data[i]);
 						   tbody.append($("<tr>")
 								   .append($("<td>").text(list[i].orderId))
-								   .append($("<td>").text(list[i].user != null?list[i].user.nickName:""))
-								   .append($("<td>").text(list[i].store != null?list[i].store.name:""))
+								   .append($("<td>").text(list[i].user.nickName != null?list[i].user.nickName:list[i].payMethod==1?'微信用户':'支付宝用户'))
+								   .append($("<td>").text(list[i].store != 'null'?list[i].store.name:""))
+								   .append($("<td>").text(list[i].payMethod==1?'微信':'支付宝'))
 								   .append($("<td>").text(list[i].planChargeAmount))
 								   .append($("<td>").text(list[i].actualChargeAmount))
 								   .append($("<td>").text(list[i].discountType))
 								   .append($("<td>").text(list[i].discountId))
 								   .append($("<td>").text(list[i].ctime))
-								   .append($("<td>").text(list[i].status==0?"支付中":list[i].status==1?'支付成功':'支付失败'))
+								   .append($("<td>").text(list[i].status==1?"支付成功":list[i].status==2?'支付失败':list[i].status==3?'退款':''))
 // 								   .append($("<td>")
 // 										   .append($("<span>").text("查看").attr("data-id",list[i].id).on("click",function(){
 // 											   alert($(this).attr("data-id")+"   查看");
@@ -292,10 +292,10 @@ if("account".equals(flag)){
 				                    <label>支付状态</label>
 				                    <div class="time">
 				                           <select id="payStatus" class="form-control">
-				                               <option value="3">全部</option>
-				                               <option value="0">支付中</option>
+				                               <option value="-1">全部</option>
 				                               <option value="1">支付成功</option>
 				                               <option value="2">支付失败</option>
+				                               <option value="3">退款</option>
 				                           </select>
 <!-- 				                       <div class="start"> -->
 <!-- 				                          <label><input type="radio" name="payStatus" value="0" checked/>支付中</label> -->
@@ -347,6 +347,7 @@ if("account".equals(flag)){
 									<th style="width:100px;">订单号</th>
 									<th style="width:100px;">付款者名称</th>
 									<th style="width:100px;">收款台名称</th>
+									<th style="width:100px;">付款方法</th>
 									<th style="width:100px;">应付金额</th>
 									<th style="width:100px;">实付金额</th>
 									<th style="width:100px;">折扣类型</th>

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.zhsj.dao.CityCodeDao;
 import com.zhsj.dao.OrgDao;
+import com.zhsj.dao.SequenceDao;
 import com.zhsj.dao.StoreBindAccountDao;
 import com.zhsj.dao.StoreBindOrgDao;
 import com.zhsj.dao.StoreDao;
@@ -21,8 +22,8 @@ import com.zhsj.model.StoreBindAccount;
 import com.zhsj.model.StoreBindOrg;
 import com.zhsj.model.StorePayInfo;
 import com.zhsj.service.StoreService;
-import com.zhsj.util.NoUtil;
 import com.zhsj.util.SessionThreadLocal;
+import com.zhsj.util.StoreUtils;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -39,7 +40,8 @@ public class StoreServiceImpl implements StoreService {
 	private CityCodeDao cityCodeDao;
 	@Autowired
 	private StorePayInfoDao storePayInfoDao;
-	
+	@Autowired
+	private SequenceDao sequenceDao;
 	/**
 	 * 
 	 * @see com.zhsj.service.StoreService#add(com.zhsj.model.Store)
@@ -48,7 +50,7 @@ public class StoreServiceImpl implements StoreService {
 	public int add(Store store,long orgId) throws Exception{
 		Org org = orgDao.getOrgById(orgId);
 		store.setOrgIds(org.getOrgIds()+","+orgId);//
-		store.setStoreNo(NoUtil.getStoreNO(0L));
+		store.setStoreNo(StoreUtils.getStoreNO(sequenceDao.getCode()));
 		store.setStatus(1);//1 正常 2：下线
 		store.setValid(1);//0 无效 1：有效
 		store.setUtime(System.currentTimeMillis()/1000);
@@ -73,7 +75,7 @@ public class StoreServiceImpl implements StoreService {
 		Store pStore = storeDao.getByStoreNo(sba.getStoreNo());
 		store.setOrgIds(pStore.getOrgIds());//
 		store.setParentNo(sba.getStoreNo());
-		store.setStoreNo(NoUtil.getStoreNO(0L));
+		store.setStoreNo(StoreUtils.getStoreNO(sequenceDao.getCode()));
 		store.setStatus(1);//1 正常 2：下线
 		store.setValid(1);//0 无效 1：有效
 		store.setUtime(System.currentTimeMillis()/1000);

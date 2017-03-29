@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis_mapper.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhsj.dao.TBStoreNoDao">
+
+    <sql id="TABLE">
+      tb_store_no
+    </sql>
+    <sql id="FIELD">
+      store_no,status,utime,ctime,qrcode_id
+    </sql>
+    
+    <insert id="insertAll">
+        insert into <include refid="TABLE" /> (
+          <include refid="FIELD"/>
+        ) values
+         <foreach collection="storeNos" item="store" index="index" separator=",">
+           (#{store.storeNo},#{store.status},unix_timestamp(now()),unix_timestamp(now()),#{store.qrCodeId})
+         </foreach>
+    </insert>
+    
+    <insert id="insertOne" keyProperty="id">
+       insert into <include refid="TABLE"/> (
+         <include refid="FIELD"/>
+       ) values (
+         #{storeNo},#{status},unix_timestamp(now()),unix_timestamp(now()),#{qrCodeId}
+       )
+    </insert>
+</mapper>

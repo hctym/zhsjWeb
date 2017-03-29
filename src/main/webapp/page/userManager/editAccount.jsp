@@ -100,7 +100,9 @@ long id = (Long)request.getAttribute("id");
 			    	name:$("#name").val(),
 			    	gender:$("input[name='gender']:checked").val(),
 			    	mobile:$("#mobile").val(),
-			    	email:$("#email").val()
+			    	email:$("#email").val(),
+			    	status:-1,
+			    	valid:-1,
 			    },function(data){
 			    	if(data.code == 0){
 			    		alert("修改用户成功");

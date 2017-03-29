@@ -1,21 +1,14 @@
 package com.zhsj.util;
 
 import java.util.Random;
+import java.util.zip.CRC32;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
- * 
- * 项目名称：zhsjWeb   
- *
- * 类描述：生成编号工具类
- * 类名称：com.zhsj.util.GenerateNo     
- * 创建人：xulinchuang
- * 创建时间：2016年12月29日 下午4:08:50
+ * Created by lcg on 17/1/1.
  */
-public class NoUtil {
-    
+public class StoreUtils {
     public static synchronized String getStoreNO(long seq){
     	seq = seq^674653;
         String rd = String.format("%3s%07d","111",seq);
@@ -37,12 +30,17 @@ public class NoUtil {
         String rd = String.format("%s%6s%05d%4s",storeNo ,date,time,no);
         return rd;
     }
-    public static void main(String[] args) {
-//		System.err.println(getStoreNO());
-//		System.err.println(getOrderNO(getStoreNO()));
-		
-    	int num = 11111;
-    	String str = String.format("%06d", num);
-    	System.err.println(str);
-	}
+
+    public static void main(String[] args){
+    	//System.out.println(StoreUtils.getOrderNO("1110674308"));
+    	//System.out.println(StoreUtils.getStoreNO(345L));
+    	System.out.println(getStoreNO(61L));
+    	System.err.println(getOrderNO("1110674656"));
+    	//1110674656
+//    	10674656170222497211847
+//    	1110674656
+//    	10674656170222497341114
+//    	1110674656
+//    	10674656170222497816641
+    }
 }
