@@ -164,7 +164,7 @@ import javax.imageio.ImageIO;
 				ImageUtils imgUtils = new ImageUtils();
 				File sourceFile = new File(sourceFilePath);
 				File waterFile = new File(waterFilePath);
-				int qrwidth = 664,qrheight = 1062,fontWidth = 853,fontHeight=2350;
+				int qrwidth = 664,qrheight = 1062,fontWidth = 760,fontHeight=2350;
 				BufferedImage buffImg = ImageUtils.watermark(sourceFile, waterFile, 
 						qrwidth, qrheight, 1.0f, storeNo,fontWidth,fontHeight);
 				imgUtils.generateWaterFile(buffImg, saveFilePath);
