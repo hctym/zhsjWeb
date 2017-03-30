@@ -18,6 +18,7 @@ public class ConfigUtil {
     
 	public static String filepath;//
 	public static String imgpath;//
+	public static String FILE_URL;
 	
 	static Properties properties = null;
 	static{
@@ -28,6 +29,7 @@ public class ConfigUtil {
 			properties.load(is);
 			filepath = properties.getProperty("filepath");
 			imgpath = properties.getProperty("imgpath");
+			FILE_URL= properties.getProperty("FILE_URL");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

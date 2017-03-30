@@ -27,6 +27,8 @@ if("account".equals(flag)){
 	<link rel="shortcut icon" href="image/wechat.jpg">
 	<link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="js/lib/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/lib/ajaxfileupload.js"></script>
+	
 	<style>
 	*{
 	    box-sizing: border-box;
@@ -89,7 +91,7 @@ if("account".equals(flag)){
 	                    $("#cityCode").val(obj.cityCode);//test
 				    	$("#address").val(obj.address);
 				    	$("#phone").val(obj.phone);
-				    	$("#showImg").attr("src","<%=basePath%>"+obj.shopLogo).on("error",function(){
+				    	$("#showImg").attr("src",obj.shopLogo).on("error",function(){
 				    		$("#showImg").attr("src","<%=basePath%>image/nopic.jpg");
 				    	});
 				    	$("#latitude").val(obj.latitude/1000000);
@@ -112,8 +114,8 @@ if("account".equals(flag)){
 				           console.log($.parseJSON($(data).text()));
 				           var obj = $.parseJSON($(data).text());
 				           if(obj.code == 0){
-				        	   $("#showImg").prop("src","<%=basePath%>"+obj.data);
-				        	   logo = obj.data;
+				        	   $("#showImg").prop("src",obj.data.fileUrl+obj.data.filePath);
+				        	   logo =obj.data.filePath;
 				           }else{
 				        	   alert("上传图片失败");
 				           }

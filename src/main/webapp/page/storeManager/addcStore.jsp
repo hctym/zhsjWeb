@@ -114,8 +114,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			           console.log($.parseJSON($(data).text()));
 			           var obj = $.parseJSON($(data).text());
 			           if(obj.code == 0){
-			        	   $("#showImg").prop("src","<%=basePath%>"+obj.data);
-			        	   logo = obj.data;
+			        	   $("#showImg").prop("src",obj.data.fileUrl+obj.data.filePath);
+			        	   logo =obj.data.filePath;
 			           }else{
 			        	   alert("上传图片失败");
 			           }

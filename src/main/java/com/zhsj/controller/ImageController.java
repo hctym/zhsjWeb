@@ -1,10 +1,11 @@
 package com.zhsj.controller;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,10 @@ public class ImageController {
         	    System.err.println(filename);
                 // 转存文件  
                 file.transferTo(new File(filePath+filename));  
-                return CommonResult.success("",ConfigUtil.imgpath+filename);
+                Map<String,String> map = new HashMap<>();
+                map.put("fileUrl", ConfigUtil.FILE_URL);
+                map.put("filePath", ConfigUtil.imgpath+filename);
+                return CommonResult.success("",map);
             } catch (Exception e) {  
                 e.printStackTrace();  
                 return CommonResult.defaultError("error");

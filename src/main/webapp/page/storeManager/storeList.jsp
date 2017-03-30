@@ -162,7 +162,7 @@ if("account".equals(flag)){
 							   tbody.append($("<tr>")
 									   .append($("<td>").text(list[i].id))
 									   .append($("<td>").text(list[i].name))
-									   .append($("<td>").append($("<img>").prop("src","<%=basePath%>"+list[i].shopLogo).width("30px").error(function(){
+									   .append($("<td>").append($("<img>").prop("src",list[i].shopLogo).width("30px").error(function(){
 										   $(this).attr("onerror","javascript:this.src='image/nopic.jpg';");
 									   })))
 									   .append($("<td>").text(list[i].phone))
